@@ -7,7 +7,7 @@
 
 #include "../include/mglGuiLibManager.h"
 #include "../include/mglGuiObjectFactory.h"
-#include "../include/mglLogger.h"
+#include "mglLogger.h"
 
 using namespace std;
 

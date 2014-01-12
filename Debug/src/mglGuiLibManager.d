@@ -9,8 +9,10 @@ src/mglGuiLibManager.d: ../src/mglGuiLibManager.cpp \
  ../src/../include/../include/../include/mglGuiActionFunctor.h \
  ../src/../include/../include/../include/mglGuiObject.h \
  ../src/../include/../include/mglGuiActionFactory.h \
- ../src/../include/mglGuiObjectFactory.h ../src/../include/mglLogger.h \
- ../src/../include/mglLogChannel.h
+ ../src/../include/mglGuiObjectFactory.h \
+ /home/cromas/git/mgl/workspace/MGL/include/Logger/mglLogger.h \
+ /home/cromas/git/mgl/workspace/MGL/include/Logger/mglLogChannel.h \
+ /home/cromas/git/mgl/workspace/MGL/include/Logger/mglLogDevice.h
 
 ../src/../include/mglGuiLibManager.h:
 
@@ -34,6 +36,8 @@ src/mglGuiLibManager.d: ../src/mglGuiLibManager.cpp \
 
 ../src/../include/mglGuiObjectFactory.h:
 
-../src/../include/mglLogger.h:
+/home/cromas/git/mgl/workspace/MGL/include/Logger/mglLogger.h:
 
-../src/../include/mglLogChannel.h:
+/home/cromas/git/mgl/workspace/MGL/include/Logger/mglLogChannel.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/Logger/mglLogDevice.h:

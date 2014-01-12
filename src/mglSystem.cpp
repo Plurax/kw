@@ -67,7 +67,10 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 	mglGuiObject *Target = getTargetWindow(Message->getCoord());
 	if (Target != NULL)
 		if (Target->getGuiAction() != NULL)
+		{
+			Message->setTarget(Target);
 			return Target->ProcessMessage(Message);
+		}
 	return NULL;
 }
 
@@ -159,6 +162,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 
    XMLCh* TAG_GUI = XMLString::transcode("GUI");
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
+   XMLCh* TAG_Logging = XMLString::transcode("Logging");
    try
    {
       m_ConfigFileParser->parse( configFile.c_str() );
@@ -188,6 +192,12 @@ void mglSystem::readConfiguration(std::string& configFile)
 				// Found node which is an Element. Re-cast node as element
 				DOMElement* currentElement
 							= dynamic_cast< xercesc::DOMElement* >( currentNode );
+
+				if ( XMLString::equals(currentElement->getTagName(), TAG_Logging))
+				{
+					cout << "Got configuration tag for logging\n";
+					mglLogger::Inst().configure(currentNode);
+				}
 				if ( XMLString::equals(currentElement->getTagName(), TAG_AppConfiguration))
 				{
 				   // Already tested node as type element and of name "ApplicationSettings".
@@ -283,6 +293,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 					m_MainFrames.push_back(thisWindow);
 				else
 				{
+					thisWindow->setParentWindow(parent);
 					parent->AddChild(thisWindow);
 				}
 

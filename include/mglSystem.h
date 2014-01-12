@@ -7,7 +7,7 @@
 #include <vector>
 
 
-#include "../include/mglLogger.h"
+#include "Logger/mglLogger.h"
 #include "mglGuiObject.h"
 #include "mglInputMessage.h"
 

@@ -1,7 +1,7 @@
 
 
 #include "../include/mglGuiObject.h"
-#include "../include/mglLogger.h"
+#include "mglLogger.h"
 
 #include <stdio.h>
 
@@ -148,13 +148,41 @@ void mglGuiObject::AddChild(mglGuiObject *Child)
 {
 	INIT_LOG("AddChild(mglWindow *Child");
 	LOG_TRACE("Added child");
-	bHasChildren = true;
+
+	if (bHasChildren)
+	{
+		Children.back()->setNextWindow(Child);
+		Child->setPrevWindow(Children.back());
+	}
+	else
+		bHasChildren = true;
+
 	Children.push_back(Child);
+}
+
+void mglGuiObject::setState(unsigned short _state)
+{
+	m_usState = _state;
+}
+
+unsigned short mglGuiObject::getState()
+{
+	return m_usState;
 }
 
 void mglGuiObject::setParentWindow(mglGuiObject* parent)
 {
 	m_pParent = parent;
+}
+
+void mglGuiObject::setNextWindow(mglGuiObject* parent)
+{
+	m_pNext = parent;
+}
+
+void mglGuiObject::setPrevWindow(mglGuiObject* parent)
+{
+	m_pPrev = parent;
 }
 
 

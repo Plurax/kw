@@ -23,6 +23,7 @@ mglInputMessage::mglInputMessage(int messagetype, mglCoord coord, int inputtype,
 	m_InputType = inputtype;
 	m_keySym = key;
 	m_MouseButton = mousebutton;
+	m_target = NULL;
 }
 
 mglInputMessage::~mglInputMessage()
@@ -49,5 +50,16 @@ int mglInputMessage::getInputType()
 int mglInputMessage::getMouseButton()
 {
 	return m_MouseButton;
+}
+
+void mglInputMessage::setTarget(mglGuiObject* _target)
+{
+	m_target = _target;
+}
+
+
+mglGuiObject* mglInputMessage::getTarget()
+{
+	return m_target;
 }
 

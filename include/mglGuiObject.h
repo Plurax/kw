@@ -53,6 +53,8 @@ public:
 
 	virtual mglGuiObject* getChildAtPosition(mglCoord pt);
 	void setParentWindow(mglGuiObject* parent);
+	void setNextWindow(mglGuiObject* parent);
+	void setPrevWindow(mglGuiObject* parent);
 
 	int GetX();
 	int GetY();
@@ -69,6 +71,9 @@ public:
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
 	void RemoveChild(std::string ChildName);
+	void setState(unsigned short _state);
+	unsigned short getState();
+
 
 	virtual mglGuiObject* getChildByID(unsigned int ID);
 
@@ -85,8 +90,12 @@ protected:
 	int iWidth;
 
 	mglGuiObject* m_pParent;
+	mglGuiObject* m_pPrev;
+	mglGuiObject* m_pNext;
 
 	WindowList Children;
+
+	unsigned short m_usState; // focus, selected etc
 
 	bool bVisible;
 	bool bHasChildren;

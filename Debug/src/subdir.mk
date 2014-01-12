@@ -13,8 +13,6 @@ CPP_SRCS += \
 ../src/mglGuiObjectFactory.cpp \
 ../src/mglInputMessage.cpp \
 ../src/mglLibHandle.cpp \
-../src/mglLogChannel.cpp \
-../src/mglLogger.cpp \
 ../src/mglMessage.cpp \
 ../src/mglSystem.cpp \
 ../src/mglTextureManager.cpp \
@@ -33,8 +31,6 @@ OBJS += \
 ./src/mglGuiObjectFactory.o \
 ./src/mglInputMessage.o \
 ./src/mglLibHandle.o \
-./src/mglLogChannel.o \
-./src/mglLogger.o \
 ./src/mglMessage.o \
 ./src/mglSystem.o \
 ./src/mglTextureManager.o \
@@ -53,8 +49,6 @@ CPP_DEPS += \
 ./src/mglGuiObjectFactory.d \
 ./src/mglInputMessage.d \
 ./src/mglLibHandle.d \
-./src/mglLogChannel.d \
-./src/mglLogger.d \
 ./src/mglMessage.d \
 ./src/mglSystem.d \
 ./src/mglTextureManager.d \
@@ -68,7 +62,7 @@ CPP_DEPS += \
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -D"__LIBNAME="\"MGlBase\" -I/usr/include/freetype2 -I/usr/include -I"/home/cromas/git/mgl/workspace/MGL/include" -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	g++ -D"__LIBNAME="\"MGlBase\" -I"/home/cromas/git/mgl/workspace/MGL/include/Logger" -I"/home/cromas/git/mgl/workspace/MGL/include" -I/usr/include/freetype2 -I/usr/include -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
