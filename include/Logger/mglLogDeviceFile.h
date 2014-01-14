@@ -10,17 +10,23 @@
 
 #include "mglLogDevice.h"
 #include <string>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
 class mglLogDeviceFile : public mglLogDevice
 {
+
 public:
 	void flush();
 	mglLogDeviceFile(const char* filename);
 	~mglLogDeviceFile();
 	void operator << (char* str);
 	void operator << (string str);
+
+private:
+	ofstream m_outputFile;
 };
 
 #endif /* MGLLOGDEVICEFILE_H_ */

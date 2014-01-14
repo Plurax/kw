@@ -31,29 +31,30 @@ using namespace std;
 struct __static_log_info {
 	string s_libname;
 	string s_file;
+	string s_classname;
 	string s_method;
 };
 
 typedef struct __static_log_info static_log_info;
 
-#define INIT_LOG(methodname) \
-	static __static_log_info _stat_log_info = {__LIBNAME, __FILE__, methodname}
+#define INIT_LOG(classname, methodname) \
+	static __static_log_info _stat_log_info = {__LIBNAME, __FILE__, classname, methodname}
 
 #define LOG_LEVEL(level,tag,text) \
 	do { \
 		std::stringstream line; \
-		line <<  _stat_log_info.s_libname << ";" << std::setw(15) << _stat_log_info.s_file << ";" << std::setw(0) << _stat_log_info.s_method << "(" << __LINE__  << ")" << tag << ": " << text; \
+		line <<  _stat_log_info.s_libname << ";" << std::setw(15) << _stat_log_info.s_file << ";" << std::setw(0) << _stat_log_info.s_method << ";" << __LINE__  << ";" << tag << ": " << text; \
 		mglLogger::Inst().log(level,&_stat_log_info,line); \
 	} \
 	while (false);
 
 
-#define LOG_MASK_TRACE 0x0020
-#define LOG_MASK_DEBUG 0x0010
-#define LOG_MASK_INFO  0x0008
-#define LOG_MASK_WARN  0x0004
-#define LOG_MASK_ERROR 0x0002
-#define LOG_MASK_PANIC 0x0001
+#define LOG_MASK_TRACE (unsigned short)0x0020
+#define LOG_MASK_DEBUG (unsigned short)0x0010
+#define LOG_MASK_INFO  (unsigned short)0x0008
+#define LOG_MASK_WARN  (unsigned short)0x0004
+#define LOG_MASK_ERROR (unsigned short)0x0002
+#define LOG_MASK_PANIC (unsigned short)0x0001
 
 
 #define LOG_TRACE(text) LOG_LEVEL(LOG_MASK_TRACE,"T",text)
@@ -63,7 +64,7 @@ typedef struct __static_log_info static_log_info;
 #define LOG_ERROR(text) LOG_LEVEL(LOG_MASK_ERROR,"E",text)
 #define LOG_PANIC(text) LOG_LEVEL(LOG_MASK_PANIC,"P",text)
 
-
+#define DEF_MAX_LOG_CHANNELS 5
 
 class mglLogger
 {
@@ -81,10 +82,10 @@ public:
 	void addLibraryFilter(string& channel, string& name, unsigned short value);
 	void addClassFilter(string& channel, string& name, unsigned short value);
 
-	void log(int level, static_log_info* info, stringstream& line);
-	bool Clear(void);
+	void log(unsigned short level, static_log_info* info, stringstream& line);
+	bool destroy(void);
 protected:
-	mglLogChannel* m_Channels[5];
+	mglLogChannel* m_Channels[DEF_MAX_LOG_CHANNELS];
 
 	mglLogger();
 	mglLogger& operator=(const mglLogger& tm);

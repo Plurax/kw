@@ -18,7 +18,7 @@ mglGuiActionFunctor::mglGuiActionFunctor()
 
 mglMessage* mglGuiActionFunctor::operator () (mglMessage* message)
 {
-	INIT_LOG("operator() (mglMessage* message)");
+	INIT_LOG("mglGuiActionFunctor", "operator() (mglMessage* message)");
 	LOG_TRACE("Testfunction called!");
 
 	return NULL;

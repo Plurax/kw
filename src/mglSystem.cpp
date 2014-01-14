@@ -134,7 +134,6 @@ void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 void mglSystem::readConfiguration(std::string& configFile)
 {
 	// Test to see if the file is ok.
-
    struct stat fileStatus;
 
    errno = 0;
@@ -151,9 +150,6 @@ void mglSystem::readConfiguration(std::string& configFile)
        else if( errno == ENAMETOOLONG )
           throw ( std::runtime_error("File can not be read\n"));
    }
-
-   // Configure DOM parser.
-   std::cout << "Reading configuration file...\n";
 
    m_ConfigFileParser->setValidationScheme( XercesDOMParser::Val_Never );
    m_ConfigFileParser->setDoNamespaces( false );
@@ -195,19 +191,16 @@ void mglSystem::readConfiguration(std::string& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Logging))
 				{
-					cout << "Got configuration tag for logging\n";
 					mglLogger::Inst().configure(currentNode);
 				}
 				if ( XMLString::equals(currentElement->getTagName(), TAG_AppConfiguration))
 				{
 				   // Already tested node as type element and of name "ApplicationSettings".
 				  // Read attributes of element "ApplicationSettings".
-					cout << "Got configuration tag for application\n";
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
 				{
-					cout << "Got GUI tag - reading GUI settings from XML\n";
 					createGUIfromXML(currentNode, NULL, NULL);
 				}
 			}
@@ -225,7 +218,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 // This is recursive creation of the GUI Tree
 void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)
 {
-	INIT_LOG("createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
+	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
 
 	DOMNode* currentNode = GUIELement;
 	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(GUIELement);
@@ -308,3 +301,10 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
   }
 
 }
+
+
+void mglSystem::destroy()
+{
+	mglLogger::Inst().destroy();
+}
+

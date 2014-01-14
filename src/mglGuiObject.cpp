@@ -146,7 +146,7 @@ void mglGuiObject::Draw(void)
 
 void mglGuiObject::AddChild(mglGuiObject *Child)
 {
-	INIT_LOG("AddChild(mglWindow *Child");
+	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child");
 	LOG_TRACE("Added child");
 
 	if (bHasChildren)

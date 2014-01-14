@@ -49,6 +49,7 @@ public:
 
 	void Draw(void);
 	void SetMainFrame(mglGuiObject *MainFrame);
+	void destroy();
 	mglGuiObject* getMainFrameByID(unsigned int ID);
 
 	mglMessage* sendInputMessage(mglInputMessage* Message);

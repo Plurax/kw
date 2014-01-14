@@ -18,6 +18,9 @@ using namespace std;
 
 mglLogChannel::mglLogChannel(string name)
 {
+	m_classesEmpty = true;
+	m_librariesEmpty = true;
+
 	if (name.compare(string("stdout")) == 0)
 	{
 		m_logDevice = new mglLogDeviceStdOut();
@@ -37,6 +40,8 @@ mglLogChannel::mglLogChannel(string name)
 void mglLogChannel::log(stringstream& line)
 {
 	(*m_logDevice) << line.str();
+	(*m_logDevice) << "\n";
+	m_logDevice->flush();
 }
 
 void mglLogChannel::addLibraryFilter(string& libraryname, unsigned short value)
@@ -53,12 +58,20 @@ void mglLogChannel::addClassFilter(string& classname, unsigned short value)
 
 unsigned short mglLogChannel::getLibraryFilter(string& libraryname)
 {
-	return m_libraryFilters.find(libraryname)->second;
+	map<string,unsigned short>::iterator it = m_libraryFilters.find(libraryname);
+	if (it == m_libraryFilters.end())
+		return 0xFF;
+	else
+		return it->second;
 }
 
 unsigned short mglLogChannel::getClassFilter(string& classname)
 {
-	return m_libraryFilters.find(classname)->second;
+	map<string,unsigned short>::iterator it = m_classFilters.find(classname);
+	if (it == m_classFilters.end())
+		return 0xFF;
+	else
+		return it->second;
 }
 
 
@@ -70,5 +83,15 @@ void mglLogChannel::setMask(unsigned short msk)
 unsigned short mglLogChannel::getMask()
 {
 	return m_usMask;
+}
+
+bool mglLogChannel::classesEmpty()
+{
+	return m_classesEmpty;
+}
+
+bool mglLogChannel::librariesEmpty()
+{
+	return m_librariesEmpty;
 }
 

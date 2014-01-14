@@ -30,7 +30,7 @@ mglValColor::mglValColor(float red, float green, float blue, float alpha)
 
 mglValColor::mglValColor(const char* hex)
 {
-	INIT_LOG("mglColor(const char* hex)");
+	INIT_LOG("mglValColor", "mglColor(const char* hex)");
 
 	const char* ptr = hex;
 	// Assume we got RRGGBBAA:

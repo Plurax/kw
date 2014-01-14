@@ -13,28 +13,28 @@
 
 void mglLogDeviceFile::flush()
 {
-
+	m_outputFile.flush();
 }
 
 mglLogDeviceFile::mglLogDeviceFile(const char* filename)
 {
-
+	m_outputFile.open (filename);
 }
 
 
 void mglLogDeviceFile::operator << (char* str)
 {
-	std::cout << str;
+	m_outputFile << str;
 }
 
 
 void mglLogDeviceFile::operator << (std::string str)
 {
-	std::cout << str;
+	m_outputFile << str;
 }
 
 
 mglLogDeviceFile::~mglLogDeviceFile()
 {
-
+	m_outputFile.close();
 }

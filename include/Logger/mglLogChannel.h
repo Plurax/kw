@@ -12,6 +12,7 @@
 #include <fstream>
 #include "mglLogDevice.h"
 #include <map>
+#include <set>
 
 using namespace std;
 
@@ -20,8 +21,6 @@ class mglLogChannel
 public:
 	void addLibraryFilter(string& libraryname, unsigned short value);
 	void addClassFilter(string& classname, unsigned short value);
-	void addClass(string& _classname);
-	void addLibrary(string& _libraryname);
 
 	unsigned short getLibraryFilter(string& libraryname);
 	unsigned short getClassFilter(string& classname);
@@ -32,6 +31,10 @@ public:
 	void setMask(unsigned short msk);
 	unsigned short getMask();
 
+	bool classesEmpty();
+	bool librariesEmpty();
+
+
 private:
 	mglLogDevice* m_logDevice;
 
@@ -39,8 +42,11 @@ private:
 
 	map<string,unsigned short> m_libraryFilters;
 	map<string,unsigned short> m_classFilters;
-	map<string, string> m_classes; // If this is empty - all classes will log
-	map<string, string> m_libraries;// If this is empty - all classes will log
+
+	bool m_classesEmpty, m_librariesEmpty;
+
+	set<string> m_classes; // If this is empty - all classes will log
+	set<string> m_libraries;// If this is empty - all classes will log
 };
 
 #endif /* MGLLOGCHANNEL_H_ */
