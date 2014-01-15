@@ -9,7 +9,7 @@
 #define MGLINPUTMESSAGE_H_
 
 #include "mglMessage.h"
-#include "mglCoord.h"
+#include "mglValues/mglValCoord.h"
 #include "mglGuiObject.h"
 
 enum eInputType
@@ -25,11 +25,11 @@ class mglInputMessage : public mglMessage
 {
 public:
 	mglInputMessage(int messagetype);
-	mglInputMessage(int messagetype, mglCoord coord, int inputtype, unsigned int mousebutton, unsigned long key);
+	mglInputMessage(int messagetype, mglValCoord coord, int inputtype, unsigned int mousebutton, unsigned long key);
 	~mglInputMessage();
 
-	mglCoord getCoord();
-	void setCoord(mglCoord coord);
+	mglValCoord getCoord();
+	void setCoord(mglValCoord coord);
 
 	int getInputType();
 	int getMouseButton();
@@ -37,7 +37,7 @@ public:
 	mglGuiObject* getTarget();
 
 private:
-	mglCoord m_Coord;
+	mglValCoord m_Coord;
 	int m_InputType;
 	unsigned int m_MouseButton;
 	unsigned long m_keySym;

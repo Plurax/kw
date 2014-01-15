@@ -21,7 +21,7 @@
 
 #include "mglMessage.h"
 #include "mglGuiActionFunctor.h"
-#include "mglCoord.h"
+#include "mglValues/mglValCoord.h"
 
 using namespace xercesc;
 
@@ -46,19 +46,19 @@ public:
 
 	virtual void Draw();
 
-	void SetPosition(mglCoord pt);
+	void SetPosition(mglValCoord pt);
 
 	int GetWidth();
 	void SetWidth(uint uiWidth);
 
-	virtual mglGuiObject* getChildAtPosition(mglCoord pt);
+	virtual mglGuiObject* getChildAtPosition(mglValCoord pt);
 	void setParentWindow(mglGuiObject* parent);
 	void setNextWindow(mglGuiObject* parent);
 	void setPrevWindow(mglGuiObject* parent);
 
 	int GetX();
 	int GetY();
-	mglCoord GetPosition();
+	mglValCoord GetPosition();
 
 	int GetHeight();
 	void SetHeight(uint uiHeight);

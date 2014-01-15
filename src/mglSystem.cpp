@@ -45,7 +45,13 @@ void mglSystem::init(GLXContext context, Display *disp, Window win, GLboolean db
 
 	/* Create graphics context... */
 	//InitGraphics(context);
-	sCurrentMainFrame = 0;
+	m_sCurrentMainFrame = 0;
+	m_sCurrentMenu = 0;
+
+	m_CurrentMainFrame = NULL;
+	m_CurrentMenu = NULL;
+	m_CurrentFocus = NULL;
+
 	m_display = disp;
 	m_window = win;
 	m_dbf = dblbuff;
@@ -82,7 +88,13 @@ void mglSystem::Draw(void)
 	glLoadIdentity();
 
 	// render all the currently active main frame
-	m_MainFrames.at(sCurrentMainFrame)->Draw();
+	m_MainFrames.at(m_sCurrentMainFrame)->Draw();
+
+	glLoadIdentity();
+	glTranslatef(0.0, 0.0, 1.0); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
+
+	if (m_CurrentMenu != NULL)
+		m_CurrentMenu->Draw();
 
     // Show the new scene
 	if (m_dbf)
@@ -93,7 +105,7 @@ void mglSystem::Draw(void)
 }
 
 
-mglGuiObject* mglSystem::getTargetWindow(mglCoord pt)
+mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 {
 	mglGuiObject* destination;
 	destination = m_CurrentMainFrame; // set target to current root mainframe
@@ -121,10 +133,23 @@ mglGuiObject* mglSystem::getMainFrameByID(unsigned int ID)
 		return 0;
 }
 
+mglGuiObject* mglSystem::getMenuByID(unsigned int ID)
+{
+	if (ID < m_Menus.size())
+		return m_Menus.at(ID);
+	else
+		return 0;
+}
+
 
 void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 {
 	m_CurrentMainFrame = MainFrame;
+}
+
+void mglSystem::SetMenu(mglGuiObject *Menu)
+{
+	m_CurrentMenu = Menu;
 }
 
 /*
@@ -157,6 +182,7 @@ void mglSystem::readConfiguration(std::string& configFile)
    m_ConfigFileParser->setLoadExternalDTD( false );
 
    XMLCh* TAG_GUI = XMLString::transcode("GUI");
+   XMLCh* TAG_Menus = XMLString::transcode("MENUS");
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
    try
@@ -201,7 +227,12 @@ void mglSystem::readConfiguration(std::string& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
 				{
-					createGUIfromXML(currentNode, NULL, NULL);
+					createGUIfromXML(currentNode, NULL, NULL, m_MainFrames);
+				}
+
+				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
+				{
+					createGUIfromXML(currentNode, NULL, NULL, m_Menus);
 				}
 			}
 	  }
@@ -216,7 +247,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 }
 
 // This is recursive creation of the GUI Tree
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)
+void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, WindowList& listToAdd)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
 
@@ -243,8 +274,8 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 						= dynamic_cast< xercesc::DOMElement* >( currentNode );
 			if ( XMLString::equals(currentElement->getTagName(), TAG_mglWindowItem))
 			{
-				/* The XML should always contain the following four tags at this point:
-				 * <name>,<libname>, <classname> and <configuration>
+				/* The XML should always contain the following tags at this point:
+				 * <name>,<libname>, <classname>, <handlerLib>, <handlerClass> and <configuration>
 				 * The programmer can even replace the frame object implementation by using
 				 * his own library at this point!
 				 */
@@ -283,7 +314,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 
 				// We are at parent level - so this is a main frame
 				if (parent == NULL)
-					m_MainFrames.push_back(thisWindow);
+					listToAdd.push_back(thisWindow);
 				else
 				{
 					thisWindow->setParentWindow(parent);
@@ -293,7 +324,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				// Now ascend down and create the children
 				if (DE_children->getChildNodes()->getLength() > 0)
 				{
-					createGUIfromXML(DE_children, thisWindow, NULL);
+					createGUIfromXML(DE_children, thisWindow, NULL, listToAdd);
 				}
 				prevWindow = thisWindow;
 			}

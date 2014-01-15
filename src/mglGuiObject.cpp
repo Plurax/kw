@@ -1,7 +1,7 @@
 
 
 #include "../include/mglGuiObject.h"
-#include "mglLogger.h"
+#include "mglLogger/mglLogger.h"
 
 #include <stdio.h>
 
@@ -186,7 +186,7 @@ void mglGuiObject::setPrevWindow(mglGuiObject* parent)
 }
 
 
-mglGuiObject* mglGuiObject::getChildAtPosition(mglCoord pt)
+mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 {
 	const WindowList::const_iterator it_end = Children.end();
 	

@@ -6,16 +6,16 @@
  */
 
 #include "mglInputMessage.h"
-#include "mglCoord.h"
+#include "mglValues/mglValCoord.h"
 
 mglInputMessage::mglInputMessage(int messagetype)
 : mglMessage(messagetype)
-, m_Coord(mglCoord(0,0,0))
+, m_Coord(mglValCoord(0,0,0))
 {
 
 }
 
-mglInputMessage::mglInputMessage(int messagetype, mglCoord coord, int inputtype, unsigned int mousebutton, unsigned long key)
+mglInputMessage::mglInputMessage(int messagetype, mglValCoord coord, int inputtype, unsigned int mousebutton, unsigned long key)
 : mglMessage(messagetype)
 , m_Coord(coord)
 {
@@ -31,12 +31,12 @@ mglInputMessage::~mglInputMessage()
 
 }
 
-mglCoord mglInputMessage::getCoord()
+mglValCoord mglInputMessage::getCoord()
 {
 	return m_Coord;
 }
 
-void mglInputMessage::setCoord(mglCoord coord)
+void mglInputMessage::setCoord(mglValCoord coord)
 {
 	m_Coord = coord;
 }

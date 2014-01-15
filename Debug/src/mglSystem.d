@@ -1,9 +1,11 @@
 src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
- ../src/../include/Logger/mglLogger.h \
- ../src/../include/Logger/mglLogChannel.h \
- ../src/../include/Logger/mglLogDevice.h ../src/../include/mglGuiObject.h \
- ../src/../include/mglMessage.h ../src/../include/mglGuiActionFunctor.h \
- ../src/../include/mglCoord.h ../src/../include/mglInputMessage.h \
+ ../src/../include/mglLogger/mglLogger.h \
+ ../src/../include/mglLogger/mglLogChannel.h \
+ ../src/../include/mglLogger/mglLogDevice.h \
+ ../src/../include/mglGuiObject.h ../src/../include/mglMessage.h \
+ ../src/../include/mglGuiActionFunctor.h \
+ ../src/../include/mglValues/mglValCoord.h \
+ ../src/../include/mglInputMessage.h \
  ../src/../include/../include/mglFontProvider.h \
  ../src/../include/../include/mglGuiLibManager.h \
  ../src/../include/../include/../include/mglGuiObject.h \
@@ -23,11 +25,11 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
 
 ../src/../include/mglSystem.h:
 
-../src/../include/Logger/mglLogger.h:
+../src/../include/mglLogger/mglLogger.h:
 
-../src/../include/Logger/mglLogChannel.h:
+../src/../include/mglLogger/mglLogChannel.h:
 
-../src/../include/Logger/mglLogDevice.h:
+../src/../include/mglLogger/mglLogDevice.h:
 
 ../src/../include/mglGuiObject.h:
 
@@ -35,7 +37,7 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
 
 ../src/../include/mglGuiActionFunctor.h:
 
-../src/../include/mglCoord.h:
+../src/../include/mglValues/mglValCoord.h:
 
 ../src/../include/mglInputMessage.h:
 

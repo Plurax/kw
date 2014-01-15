@@ -1,6 +1,6 @@
 
 #include "../include/mglFontProvider.h"
-#include "mglLogger.h"
+#include "mglLogger/mglLogger.h"
 
 
 mglFontProvider* mglFontProvider::dInst = NULL;

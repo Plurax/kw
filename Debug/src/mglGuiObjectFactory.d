@@ -5,7 +5,7 @@ src/mglGuiObjectFactory.d: ../src/mglGuiObjectFactory.cpp \
  ../src/../include/../include/mglMessage.h \
  ../src/../include/../include/mglGuiObject.h \
  ../src/../include/../include/mglGuiActionFunctor.h \
- ../src/../include/../include/mglCoord.h
+ ../src/../include/../include/mglValues/mglValCoord.h
 
 ../src/../include/mglGuiObjectFactory.h:
 
@@ -19,4 +19,4 @@ src/mglGuiObjectFactory.d: ../src/mglGuiObjectFactory.cpp \
 
 ../src/../include/../include/mglGuiActionFunctor.h:
 
-../src/../include/../include/mglCoord.h:
+../src/../include/../include/mglValues/mglValCoord.h:
