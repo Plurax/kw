@@ -7,15 +7,13 @@ mglFontProvider* mglFontProvider::dInst = NULL;
 
 // constructor
 mglFontProvider::mglFontProvider(void)
-{}
+{
+}
 
 mglFontProvider::~mglFontProvider()  // destructor
 {
-	while(!PixMapFonts.empty())
-	{
-		delete PixMapFonts.back();
-		PixMapFonts.pop_back();
-	}
+	while(!PixMapFonts.empty()) delete PixMapFonts.back(), PixMapFonts.pop_back();
+
 }
 
 // singleton implementation

@@ -3,6 +3,7 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
  ../src/../include/mglLogger/mglLogChannel.h \
  ../src/../include/mglLogger/mglLogDevice.h \
  ../src/../include/mglGuiObject.h ../src/../include/mglMessage.h \
+ ../src/../include/mglValues/mglValColor.h \
  ../src/../include/mglGuiActionFunctor.h \
  ../src/../include/mglValues/mglValCoord.h \
  ../src/../include/mglInputMessage.h \
@@ -34,6 +35,8 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
 ../src/../include/mglGuiObject.h:
 
 ../src/../include/mglMessage.h:
+
+../src/../include/mglValues/mglValColor.h:
 
 ../src/../include/mglGuiActionFunctor.h:
 

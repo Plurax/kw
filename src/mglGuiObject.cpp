@@ -22,6 +22,7 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 	XMLCh* TAG_ypos = XMLString::transcode("ypos");
 	XMLCh* TAG_width = XMLString::transcode("width");
 	XMLCh* TAG_height = XMLString::transcode("height");
+	XMLCh* TAG_backgroundcolor = XMLString::transcode("backgroundcolor");
 
 	int x,y,width,height;
 
@@ -57,13 +58,19 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
 				height = atoi(xstr.c_str());
 			}
+
+			if ( XMLString::equals(currentElement->getTagName(), TAG_backgroundcolor))
+			{
+				std::string xstr = XMLString::transcode(currentElement->getTextContent());
+				m_BackGroundColor = mglValColor(xstr.c_str());
+			}
 		}
 	}
 	m_GuiAction = NULL; // on creation there is no function defined!
-	iXpos = x;
-	iYpos = y;
-	iHeight = height;
-	iWidth = width;
+	m_fXpos = x;
+	m_fYpos = y;
+	m_fHeight = height;
+	m_fWidth = width;
 	bVisible = true;
 	bHasChildren = false;
 }
@@ -72,10 +79,10 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 mglGuiObject::mglGuiObject(int X, int Y, int W, int H)
 {
 	m_GuiAction = NULL; // on creation there is no function defined!
-	iXpos = X;
-	iYpos = Y;
-	iHeight = H;
-	iWidth = W;
+	m_fXpos = X;
+	m_fYpos = Y;
+	m_fHeight = H;
+	m_fWidth = W;
 	bVisible = true;
 	bHasChildren = false;
 }
@@ -103,40 +110,39 @@ mglGuiActionFunctor* mglGuiObject::getGuiAction()
 	return m_GuiAction;
 }
 
-int mglGuiObject::GetX()
+float mglGuiObject::GetX()
 {
-	return iXpos;
+	return m_fXpos;
 }
 
 
-int mglGuiObject::GetY()
+float mglGuiObject::GetY()
 {
-	return iYpos;
+	return m_fYpos;
 }
 
-int mglGuiObject::GetHeight()
+float mglGuiObject::GetHeight()
 {
-	return iHeight;
+	return m_fHeight;
 }
 
 
-int mglGuiObject::GetWidth()
+float mglGuiObject::GetWidth()
 {
-	return iWidth;
+	return m_fWidth;
 }
 
 void mglGuiObject::Draw(void)
 {
 	// the position coordinates always point to the top left!
-	glColor3f(1.0f,1.0f,1.0f);
+	glColor3f(m_BackGroundColor.fRed,m_BackGroundColor.fGreen,m_BackGroundColor.fBlue);
 
 	glBegin (GL_QUADS);
 
-
-	glVertex2i(iXpos, iYpos); // Unten links der Textur und des Quadrats  
-	glVertex2i(iXpos + iWidth, iYpos); // Unten rechts der Textur und des Quadrats  
-	glVertex2i(iXpos + iWidth, iYpos - iHeight); // Oben rechts der Textur und des Quadrats  
-	glVertex2i(iXpos, iYpos - iHeight);
+	glVertex2f(m_fXpos, m_fYpos); // Unten links der Textur und des Quadrats
+	glVertex2f(m_fXpos + m_fWidth, m_fYpos); // Unten rechts der Textur und des Quadrats
+	glVertex2f(m_fXpos + m_fWidth, m_fYpos - m_fHeight); // Oben rechts der Textur und des Quadrats
+	glVertex2f(m_fXpos, m_fYpos - m_fHeight);
 	glEnd ();
 
 	// assure painting of all children
@@ -178,6 +184,16 @@ void mglGuiObject::setParentWindow(mglGuiObject* parent)
 void mglGuiObject::setNextWindow(mglGuiObject* parent)
 {
 	m_pNext = parent;
+}
+
+const std::string& mglGuiObject::getName()
+{
+	return m_name;
+}
+
+void mglGuiObject::setName(std::string name)
+{
+	m_name = name;
 }
 
 void mglGuiObject::setPrevWindow(mglGuiObject* parent)

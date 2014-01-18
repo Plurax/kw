@@ -49,6 +49,9 @@ void mglLogger::configure(DOMNode* loggerconfig)
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_Channel))
 			{
+				if (iChannelCount >= DEF_MAX_LOG_CHANNELS)
+					continue; // ignore additional log channel settings
+
 				DOMNodeList* channel_children = currentElement->getChildNodes();
 				for( XMLSize_t ccxx = 0; ccxx < channel_children->getLength(); ++ccxx )
 				{
@@ -128,10 +131,8 @@ void mglLogger::configure(DOMNode* loggerconfig)
 						}
 					}
 				}
+				iChannelCount++;
 			}
-			iChannelCount++;
-			if (iChannelCount >= DEF_MAX_LOG_CHANNELS)
-				return;
 		}
 	}
 }

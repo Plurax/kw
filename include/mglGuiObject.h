@@ -20,6 +20,7 @@
 #include <xercesc/dom/DOMText.hpp>
 
 #include "mglMessage.h"
+#include "mglValues/mglValColor.h"
 #include "mglGuiActionFunctor.h"
 #include "mglValues/mglValCoord.h"
 
@@ -48,20 +49,20 @@ public:
 
 	void SetPosition(mglValCoord pt);
 
-	int GetWidth();
-	void SetWidth(uint uiWidth);
+	float GetWidth();
+	void SetWidth(float uiWidth);
 
 	virtual mglGuiObject* getChildAtPosition(mglValCoord pt);
 	void setParentWindow(mglGuiObject* parent);
 	void setNextWindow(mglGuiObject* parent);
 	void setPrevWindow(mglGuiObject* parent);
 
-	int GetX();
-	int GetY();
+	float GetX();
+	float GetY();
 	mglValCoord GetPosition();
 
-	int GetHeight();
-	void SetHeight(uint uiHeight);
+	float GetHeight();
+	void SetHeight(float uiHeight);
 
 	virtual void Connect(mglGuiActionFunctor* func);
 	mglMessage* ProcessMessage(mglMessage* message);
@@ -73,7 +74,8 @@ public:
 	void RemoveChild(std::string ChildName);
 	void setState(unsigned short _state);
 	unsigned short getState();
-
+	const std::string& getName();
+	void setName(std::string name);
 
 	virtual mglGuiObject* getChildByID(unsigned int ID);
 
@@ -84,10 +86,10 @@ protected:
 
 	mglGuiActionFunctor* m_GuiAction;
 
-	int iXpos;
-	int iYpos;
-	int iHeight;
-	int iWidth;
+	float m_fXpos;
+	float m_fYpos;
+	float m_fHeight;
+	float m_fWidth;
 
 	mglGuiObject* m_pParent;
 	mglGuiObject* m_pPrev;
@@ -101,6 +103,8 @@ protected:
 	bool bHasChildren;
 
 	std::string m_name;
+
+	mglValColor m_BackGroundColor;
 };
 
 

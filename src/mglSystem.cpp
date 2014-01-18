@@ -108,18 +108,36 @@ void mglSystem::Draw(void)
 mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 {
 	mglGuiObject* destination;
-	destination = m_CurrentMainFrame; // set target to current root mainframe
 
+	destination = m_CurrentMenu; // set target to current menu if not null
+
+	if (destination != NULL)
+	{
+		if (!destination->isVisible())
+			return 0;
+
+		// then search within the concatenation for the final input target
+		if ((pt.getX() >= (m_CurrentMenu)->GetX()) &&
+			(pt.getX() < ((m_CurrentMenu)->GetX() + (m_CurrentMenu)->GetWidth())) &&
+			(pt.getY() <= (m_CurrentMenu)->GetY()) &&
+			(pt.getY() > ((m_CurrentMenu)->GetY() - (m_CurrentMenu)->GetHeight())))
+		{
+			destination = m_CurrentMenu->getChildAtPosition(pt);
+			return destination;
+		}
+	}
+
+	destination = m_CurrentMainFrame; // set target to current root mainframe
 	if (!destination->isVisible())
 		return 0;
 
 	// then search within the concatenation for the final input target
-	if ((pt.getX() >= m_CurrentMainFrame->GetX()) &&
-		(pt.getX() < (m_CurrentMainFrame->GetX() + m_CurrentMainFrame->GetWidth())) &&
-		(pt.getY() >= m_CurrentMainFrame->GetY()) &&
-		(pt.getY() < (m_CurrentMainFrame->GetY() + m_CurrentMainFrame->GetHeight())))
+	if ((pt.getX() >= (m_CurrentMainFrame)->GetX()) &&
+		(pt.getX() < ((m_CurrentMainFrame)->GetX() + (m_CurrentMainFrame)->GetWidth())) &&
+		(pt.getY() <= (m_CurrentMainFrame)->GetY()) &&
+		(pt.getY() > ((m_CurrentMainFrame)->GetY() - (m_CurrentMainFrame)->GetHeight())))
 	{
-		destination = m_CurrentMainFrame->getChildAtPosition(pt); 
+		destination = m_CurrentMainFrame->getChildAtPosition(pt);
 		return destination;
 	}
 	return 0;
