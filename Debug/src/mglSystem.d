@@ -22,7 +22,8 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
  ../src/../include/../include/mglTextureManager.h \
  ../src/../include/../include/mglSystem.h \
  ../src/../include/../include/mglTimer.h \
- ../src/../include/../include/mglMessage.h
+ ../src/../include/../include/mglMessage.h \
+ ../src/../include/../include/mglAppConfiguration.h
 
 ../src/../include/mglSystem.h:
 
@@ -75,3 +76,5 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
 ../src/../include/../include/mglTimer.h:
 
 ../src/../include/../include/mglMessage.h:
+
+../src/../include/../include/mglAppConfiguration.h:

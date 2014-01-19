@@ -16,6 +16,7 @@
 #include "../include/mglSystem.h"
 #include "../include/mglBase.h"
 #include "../include/mglMessage.h"
+#include "../include/mglAppConfiguration.h"
 
 
 #include <xercesc/dom/DOM.hpp>
@@ -38,7 +39,7 @@ using namespace xercesc;
 class mglSystem
 {
 public:
-	void init(GLXContext context, Display *disp, Window win, GLboolean dblbuff);
+	void init(GLXContext context, void (*_flushGL)());
 	~mglSystem();
 
 	static mglSystem& Inst()
@@ -57,12 +58,14 @@ public:
 	mglMessage* sendInputMessage(mglInputMessage* Message);
 
 	void readConfiguration(std::string& configFile);
-
+	void (*flushGL)();
 	mglGuiObject* getTargetWindow(mglValCoord pt);
 
 	WindowList m_MainFrames;
 	WindowList m_Menus;
 	mglFontProvider *m_FontProvider;
+
+	mglAppConfiguration m_Configuration;
 
 private:
 	int m_pixelformat;

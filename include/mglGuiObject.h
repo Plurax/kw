@@ -103,7 +103,6 @@ protected:
 	bool bHasChildren;
 
 	std::string m_name;
-
 	mglValColor m_BackGroundColor;
 };
 

@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/mglAppConfiguration.cpp \
 ../src/mglFontProvider.cpp \
 ../src/mglGuiActionFactory.cpp \
 ../src/mglGuiActionFunctor.cpp \
@@ -18,6 +19,7 @@ CPP_SRCS += \
 ../src/mglTimer.cpp 
 
 OBJS += \
+./src/mglAppConfiguration.o \
 ./src/mglFontProvider.o \
 ./src/mglGuiActionFactory.o \
 ./src/mglGuiActionFunctor.o \
@@ -32,6 +34,7 @@ OBJS += \
 ./src/mglTimer.o 
 
 CPP_DEPS += \
+./src/mglAppConfiguration.d \
 ./src/mglFontProvider.d \
 ./src/mglGuiActionFactory.d \
 ./src/mglGuiActionFunctor.d \

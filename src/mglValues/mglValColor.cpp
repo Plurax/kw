@@ -36,13 +36,17 @@ mglValColor::mglValColor(const char* hex)
 	// Assume we got RRGGBBAA:
 	float* fPtr[4] = { &this->fRed, &this->fGreen, &this->fBlue, &this->fAlpha};
 
-	if ((hex[0] == '0') &&
-			(hex[1] == 'x'))
-	{
+	if (hex[0] == '0' && hex[1] == 'x')
 		ptr = &hex[2];
+
+	int istop = 4;
+	if (strlen(ptr) < 8)
+	{
+		istop = 3;
+		fAlpha = 1.0;
 	}
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < istop; i++)
 	{
 		unsigned long x;
 		char tmp[3];

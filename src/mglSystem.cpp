@@ -17,12 +17,13 @@ using namespace xercesc;
 using namespace std;
 
 
-void mglSystem::init(GLXContext context, Display *disp, Window win, GLboolean dblbuff)
+void mglSystem::init(GLXContext context, void (*ptr)(void))
 {
 	// Insert default factory into the list
 	mglGuiLibManager& objManager = mglGuiLibManager::Inst();
 	objManager.init();
 
+	flushGL = ptr;
 	/* Prepare XML Parser */
    try
    {
@@ -51,11 +52,6 @@ void mglSystem::init(GLXContext context, Display *disp, Window win, GLboolean db
 	m_CurrentMainFrame = NULL;
 	m_CurrentMenu = NULL;
 	m_CurrentFocus = NULL;
-
-	m_display = disp;
-	m_window = win;
-	m_dbf = dblbuff;
-
 }
 
 mglSystem::~mglSystem()
@@ -96,11 +92,7 @@ void mglSystem::Draw(void)
 	if (m_CurrentMenu != NULL)
 		m_CurrentMenu->Draw();
 
-    // Show the new scene
-	if (m_dbf)
-		glXSwapBuffers(m_display, m_window);/* buffer swap does implicit glFlush */
-	else
-		glFlush();  /* explicit flush for single buffered case */
+	(*flushGL)();
 
 }
 
@@ -203,6 +195,7 @@ void mglSystem::readConfiguration(std::string& configFile)
    XMLCh* TAG_Menus = XMLString::transcode("MENUS");
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
+
    try
    {
       m_ConfigFileParser->parse( configFile.c_str() );
@@ -239,8 +232,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 				}
 				if ( XMLString::equals(currentElement->getTagName(), TAG_AppConfiguration))
 				{
-				   // Already tested node as type element and of name "ApplicationSettings".
-				  // Read attributes of element "ApplicationSettings".
+					m_Configuration.init(currentNode);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
