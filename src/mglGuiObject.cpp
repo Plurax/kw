@@ -90,8 +90,8 @@ mglGuiObject::mglGuiObject(int X, int Y, int W, int H)
 
 mglGuiObject::~mglGuiObject()
 {
-	for (size_t i = 0; i < Children.size(); ++i)
-		delete Children.at(i);
+	for (size_t i = 0; i < m_Children.size(); ++i)
+		delete m_Children.at(i);
 }
 
 
@@ -146,8 +146,8 @@ void mglGuiObject::Draw(void)
 	glEnd ();
 
 	// assure painting of all children
-	for (size_t i = 0; i < Children.size(); ++i)
-		Children.at(i)->Draw();
+	for (size_t i = 0; i < m_Children.size(); ++i)
+		m_Children.at(i)->Draw();
 }
 
 void mglGuiObject::AddChild(mglGuiObject *Child)
@@ -157,14 +157,20 @@ void mglGuiObject::AddChild(mglGuiObject *Child)
 
 	if (bHasChildren)
 	{
-		Children.back()->setNextWindow(Child);
-		Child->setPrevWindow(Children.back());
+		m_Children.back()->setNextWindow(Child);
+		Child->setPrevWindow(m_Children.back());
 	}
 	else
 		bHasChildren = true;
 
-	Children.push_back(Child);
+	m_Children.push_back(Child);
 }
+
+WindowList* mglGuiObject::getChildren()
+{
+	return &m_Children;
+}
+
 
 void mglGuiObject::setState(unsigned short _state)
 {
@@ -180,6 +186,27 @@ void mglGuiObject::setParentWindow(mglGuiObject* parent)
 {
 	m_pParent = parent;
 }
+
+mglGuiObject* mglGuiObject::parent()
+{
+	return m_pParent;
+}
+
+mglGuiObject* mglGuiObject::prev()
+{
+	return m_pPrev;
+}
+
+mglGuiObject* mglGuiObject::next()
+{
+	return m_pNext;
+}
+
+unsigned long mglGuiObject::getOptionMask()
+{
+	return m_ulOptionMask;
+}
+
 
 void mglGuiObject::setNextWindow(mglGuiObject* parent)
 {
@@ -204,13 +231,13 @@ void mglGuiObject::setPrevWindow(mglGuiObject* parent)
 
 mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 {
-	const WindowList::const_iterator it_end = Children.end();
+	const WindowList::const_iterator it_end = m_Children.end();
 	
 	if (!bHasChildren)
 		return this;
 
 	WindowList::const_iterator child;
-	for (child = Children.begin(); child != it_end; ++child)
+	for (child = m_Children.begin(); child != it_end; ++child)
 	{
 		if ((*child)->isVisible())
 		{
@@ -238,9 +265,9 @@ mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 
 mglGuiObject* mglGuiObject::getChildByID(unsigned int ID)
 {
-	if ((bHasChildren) && (Children.size() > ID))
+	if ((bHasChildren) && (m_Children.size() > ID))
 	{
-		return Children.at(ID);
+		return m_Children.at(ID);
 	}
 	return 0;
 }

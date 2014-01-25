@@ -52,6 +52,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	m_CurrentMainFrame = NULL;
 	m_CurrentMenu = NULL;
 	m_CurrentFocus = NULL;
+	m_pCurrentSelectionList = NULL;
 }
 
 mglSystem::~mglSystem()
@@ -66,13 +67,91 @@ mglSystem::~mglSystem()
 mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 {
 	// find the target object
-	mglGuiObject *Target = getTargetWindow(Message->getCoord());
-	if (Target != NULL)
-		if (Target->getGuiAction() != NULL)
+	if ((Message->getInputType() != eInputIGR) &&
+			(Message->getButton() != BTN_IGR))
+	{
+		mglGuiObject *Target = getTargetWindow(Message->getCoord());
+		if (Target != NULL)
+			if (Target->getGuiAction() != NULL)
+			{
+				Message->setTarget(Target);
+
+				return Target->ProcessMessage(Message);
+			}
+	}
+	else
+	{
+		if (Message->getButton() == BTN_IGR)
 		{
-			Message->setTarget(Target);
-			return Target->ProcessMessage(Message);
+			// Remap to button 1?
+			if (m_CurrentFocus != NULL)
+			{
+				Message->setTarget(m_CurrentFocus);
+				m_CurrentFocus->ProcessMessage(Message);
+			}
+			// May be functor logic maps the input onto the mt1 behaviour - so we change the state to focussed again here...
+			if (Message->getInputType() == eInputMouseButtonRelease)
+				m_CurrentFocus->setState(OBJ_STATE_FOCUSSED);
 		}
+		else
+		{
+			mglGuiObject* pTemp = NULL;
+			mglGuiObject* pSwap = NULL;
+
+			int iCount = Message->getIGRCount();
+			bool bForward,bEntry = false;
+
+			if (iCount > 0)
+				bForward = true;
+			else
+			{
+				bForward = false;
+				iCount *= -1;
+			}
+
+			if (m_pCurrentSelectionList == NULL)
+			{
+				bEntry = true;
+				m_pCurrentSelectionList = m_CurrentMainFrame->getChildren();
+				if (bForward)
+					pTemp = *(m_pCurrentSelectionList->begin());
+				else
+					pTemp = *(m_pCurrentSelectionList->rbegin());
+			}
+			else
+			{
+				pTemp = m_CurrentFocus;
+				m_CurrentFocus->setState(OBJ_STATE_STANDARD);
+			}
+
+			while ((iCount != 0) && (pTemp != NULL))
+			{
+				if (!bEntry)
+				{
+					if (bForward)
+						pSwap = pTemp->next();
+					else
+						pSwap = pTemp->prev();
+
+					pTemp = pSwap;
+				}
+				if (pTemp)
+					if (pTemp->getOptionMask() & OBJ_IGR_SELECTABLE)
+						iCount--;
+			}
+
+			if (pTemp != NULL)
+			{
+				pTemp->setState(OBJ_STATE_FOCUSSED);
+				m_CurrentFocus = pTemp;
+			}
+			else
+			{
+				m_CurrentFocus = NULL;
+				m_pCurrentSelectionList = NULL;
+			}
+		}
+	}
 	return NULL;
 }
 
@@ -330,6 +409,11 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 					thisWindow->setParentWindow(parent);
 					parent->AddChild(thisWindow);
 				}
+
+				thisWindow->setPrevWindow(prevWindow);
+				thisWindow->setNextWindow(NULL);
+				if (prevWindow)
+					prevWindow->setNextWindow(thisWindow);
 
 				// Now ascend down and create the children
 				if (DE_children->getChildNodes()->getLength() > 0)

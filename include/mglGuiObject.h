@@ -24,6 +24,16 @@
 #include "mglGuiActionFunctor.h"
 #include "mglValues/mglValCoord.h"
 
+// Those are bit definitions for special features of several objects:
+#define OBJ_IGR_SELECTABLE	(unsigned long)0x00000001
+#define OBJ_IGR_EDITABLE	(unsigned long)0x00000002
+
+
+#define OBJ_STATE_STANDARD	(unsigned short) 0
+#define OBJ_STATE_SELECTED	(unsigned short) 1
+#define OBJ_STATE_FOCUSSED	(unsigned short) 2
+
+
 using namespace xercesc;
 
 
@@ -72,17 +82,25 @@ public:
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
 	void RemoveChild(std::string ChildName);
+	WindowList* getChildren();
+	virtual mglGuiObject* getChildByID(unsigned int ID);
+
 	void setState(unsigned short _state);
 	unsigned short getState();
 	const std::string& getName();
 	void setName(std::string name);
 
-	virtual mglGuiObject* getChildByID(unsigned int ID);
+	mglGuiObject* parent();
+	mglGuiObject* prev();
+	mglGuiObject* next();
+
+	unsigned long getOptionMask();
 
 	virtual bool hasChildren() {return bHasChildren; };
 	virtual bool isVisible() { return bVisible;};
 protected:
 	uint uiElementState; // State of element, inactive, focussed, selected
+	unsigned long m_ulOptionMask;
 
 	mglGuiActionFunctor* m_GuiAction;
 
@@ -95,7 +113,7 @@ protected:
 	mglGuiObject* m_pPrev;
 	mglGuiObject* m_pNext;
 
-	WindowList Children;
+	WindowList m_Children;
 
 	unsigned short m_usState; // focus, selected etc
 

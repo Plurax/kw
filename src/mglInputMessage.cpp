@@ -47,7 +47,7 @@ int mglInputMessage::getInputType()
 	return m_InputType;
 }
 
-int mglInputMessage::getMouseButton()
+int mglInputMessage::getButton()
 {
 	return m_MouseButton;
 }
@@ -61,5 +61,16 @@ void mglInputMessage::setTarget(mglGuiObject* _target)
 mglGuiObject* mglInputMessage::getTarget()
 {
 	return m_target;
+}
+
+
+void mglInputMessage::setIGRCount(int _cnt)
+{
+	m_iIGRCount = _cnt;
+}
+
+int mglInputMessage::getIGRCount()
+{
+	return m_iIGRCount;
 }
 
