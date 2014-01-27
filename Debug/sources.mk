@@ -26,4 +26,5 @@ SUBDIRS := \
 src/mglValues \
 src \
 src/mglLogger \
+src/mglDataLayer \
 

@@ -7,10 +7,9 @@
 
 using namespace std;
 
+
 mglGuiObject::mglGuiObject()
-{
-	m_GuiAction = NULL; // on creation there is no function defined!
-}
+{}
 
 mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 {
@@ -71,18 +70,6 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 	m_fYpos = y;
 	m_fHeight = height;
 	m_fWidth = width;
-	bVisible = true;
-	bHasChildren = false;
-}
-
-
-mglGuiObject::mglGuiObject(int X, int Y, int W, int H)
-{
-	m_GuiAction = NULL; // on creation there is no function defined!
-	m_fXpos = X;
-	m_fYpos = Y;
-	m_fHeight = H;
-	m_fWidth = W;
 	bVisible = true;
 	bHasChildren = false;
 }

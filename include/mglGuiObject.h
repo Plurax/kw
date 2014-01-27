@@ -46,15 +46,22 @@ class mglGuiObject
 {
 public:
 
-	mglGuiObject();
-	mglGuiObject(int X, int Y, int W, int H);
-
+	/**
+	 * This is the main constructor of the standard gui object class.
+	 * It is called from the mglSystem singleton when intitializing the complete GUI from the
+	 * xml configuration. The parameter is the treepart of the xml configuration matching the <configuration> tag.
+	 * @param xmlconfiguration
+	 */
 	mglGuiObject(DOMElement* xmlconfiguration);
 
-	mglGuiObject(mglGuiObject *psParent, uint X, uint Y, uint W, uint H);
+	mglGuiObject();
 
 	virtual ~mglGuiObject();
 
+	/**
+	 * The Draw function is propably the most important function for any GUI object.
+	 * Siblings must overwrite this function to implement their own rendering.
+	 */
 	virtual void Draw();
 
 	void SetPosition(mglValCoord pt);

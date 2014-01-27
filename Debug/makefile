@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/mglValues/subdir.mk
 -include src/mglLogger/subdir.mk
+-include src/mglDataLayer/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk

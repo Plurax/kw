@@ -5,10 +5,10 @@
  *      Author: cromas
  */
 
-#include "mglValues/mglValColor.h"
 #include <stdlib.h>
 #include <iostream>
 #include "mglLogger/mglLogger.h"
+#include "mglValues/mglValColor.h"
 
 using namespace std;
 
