@@ -1,5 +1,5 @@
 
-#include "../include/mglFontProvider.h"
+#include "mglGui/mglFontProvider.h"
 #include "mglLogger/mglLogger.h"
 
 

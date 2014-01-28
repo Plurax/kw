@@ -5,9 +5,9 @@
 #define __LIBNAME "undefinedLib"
 #endif
 
-#include "mglGuiObject.h"
-#include "mglFontProvider.h"
-#include "mglTextureManager.h"
+#include "mglGui/mglGuiObject.h"
+#include "mglGui/mglFontProvider.h"
+#include "mglGui/mglTextureManager.h"
 #include "mglSystem.h"
 #include "mglTimer.h"
 #include "FTGL/ftgl.h"

@@ -6,46 +6,25 @@
 CPP_SRCS += \
 ../src/mglAppConfiguration.cpp \
 ../src/mglFontProvider.cpp \
-../src/mglGuiActionFactory.cpp \
-../src/mglGuiActionFunctor.cpp \
-../src/mglGuiLibManager.cpp \
-../src/mglGuiObject.cpp \
-../src/mglGuiObjectFactory.cpp \
-../src/mglInputMessage.cpp \
 ../src/mglLibHandle.cpp \
 ../src/mglMessage.cpp \
 ../src/mglSystem.cpp \
-../src/mglTextureManager.cpp \
 ../src/mglTimer.cpp 
 
 OBJS += \
 ./src/mglAppConfiguration.o \
 ./src/mglFontProvider.o \
-./src/mglGuiActionFactory.o \
-./src/mglGuiActionFunctor.o \
-./src/mglGuiLibManager.o \
-./src/mglGuiObject.o \
-./src/mglGuiObjectFactory.o \
-./src/mglInputMessage.o \
 ./src/mglLibHandle.o \
 ./src/mglMessage.o \
 ./src/mglSystem.o \
-./src/mglTextureManager.o \
 ./src/mglTimer.o 
 
 CPP_DEPS += \
 ./src/mglAppConfiguration.d \
 ./src/mglFontProvider.d \
-./src/mglGuiActionFactory.d \
-./src/mglGuiActionFunctor.d \
-./src/mglGuiLibManager.d \
-./src/mglGuiObject.d \
-./src/mglGuiObjectFactory.d \
-./src/mglInputMessage.d \
 ./src/mglLibHandle.d \
 ./src/mglMessage.d \
 ./src/mglSystem.d \
-./src/mglTextureManager.d \
 ./src/mglTimer.d 
 
 

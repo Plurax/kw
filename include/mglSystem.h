@@ -8,15 +8,15 @@
 
 
 #include "mglLogger/mglLogger.h"
-#include "mglGuiObject.h"
-#include "mglInputMessage.h"
+#include "mglGui/mglGuiObject.h"
+#include "mglGui/mglInputMessage.h"
 
-#include "../include/mglFontProvider.h"
-#include "../include/mglGuiLibManager.h"
-#include "../include/mglSystem.h"
-#include "../include/mglBase.h"
-#include "../include/mglMessage.h"
-#include "../include/mglAppConfiguration.h"
+#include "mglGui/mglFontProvider.h"
+#include "mglGui/mglGuiLibManager.h"
+#include "mglSystem.h"
+#include "mglBase.h"
+#include "mglMessage.h"
+#include "mglAppConfiguration.h"
 
 
 #include <xercesc/dom/DOM.hpp>
@@ -66,6 +66,7 @@ public:
 	mglFontProvider *m_FontProvider;
 
 	mglAppConfiguration m_Configuration;
+	mglDataLayer m_DataLayer;
 
 private:
 	int m_pixelformat;
@@ -84,6 +85,7 @@ private:
 	int m_ScreenYRes;
 
 	mglGuiObject *m_CurrentMainFrame;
+	mglGuiObject *m_SelectListParent;
 	mglGuiObject *m_CurrentMenu; // This can also be every mglWindow - but it is shown via zbuffering before the mainframe
 
 	WindowList* m_pCurrentSelectionList;

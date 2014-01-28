@@ -95,6 +95,11 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 		}
 		else
 		{
+			if (m_CurrentMenu != NULL)
+				m_SelectListParent = m_CurrentMenu;
+			else
+				m_SelectListParent = m_CurrentMainFrame;
+
 			mglGuiObject* pTemp = NULL;
 			mglGuiObject* pSwap = NULL;
 
@@ -112,7 +117,7 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 			if (m_pCurrentSelectionList == NULL)
 			{
 				bEntry = true;
-				m_pCurrentSelectionList = m_CurrentMainFrame->getChildren();
+				m_pCurrentSelectionList = m_SelectListParent->getChildren();
 				if (bForward)
 					pTemp = *(m_pCurrentSelectionList->begin());
 				else
@@ -238,7 +243,10 @@ void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 
 void mglSystem::SetMenu(mglGuiObject *Menu)
 {
+	m_pCurrentSelectionList = NULL;
 	m_CurrentMenu = Menu;
+	if (Menu == NULL)
+		m_SelectListParent = m_CurrentMainFrame;
 }
 
 /*
@@ -271,6 +279,7 @@ void mglSystem::readConfiguration(std::string& configFile)
    m_ConfigFileParser->setLoadExternalDTD( false );
 
    XMLCh* TAG_GUI = XMLString::transcode("GUI");
+   XMLCh* TAG_DataLayer= XMLString::transcode("DataLayer");
    XMLCh* TAG_Menus = XMLString::transcode("MENUS");
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
@@ -312,6 +321,11 @@ void mglSystem::readConfiguration(std::string& configFile)
 				if ( XMLString::equals(currentElement->getTagName(), TAG_AppConfiguration))
 				{
 					m_Configuration.init(currentNode);
+				}
+
+				if ( XMLString::equals(currentElement->getTagName(), TAG_DataLayer))
+				{
+					InitDataLayer(currentNode);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
