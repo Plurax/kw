@@ -13,6 +13,7 @@
 
 #include "mglGui/mglFontProvider.h"
 #include "mglGui/mglGuiLibManager.h"
+#include "mglDataLayer/mglDataSourceManager.h"
 #include "mglSystem.h"
 #include "mglBase.h"
 #include "mglMessage.h"
@@ -61,19 +62,22 @@ public:
 	void (*flushGL)();
 	mglGuiObject* getTargetWindow(mglValCoord pt);
 
-	WindowList m_MainFrames;
-	WindowList m_Menus;
+	mglWindowList m_MainFrames;
+	mglWindowList m_Menus;
+
+	mglDataSourceMap m_DataSources;
+
 	mglFontProvider *m_FontProvider;
 
 	mglAppConfiguration m_Configuration;
-	mglDataLayer m_DataLayer;
 
 private:
 	int m_pixelformat;
 
 	xercesc::XercesDOMParser *m_ConfigFileParser;
     XMLCh* m_TAG_root;
-    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, WindowList& listToAdd);
+    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglWindowList& listToAdd);
+    void createDataLayer(DOMNode* currentElement);
 
     XMLCh* m_TAG_ApplicationSettings;
 
@@ -88,7 +92,7 @@ private:
 	mglGuiObject *m_SelectListParent;
 	mglGuiObject *m_CurrentMenu; // This can also be every mglWindow - but it is shown via zbuffering before the mainframe
 
-	WindowList* m_pCurrentSelectionList;
+	mglWindowList* m_pCurrentSelectionList;
 	mglGuiObject *m_CurrentFocus; /* This pointer contains the object which holds focus in time - this is modified by
 									prev/next concatenation of focussable objects by the nextfocus/prevfocus events (ie. IGR increment/decrement)
 									*/

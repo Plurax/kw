@@ -11,7 +11,7 @@
 #include <stdexcept>
 
 
-#include "../include/mglSystem.h"
+#include "mglSystem.h"
 
 using namespace xercesc;
 using namespace std;
@@ -22,6 +22,8 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	// Insert default factory into the list
 	mglGuiLibManager& objManager = mglGuiLibManager::Inst();
 	objManager.init();
+	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
+	dsManager.init();
 
 	flushGL = ptr;
 	/* Prepare XML Parser */
@@ -43,6 +45,10 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 
 	std::string configfile("Configuration.xml");
 	readConfiguration(configfile);
+
+	map<string,mglDataSource*>::iterator itDS;
+	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
+		itDS->second->init();
 
 	/* Create graphics context... */
 	//InitGraphics(context);
@@ -325,7 +331,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_DataLayer))
 				{
-					InitDataLayer(currentNode);
+					createDataLayer(currentNode);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
@@ -350,12 +356,9 @@ void mglSystem::readConfiguration(std::string& configFile)
 }
 
 // This is recursive creation of the GUI Tree
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, WindowList& listToAdd)
+void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglWindowList& listToAdd)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
-
-	DOMNode* currentNode = GUIELement;
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(GUIELement);
 
 	DOMNodeList*      children = GUIELement->getChildNodes();
 	const  XMLSize_t nodeCount = children->getLength();
@@ -442,8 +445,72 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 }
 
 
+void mglSystem::createDataLayer(DOMNode* _currentElement)
+{
+	INIT_LOG("mglSystem", "createDataLayer(DOMNode* _currentElement)");
+
+	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
+
+	DOMNodeList*      children = currentElement->getChildNodes();
+	const  XMLSize_t nodeCount = children->getLength();
+
+	mglDataSource* thisDS;
+
+	XMLCh* TAG_DataSource = XMLString::transcode("DataSource");
+
+	LOG_TRACE("BUH");
+	// For all nodes, children of "GUI" in the XML tree.
+	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	{
+		DOMNode* currentNode = children->item(xx);
+		if( currentNode->getNodeType() &&  // true is not NULL
+				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		{
+			// Found node which is an Element. Re-cast node as element
+			DOMElement* currentElement
+						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+			if ( XMLString::equals(currentElement->getTagName(), TAG_DataSource))
+			{
+				/* The XML should always contain the following tags at this point:
+				 * <name>,<libname>, <classname>, <handlerLib>, <handlerClass> and <configuration>
+				 * The programmer can even replace the frame object implementation by using
+				 * his own library at this point!
+				 */
+				LOG_TRACE("DataSource found");
+
+				DOMElement* DE_name = currentElement->getFirstElementChild();
+				DOMElement* DE_libname = DE_name->getNextElementSibling();
+				DOMElement* DE_classname = DE_libname->getNextElementSibling();
+
+				DOMElement* DE_configuration = DE_classname->getNextElementSibling();
+
+				/*
+				 * Name is mandatory
+				 */
+				LOG_TRACE("Got DataSource named: " << XMLString::transcode(DE_name->getTextContent()));
+
+				// Create the configured element via the factory
+
+				string* name = new string(XMLString::transcode(DE_name->getTextContent()));
+				string* libname = new string(XMLString::transcode(DE_libname->getTextContent()));
+				string* classname = new string(XMLString::transcode(DE_classname->getTextContent()));
+
+				thisDS = mglDataSourceManager::Inst().createDataSource(libname,
+													classname,
+													DE_configuration);
+				m_DataSources.insert(pair<string,mglDataSource*>(*name,thisDS));
+			}
+		}
+  }
+}
+
+
 void mglSystem::destroy()
 {
+	map<string, mglDataSource*>::iterator itDS;
+	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
+		itDS->second->deInit();
+
 	mglLogger::Inst().destroy();
 }
 

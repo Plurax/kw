@@ -40,7 +40,7 @@ using namespace xercesc;
 class mglSystem;
 class mglGuiObject;
 
-typedef std::vector<mglGuiObject*> WindowList;
+typedef std::vector<mglGuiObject*> mglWindowList;
 
 class mglGuiObject
 {
@@ -89,7 +89,7 @@ public:
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
 	void RemoveChild(std::string ChildName);
-	WindowList* getChildren();
+	mglWindowList* getChildren();
 	virtual mglGuiObject* getChildByID(unsigned int ID);
 
 	void setState(unsigned short _state);
@@ -120,7 +120,7 @@ protected:
 	mglGuiObject* m_pPrev;
 	mglGuiObject* m_pNext;
 
-	WindowList m_Children;
+	mglWindowList m_Children;
 
 	unsigned short m_usState; // focus, selected etc
 

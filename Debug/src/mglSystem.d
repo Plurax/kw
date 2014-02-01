@@ -1,33 +1,40 @@
-src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
- ../src/../include/mglLogger/mglLogger.h \
- ../src/../include/mglLogger/mglLogChannel.h \
- ../src/../include/mglLogger/mglLogDevice.h \
- ../src/../include/mglGui/mglGuiObject.h \
+src/mglSystem.d: ../src/mglSystem.cpp \
+ /home/cromas/git/mgl/workspace/MGL/include/mglSystem.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogger.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogChannel.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogDevice.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
- ../src/../include/mglGui/mglInputMessage.h \
- ../src/../include/mglGui/mglGuiObject.h \
- ../src/../include/mglGui/mglFontProvider.h \
- ../src/../include/mglGui/mglGuiLibManager.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h \
- ../src/../include/mglSystem.h ../src/../include/mglBase.h \
- ../src/../include/mglGui/mglTextureManager.h \
- ../src/../include/mglTimer.h ../src/../include/mglMessage.h \
- ../src/../include/mglAppConfiguration.h
+ /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceFactory.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSource.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglSystem.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglBase.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTextureManager.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglTimer.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h
 
-../src/../include/mglSystem.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglSystem.h:
 
-../src/../include/mglLogger/mglLogger.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogger.h:
 
-../src/../include/mglLogger/mglLogChannel.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogChannel.h:
 
-../src/../include/mglLogger/mglLogDevice.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogDevice.h:
 
-../src/../include/mglGui/mglGuiObject.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
@@ -37,13 +44,13 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h:
 
-../src/../include/mglGui/mglInputMessage.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h:
 
-../src/../include/mglGui/mglGuiObject.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
-../src/../include/mglGui/mglFontProvider.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h:
 
-../src/../include/mglGui/mglGuiLibManager.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
@@ -51,14 +58,22 @@ src/mglSystem.d: ../src/mglSystem.cpp ../src/../include/mglSystem.h \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h:
 
-../src/../include/mglSystem.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h:
 
-../src/../include/mglBase.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h:
 
-../src/../include/mglGui/mglTextureManager.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceFactory.h:
 
-../src/../include/mglTimer.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSource.h:
 
-../src/../include/mglMessage.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglSystem.h:
 
-../src/../include/mglAppConfiguration.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglBase.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTextureManager.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglTimer.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h:

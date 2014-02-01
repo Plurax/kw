@@ -87,6 +87,8 @@ public:
 protected:
 	mglLogChannel* m_Channels[DEF_MAX_LOG_CHANNELS];
 
+	bool m_isInitialized;
+
 	mglLogger();
 	mglLogger& operator=(const mglLogger& tm);
 };

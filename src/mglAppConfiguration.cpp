@@ -6,9 +6,12 @@
  */
 
 #include "mglAppConfiguration.h"
+#include "mglLogger/mglLogger.h"
 
 void mglAppConfiguration::init(DOMNode* appconfig)
 {
+	INIT_LOG("mglAppConfiguration", "init(DOMNode* appconfig)");
+
 	DOMNodeList*      children = appconfig->getChildNodes();
 	const  XMLSize_t nodeCount = children->getLength();
 
@@ -47,7 +50,6 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 							valTagText = XMLString::transcode(child_Element->getTextContent());
 							sscanf(valTagText, "%u", &uisReadVal);
 							m_xres = (unsigned short)uisReadVal;
-							std::cout << m_xres << "\n";
 							XMLString::release(&valTagText);
 						}
 
@@ -56,7 +58,6 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 							valTagText = XMLString::transcode(child_Element->getTextContent());
 							sscanf(valTagText, "%u", &uisReadVal);
 							m_yres = (unsigned short)uisReadVal;
-							std::cout << m_yres << "\n";
 							XMLString::release(&valTagText);
 						}
 					}
@@ -64,6 +65,7 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 			}
 		}
 	}
+	LOG_TRACE("yres: " << m_yres << " xres: " << m_xres);
 }
 
 unsigned short mglAppConfiguration::getYRes()

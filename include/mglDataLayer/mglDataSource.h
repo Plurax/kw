@@ -9,6 +9,7 @@
 #define MGLDATASOURCE_H_
 
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -20,13 +21,19 @@ using namespace std;
 class mglDataSource
 {
 public:
+	mglDataSource();
+	virtual void init() = 0;
+	virtual void deInit() = 0;
+	mglDataSource(string _name, unsigned int _type);
 	string getName();
 	unsigned int getType();
 
-private:
+protected:
 	unsigned int m_type;
 	string m_name;
 };
+
+typedef map<string,mglDataSource*> mglDataSourceMap;
 
 
 #endif /* MGLDATASOURCE_H_ */

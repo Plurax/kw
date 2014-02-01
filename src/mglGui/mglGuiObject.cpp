@@ -153,7 +153,7 @@ void mglGuiObject::AddChild(mglGuiObject *Child)
 	m_Children.push_back(Child);
 }
 
-WindowList* mglGuiObject::getChildren()
+mglWindowList* mglGuiObject::getChildren()
 {
 	return &m_Children;
 }
@@ -218,12 +218,12 @@ void mglGuiObject::setPrevWindow(mglGuiObject* parent)
 
 mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 {
-	const WindowList::const_iterator it_end = m_Children.end();
+	const mglWindowList::const_iterator it_end = m_Children.end();
 	
 	if (!bHasChildren)
 		return this;
 
-	WindowList::const_iterator child;
+	mglWindowList::const_iterator child;
 	for (child = m_Children.begin(); child != it_end; ++child)
 	{
 		if ((*child)->isVisible())

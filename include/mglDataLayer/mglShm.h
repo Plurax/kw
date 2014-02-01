@@ -8,19 +8,37 @@
 #ifndef MGLSHM_H_
 #define MGLSHM_H_
 
-class mglShm
+#include "mglDataSource.h"
+
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMNodeIterator.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMText.hpp>
+
+using namespace std;
+using namespace xercesc;
+
+class mglShm : public mglDataSource
 {
 public:
-	mglShm(long key, unsigned long _size);
+	mglShm(DOMElement* configuration);
+
+	void init();
+	void deInit();
 
 	char* getPtr();
 	bool lockSegment();
 	bool unlockSegment();
 	bool isLocked();
 private:
-	  key_t key;
-	  int   shmid;
-	  char  *segptr;
+	  key_t m_key, m_semkey;
+	  int   m_shmid, m_semid, m_size;
+	  char  *m_segptr;
 };
 
 #endif /* MGLSHM_H_ */

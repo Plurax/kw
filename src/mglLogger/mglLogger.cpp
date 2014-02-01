@@ -16,6 +16,7 @@ mglLogger::~mglLogger()
 
 mglLogger::mglLogger()
 {
+	m_isInitialized = false;
 	for (int i = 0; i < DEF_MAX_LOG_CHANNELS; i++)
 		m_Channels[i] = NULL;
 }
@@ -77,7 +78,6 @@ void mglLogger::configure(DOMNode* loggerconfig)
 								sscanf(valTagText, "%u", &ui);
 							uisReadVal = (unsigned short)ui;
 							m_Channels[iChannelCount]->setMask(uisReadVal);
-							std::cout << "got mask: " << uisReadVal << "\n";
 							XMLString::release(&valTagText);
 						}
 
@@ -135,11 +135,15 @@ void mglLogger::configure(DOMNode* loggerconfig)
 			}
 		}
 	}
+	m_isInitialized = true;
 }
 
 
 void mglLogger::log(unsigned short level, static_log_info* info, stringstream& line)
 {
+	if (!m_isInitialized)
+		return;
+
 	for (int i = 0; i < DEF_MAX_LOG_CHANNELS; i++)
 	{
 		if (m_Channels[i]) // channel is defined?
