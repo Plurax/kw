@@ -46,10 +46,6 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	std::string configfile("Configuration.xml");
 	readConfiguration(configfile);
 
-	map<string,mglDataSource*>::iterator itDS;
-	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
-		itDS->second->init();
-
 	/* Create graphics context... */
 	//InitGraphics(context);
 	m_sCurrentMainFrame = 0;
@@ -458,7 +454,6 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 
 	XMLCh* TAG_DataSource = XMLString::transcode("DataSource");
 
-	LOG_TRACE("BUH");
 	// For all nodes, children of "GUI" in the XML tree.
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
 	{
@@ -472,11 +467,10 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 			if ( XMLString::equals(currentElement->getTagName(), TAG_DataSource))
 			{
 				/* The XML should always contain the following tags at this point:
-				 * <name>,<libname>, <classname>, <handlerLib>, <handlerClass> and <configuration>
+				 * <name>,<libname>, <classname> and <conf>
 				 * The programmer can even replace the frame object implementation by using
 				 * his own library at this point!
 				 */
-				LOG_TRACE("DataSource found");
 
 				DOMElement* DE_name = currentElement->getFirstElementChild();
 				DOMElement* DE_libname = DE_name->getNextElementSibling();
@@ -487,7 +481,7 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 				/*
 				 * Name is mandatory
 				 */
-				LOG_TRACE("Got DataSource named: " << XMLString::transcode(DE_name->getTextContent()));
+				LOG_TRACE("Got DataSource named: " << XMLString::transcode(DE_name->getTextContent()) << " Classname: " << XMLString::transcode(DE_classname->getTextContent()));
 
 				// Create the configured element via the factory
 
@@ -502,6 +496,20 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 			}
 		}
   }
+
+	LOG_TRACE("Initializing data sources...");
+	map<string,mglDataSource*>::iterator itDS;
+	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
+		itDS->second->init();
+}
+
+mglDataSource* mglSystem::getDataSource(string _name)
+{
+	mglDataSourceMap::iterator itDS = m_DataSources.find(_name);
+	if (itDS == m_DataSources.end())
+		return NULL;
+	else
+		return itDS->second;
 }
 
 

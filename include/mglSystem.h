@@ -67,6 +67,8 @@ public:
 
 	mglDataSourceMap m_DataSources;
 
+	mglDataSource* getDataSource(string _name);
+
 	mglFontProvider *m_FontProvider;
 
 	mglAppConfiguration m_Configuration;
