@@ -95,8 +95,7 @@ void mglLogger::configure(DOMNode* loggerconfig)
 									*nextPtr = '\0';
 
 								string newClass = string(prevPtr);
-								m_Channels[iChannelCount]->addClassFilter(newClass, 0xff);
-
+								m_Channels[iChannelCount]->addClassFilter(newClass, 0xfFff);
 								if (nextPtr)
 								{
 									nextPtr++;
@@ -120,7 +119,7 @@ void mglLogger::configure(DOMNode* loggerconfig)
 									*nextPtr = '\0';
 
 								string newLib = string(prevPtr);
-								m_Channels[iChannelCount]->addLibraryFilter(newLib, 0xFF);
+								m_Channels[iChannelCount]->addLibraryFilter(newLib, 0xFFFF);
 
 								if (nextPtr)
 								{
