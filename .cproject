@@ -46,6 +46,7 @@
 								<option id="gnu.cpp.compiler.option.preprocessor.def.397699567" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__LIBNAME=&quot;\&quot;MGlBase\&quot;"/>
 								</option>
+								<option id="gnu.cpp.compiler.option.other.other.246910598" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1923444133" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1510723426" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
@@ -60,6 +61,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.601016390" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="&quot;__LIBNAME=&quot;\&quot;MGlBase\&quot;&quot;"/>
 								</option>
+								<option id="gnu.c.compiler.option.misc.other.1425389314" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.670695880" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.492451914" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base">

@@ -66,6 +66,11 @@ mglShm::mglShm(DOMElement* configuration)
 
 		}
 	}
+
+	XMLString::release(&TAG_key);
+	XMLString::release(&TAG_semkey);
+	XMLString::release(&TAG_size);
+
 	LOG_TRACE("Init SHM with key " << m_key << " and size " << m_size);
 }
 

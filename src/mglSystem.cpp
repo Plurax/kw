@@ -348,7 +348,19 @@ void mglSystem::readConfiguration(std::string& configFile)
       ostringstream errBuf;
       errBuf << "Error parsing file: " << message << flush;
       XMLString::release( &message );
+
+      XMLString::release(&TAG_GUI);
+      XMLString::release(&TAG_DataLayer);
+      XMLString::release(&TAG_Menus);
+      XMLString::release(&TAG_AppConfiguration);
+      XMLString::release(&TAG_Logging);
    }
+
+   XMLString::release(&TAG_GUI);
+   XMLString::release(&TAG_DataLayer);
+   XMLString::release(&TAG_Menus);
+   XMLString::release(&TAG_AppConfiguration);
+   XMLString::release(&TAG_Logging);
 }
 
 // This is recursive creation of the GUI Tree
@@ -436,8 +448,8 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				prevWindow = thisWindow;
 			}
 		}
-  }
-
+	}
+	XMLString::release(&TAG_mglWindowItem);
 }
 
 
@@ -495,7 +507,9 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 				m_DataSources.insert(pair<string,mglDataSource*>(*name,thisDS));
 			}
 		}
-  }
+	}
+
+	XMLString::release(&TAG_DataSource);
 
 	LOG_TRACE("Initializing data sources...");
 	map<string,mglDataSource*>::iterator itDS;
