@@ -25,7 +25,7 @@ C_UPPER_DEPS :=
 SUBDIRS := \
 src/mglValues \
 src \
-src/mglLogger \
 src/mglGui \
+src/mglDebug \
 src/mglDataLayer \
 

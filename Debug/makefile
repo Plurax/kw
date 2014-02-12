@@ -9,8 +9,8 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/mglValues/subdir.mk
--include src/mglLogger/subdir.mk
 -include src/mglGui/subdir.mk
+-include src/mglDebug/subdir.mk
 -include src/mglDataLayer/subdir.mk
 -include src/subdir.mk
 -include subdir.mk

@@ -13,14 +13,14 @@
 using namespace std;
 
 
-enum class eValFixedPointPrec = {
-		prec10n4,
-		prec10n6,
-		prec10n8,
-		prec12n4,
-		prec12n6,
-		prec14n2,
-		prec14n4
+enum class eValFixedPointPrec {
+	prec15N2,
+	prec13N4,
+	prec11N6,
+	prec9N8,
+	prec7N10,
+	prec5N12,
+	prec3N14
 };
 
 
@@ -28,20 +28,24 @@ enum class eValFixedPointPrec = {
 class mglValFixedPoint
 {
 public:
+
+	static const short precN[7];
+
 	mglValFixedPoint();
+	mglValFixedPoint(eValFixedPointPrec prec);
 	mglValFixedPoint(long in, eValFixedPointPrec prec);
 	string asString();
 
-	bool operator >= (const mglValFixedPoint& right);
-	bool operator > (const mglValFixedPoint& right);
-	bool operator <= (const mglValFixedPoint& right);
-	bool operator < (const mglValFixedPoint& right);
-	mglValFixedPoint& operator + (const mglValFixedPoint& right);
-	mglValFixedPoint& operator - (const mglValFixedPoint& right);
-	mglValFixedPoint& operator * (const mglValFixedPoint& right);
-	mglValFixedPoint& operator / (const mglValFixedPoint& right);
+	bool operator >= (const mglValFixedPoint right);
+	bool operator > (const mglValFixedPoint right);
+	bool operator <= (const mglValFixedPoint right);
+	bool operator < (const mglValFixedPoint right);
+	mglValFixedPoint operator + (const mglValFixedPoint& right);
+	mglValFixedPoint operator - (const mglValFixedPoint& right);
+	mglValFixedPoint operator * (const mglValFixedPoint& right);
+	mglValFixedPoint operator / (const mglValFixedPoint& right);
 
-	mglValFixedPoint& getWithNewPrecision(eValFixedPointPrec prec);
+	mglValFixedPoint getWithNewPrecision(eValFixedPointPrec prec);
 
 private:
 	long m_lValue;
@@ -49,5 +53,7 @@ private:
 	bool m_isEmpty;
 	eValFixedPointPrec m_Precision;
 };
+
+const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
 
 #endif /* MGLVALFIXEDPOINT_H_ */

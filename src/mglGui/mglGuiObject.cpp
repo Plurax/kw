@@ -1,7 +1,7 @@
 
 
 #include "mglGui/mglGuiObject.h"
-#include "mglLogger/mglLogger.h"
+#include "mglDebug/mglLogger.h"
 
 #include <stdio.h>
 

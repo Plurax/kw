@@ -7,9 +7,9 @@ src/mglGui/mglGuiLibManager.d: ../src/mglGui/mglGuiLibManager.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogger.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogChannel.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogDevice.h
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogChannel.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogDevice.h
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h:
 
@@ -27,8 +27,8 @@ src/mglGui/mglGuiLibManager.d: ../src/mglGui/mglGuiLibManager.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogger.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogChannel.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogChannel.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglLogger/mglLogDevice.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogDevice.h:

@@ -117,6 +117,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>destroy</b> ()</td></
 void&#160;</td><td class="memItemRight" valign="bottom"><b>readConfiguration</b> (std::string &amp;configFile)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a528bb9799a6575dc9e1d90e7aabe6e3b"></a><!-- doxytag: member="mglSystem::getTargetWindow" ref="a528bb9799a6575dc9e1d90e7aabe6e3b" args="(mglValCoord pt)" -->
 <a class="el" href="classmglGuiObject.html">mglGuiObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getTargetWindow</b> (<a class="el" href="classmglValCoord.html">mglValCoord</a> pt)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7b74b8e208ebebe0cd719ef74b04787"></a><!-- doxytag: member="mglSystem::getDataSource" ref="ad7b74b8e208ebebe0cd719ef74b04787" args="(string _name)" -->
+<a class="el" href="classmglDataSource.html">mglDataSource</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getDataSource</b> (string _name)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a64a77d3d747c506e2cd5ae157839d35a"></a><!-- doxytag: member="mglSystem::Inst" ref="a64a77d3d747c506e2cd5ae157839d35a" args="()" -->
@@ -125,10 +127,12 @@ static <a class="el" href="classmglSystem.html">mglSystem</a> &amp;&#160;</td><t
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a605e7da5f7bcd7372e3535c2ad8e3e2c"></a><!-- doxytag: member="mglSystem::flushGL" ref="a605e7da5f7bcd7372e3535c2ad8e3e2c" args=")()" -->
 void(*&#160;</td><td class="memItemRight" valign="bottom"><b>flushGL</b> )()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a40dc192c5d0e32de9a561ae03f3e7231"></a><!-- doxytag: member="mglSystem::m_MainFrames" ref="a40dc192c5d0e32de9a561ae03f3e7231" args="" -->
-WindowList&#160;</td><td class="memItemRight" valign="bottom"><b>m_MainFrames</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52318752c30bb29ff9088e28373a395e"></a><!-- doxytag: member="mglSystem::m_Menus" ref="a52318752c30bb29ff9088e28373a395e" args="" -->
-WindowList&#160;</td><td class="memItemRight" valign="bottom"><b>m_Menus</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb1c2a5e23a4b6a36e4396f21b4642d6"></a><!-- doxytag: member="mglSystem::m_MainFrames" ref="acb1c2a5e23a4b6a36e4396f21b4642d6" args="" -->
+mglWindowList&#160;</td><td class="memItemRight" valign="bottom"><b>m_MainFrames</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff07018341a31ad8f0665f793ae8e1c9"></a><!-- doxytag: member="mglSystem::m_Menus" ref="aff07018341a31ad8f0665f793ae8e1c9" args="" -->
+mglWindowList&#160;</td><td class="memItemRight" valign="bottom"><b>m_Menus</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8dcb9dafcc6eb09f804b3c602e154d2f"></a><!-- doxytag: member="mglSystem::m_DataSources" ref="a8dcb9dafcc6eb09f804b3c602e154d2f" args="" -->
+mglDataSourceMap&#160;</td><td class="memItemRight" valign="bottom"><b>m_DataSources</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d6d3b5eaf128d38e03b6c1d1fb8c585"></a><!-- doxytag: member="mglSystem::m_FontProvider" ref="a3d6d3b5eaf128d38e03b6c1d1fb8c585" args="" -->
 <a class="el" href="classmglFontProvider.html">mglFontProvider</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_FontProvider</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8845b87594f48f74fb7d68949776ee65"></a><!-- doxytag: member="mglSystem::m_Configuration" ref="a8845b87594f48f74fb7d68949776ee65" args="" -->
@@ -156,7 +160,7 @@ WindowList&#160;</td><td class="memItemRight" valign="bottom"><b>m_Menus</b></td
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 27 2014 21:45:31 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

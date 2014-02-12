@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MGL: include/mglGuiObject.h Source File</title>
+<title>MGL: include/mglGui/mglGuiObject.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -75,7 +75,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">include/mglGuiObject.h</div>  </div>
+<div class="title">include/mglGui/mglGuiObject.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
@@ -101,7 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00021"></a>00021 
 <a name="l00022"></a>00022 <span class="preprocessor">#include &quot;mglMessage.h&quot;</span>
 <a name="l00023"></a>00023 <span class="preprocessor">#include &quot;mglValues/mglValColor.h&quot;</span>
-<a name="l00024"></a>00024 <span class="preprocessor">#include &quot;mglGuiActionFunctor.h&quot;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &quot;mglGui/mglGuiActionFunctor.h&quot;</span>
 <a name="l00025"></a>00025 <span class="preprocessor">#include &quot;mglValues/mglValCoord.h&quot;</span>
 <a name="l00026"></a>00026 
 <a name="l00027"></a>00027 <span class="comment">// Those are bit definitions for special features of several objects:</span>
@@ -120,7 +120,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00040"></a>00040 <span class="keyword">class </span><a class="code" href="classmglSystem.html">mglSystem</a>;
 <a name="l00041"></a>00041 <span class="keyword">class </span><a class="code" href="classmglGuiObject.html">mglGuiObject</a>;
 <a name="l00042"></a>00042 
-<a name="l00043"></a>00043 <span class="keyword">typedef</span> std::vector&lt;mglGuiObject*&gt; WindowList;
+<a name="l00043"></a>00043 <span class="keyword">typedef</span> std::vector&lt;mglGuiObject*&gt; mglWindowList;
 <a name="l00044"></a>00044 
 <a name="l00045"></a><a class="code" href="classmglGuiObject.html">00045</a> <span class="keyword">class </span><a class="code" href="classmglGuiObject.html">mglGuiObject</a>
 <a name="l00046"></a>00046 {
@@ -128,79 +128,81 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00048"></a>00048 
 <a name="l00055"></a>00055         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>(DOMElement* xmlconfiguration);
 <a name="l00056"></a>00056 
-<a name="l00057"></a>00057         <span class="keyword">virtual</span> ~<a class="code" href="classmglGuiObject.html">mglGuiObject</a>();
+<a name="l00057"></a>00057         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>();
 <a name="l00058"></a>00058 
-<a name="l00063"></a>00063         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Draw();
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065         <span class="keywordtype">void</span> SetPosition(<a class="code" href="classmglValCoord.html">mglValCoord</a> pt);
+<a name="l00059"></a>00059         <span class="keyword">virtual</span> ~<a class="code" href="classmglGuiObject.html">mglGuiObject</a>();
+<a name="l00060"></a>00060 
+<a name="l00065"></a>00065         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Draw();
 <a name="l00066"></a>00066 
-<a name="l00067"></a>00067         <span class="keywordtype">float</span> GetWidth();
-<a name="l00068"></a>00068         <span class="keywordtype">void</span> SetWidth(<span class="keywordtype">float</span> uiWidth);
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070         <span class="keyword">virtual</span> <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* getChildAtPosition(<a class="code" href="classmglValCoord.html">mglValCoord</a> pt);
-<a name="l00071"></a>00071         <span class="keywordtype">void</span> setParentWindow(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent);
-<a name="l00072"></a>00072         <span class="keywordtype">void</span> setNextWindow(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent);
-<a name="l00073"></a>00073         <span class="keywordtype">void</span> setPrevWindow(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent);
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075         <span class="keywordtype">float</span> GetX();
-<a name="l00076"></a>00076         <span class="keywordtype">float</span> GetY();
-<a name="l00077"></a>00077         <a class="code" href="classmglValCoord.html">mglValCoord</a> GetPosition();
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079         <span class="keywordtype">float</span> GetHeight();
-<a name="l00080"></a>00080         <span class="keywordtype">void</span> SetHeight(<span class="keywordtype">float</span> uiHeight);
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Connect(<a class="code" href="classmglGuiActionFunctor.html">mglGuiActionFunctor</a>* func);
-<a name="l00083"></a>00083         <a class="code" href="classmglMessage.html">mglMessage</a>* ProcessMessage(<a class="code" href="classmglMessage.html">mglMessage</a>* message);
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085         <a class="code" href="classmglGuiActionFunctor.html">mglGuiActionFunctor</a>* getGuiAction();
+<a name="l00067"></a>00067         <span class="keywordtype">void</span> SetPosition(<a class="code" href="classmglValCoord.html">mglValCoord</a> pt);
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069         <span class="keywordtype">float</span> GetWidth();
+<a name="l00070"></a>00070         <span class="keywordtype">void</span> SetWidth(<span class="keywordtype">float</span> uiWidth);
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072         <span class="keyword">virtual</span> <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* getChildAtPosition(<a class="code" href="classmglValCoord.html">mglValCoord</a> pt);
+<a name="l00073"></a>00073         <span class="keywordtype">void</span> setParentWindow(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent);
+<a name="l00074"></a>00074         <span class="keywordtype">void</span> setNextWindow(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent);
+<a name="l00075"></a>00075         <span class="keywordtype">void</span> setPrevWindow(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent);
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077         <span class="keywordtype">float</span> GetX();
+<a name="l00078"></a>00078         <span class="keywordtype">float</span> GetY();
+<a name="l00079"></a>00079         <a class="code" href="classmglValCoord.html">mglValCoord</a> GetPosition();
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081         <span class="keywordtype">float</span> GetHeight();
+<a name="l00082"></a>00082         <span class="keywordtype">void</span> SetHeight(<span class="keywordtype">float</span> uiHeight);
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Connect(<a class="code" href="classmglGuiActionFunctor.html">mglGuiActionFunctor</a>* func);
+<a name="l00085"></a>00085         <a class="code" href="classmglMessage.html">mglMessage</a>* ProcessMessage(<a class="code" href="classmglMessage.html">mglMessage</a>* message);
 <a name="l00086"></a>00086 
-<a name="l00087"></a>00087         <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddChild(<a class="code" href="classmglGuiObject.html">mglGuiObject</a> *Child);
-<a name="l00088"></a>00088         <span class="keywordtype">void</span> RemoveChild(uint ChildID);
-<a name="l00089"></a>00089         <span class="keywordtype">void</span> RemoveChild(std::string ChildName);
-<a name="l00090"></a>00090         WindowList* getChildren();
-<a name="l00091"></a>00091         <span class="keyword">virtual</span> <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* getChildByID(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ID);
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093         <span class="keywordtype">void</span> setState(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> _state);
-<a name="l00094"></a>00094         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getState();
-<a name="l00095"></a>00095         <span class="keyword">const</span> std::string&amp; getName();
-<a name="l00096"></a>00096         <span class="keywordtype">void</span> setName(std::string name);
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent();
-<a name="l00099"></a>00099         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* prev();
-<a name="l00100"></a>00100         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* next();
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> getOptionMask();
+<a name="l00087"></a>00087         <a class="code" href="classmglGuiActionFunctor.html">mglGuiActionFunctor</a>* getGuiAction();
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089         <span class="keyword">virtual</span> <span class="keywordtype">void</span> AddChild(<a class="code" href="classmglGuiObject.html">mglGuiObject</a> *Child);
+<a name="l00090"></a>00090         <span class="keywordtype">void</span> RemoveChild(uint ChildID);
+<a name="l00091"></a>00091         <span class="keywordtype">void</span> RemoveChild(std::string ChildName);
+<a name="l00092"></a>00092         mglWindowList* getChildren();
+<a name="l00093"></a>00093         <span class="keyword">virtual</span> <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* getChildByID(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ID);
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095         <span class="keywordtype">void</span> setState(<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> _state);
+<a name="l00096"></a>00096         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> getState();
+<a name="l00097"></a>00097         <span class="keyword">const</span> std::string&amp; getName();
+<a name="l00098"></a>00098         <span class="keywordtype">void</span> setName(std::string name);
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* parent();
+<a name="l00101"></a>00101         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* prev();
+<a name="l00102"></a>00102         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* next();
 <a name="l00103"></a>00103 
-<a name="l00104"></a>00104         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> hasChildren() {<span class="keywordflow">return</span> bHasChildren; };
-<a name="l00105"></a>00105         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> isVisible() { <span class="keywordflow">return</span> bVisible;};
-<a name="l00106"></a>00106 <span class="keyword">protected</span>:
-<a name="l00107"></a>00107         uint uiElementState; <span class="comment">// State of element, inactive, focussed, selected</span>
-<a name="l00108"></a>00108         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m_ulOptionMask;
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110         <a class="code" href="classmglGuiActionFunctor.html">mglGuiActionFunctor</a>* m_GuiAction;
+<a name="l00104"></a>00104         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> getOptionMask();
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> hasChildren() {<span class="keywordflow">return</span> bHasChildren; };
+<a name="l00107"></a>00107         <span class="keyword">virtual</span> <span class="keywordtype">bool</span> isVisible() { <span class="keywordflow">return</span> bVisible;};
+<a name="l00108"></a>00108 <span class="keyword">protected</span>:
+<a name="l00109"></a>00109         uint uiElementState; <span class="comment">// State of element, inactive, focussed, selected</span>
+<a name="l00110"></a>00110         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m_ulOptionMask;
 <a name="l00111"></a>00111 
-<a name="l00112"></a>00112         <span class="keywordtype">float</span> m_fXpos;
-<a name="l00113"></a>00113         <span class="keywordtype">float</span> m_fYpos;
-<a name="l00114"></a>00114         <span class="keywordtype">float</span> m_fHeight;
-<a name="l00115"></a>00115         <span class="keywordtype">float</span> m_fWidth;
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_pParent;
-<a name="l00118"></a>00118         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_pPrev;
-<a name="l00119"></a>00119         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_pNext;
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121         WindowList m_Children;
+<a name="l00112"></a>00112         <a class="code" href="classmglGuiActionFunctor.html">mglGuiActionFunctor</a>* m_GuiAction;
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114         <span class="keywordtype">float</span> m_fXpos;
+<a name="l00115"></a>00115         <span class="keywordtype">float</span> m_fYpos;
+<a name="l00116"></a>00116         <span class="keywordtype">float</span> m_fHeight;
+<a name="l00117"></a>00117         <span class="keywordtype">float</span> m_fWidth;
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_pParent;
+<a name="l00120"></a>00120         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_pPrev;
+<a name="l00121"></a>00121         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_pNext;
 <a name="l00122"></a>00122 
-<a name="l00123"></a>00123         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> m_usState; <span class="comment">// focus, selected etc</span>
+<a name="l00123"></a>00123         mglWindowList m_Children;
 <a name="l00124"></a>00124 
-<a name="l00125"></a>00125         <span class="keywordtype">bool</span> bVisible;
-<a name="l00126"></a>00126         <span class="keywordtype">bool</span> bHasChildren;
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128         std::string m_name;
-<a name="l00129"></a>00129         <a class="code" href="classmglValColor.html">mglValColor</a> m_BackGroundColor;
-<a name="l00130"></a>00130 };
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 <span class="preprocessor">#endif</span>
+<a name="l00125"></a>00125         <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> m_usState; <span class="comment">// focus, selected etc</span>
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127         <span class="keywordtype">bool</span> bVisible;
+<a name="l00128"></a>00128         <span class="keywordtype">bool</span> bHasChildren;
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         std::string m_name;
+<a name="l00131"></a>00131         <a class="code" href="classmglValColor.html">mglValColor</a> m_BackGroundColor;
+<a name="l00132"></a>00132 };
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -219,7 +221,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 27 2014 21:45:31 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -6,7 +6,7 @@
  */
 
 #include "mglAppConfiguration.h"
-#include "mglLogger/mglLogger.h"
+#include "mglDebug/mglLogger.h"
 
 void mglAppConfiguration::init(DOMNode* appconfig)
 {

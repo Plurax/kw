@@ -78,27 +78,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">mglDataSource Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="mglDataSource" -->
 <p><code>#include &lt;<a class="el" href="mglDataSource_8h_source.html">mglDataSource.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for mglDataSource:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmglDataSource__inherit__graph.png" border="0" usemap="#mglDataSource_inherit__map" alt="Inheritance graph"/></div>
+<map name="mglDataSource_inherit__map" id="mglDataSource_inherit__map">
+<area shape="rect" id="node3" href="classmglShm.html" title="mglShm" alt="" coords="27,83,96,112"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classmglDataSource-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1c8a2aa1062d50118e176f69379cdb29"></a><!-- doxytag: member="mglDataSource::init" ref="a1c8a2aa1062d50118e176f69379cdb29" args="()=0" -->
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7105c93408021f823a0633b5306d86e3"></a><!-- doxytag: member="mglDataSource::deInit" ref="a7105c93408021f823a0633b5306d86e3" args="()=0" -->
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>deInit</b> ()=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acdd7ebc067907a14f59a263c4e8af4f5"></a><!-- doxytag: member="mglDataSource::mglDataSource" ref="acdd7ebc067907a14f59a263c4e8af4f5" args="(string _name, unsigned int _type)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>mglDataSource</b> (string _name, unsigned int _type)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3310378dbc4c5788974228fbef6a5e08"></a><!-- doxytag: member="mglDataSource::getName" ref="a3310378dbc4c5788974228fbef6a5e08" args="()" -->
 string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6bff26e855c365a2e18c18f51ffd7bec"></a><!-- doxytag: member="mglDataSource::getType" ref="a6bff26e855c365a2e18c18f51ffd7bec" args="()" -->
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getType</b> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae824a1ca4234ec475b334204d5f5e493"></a><!-- doxytag: member="mglDataSource::m_type" ref="ae824a1ca4234ec475b334204d5f5e493" args="" -->
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_type</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b9d0a479e6f8dc226d9207c02e1d1b6"></a><!-- doxytag: member="mglDataSource::m_name" ref="a5b9d0a479e6f8dc226d9207c02e1d1b6" args="" -->
+string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>This class is a main wrapper for every data source type. All objects which act as a data source should inherit from this type to allow the management by the <a class="el" href="classmglSystem.html">mglSystem</a> singleton. Custom code can retrieve the data source object from the <a class="el" href="classmglSystem.html">mglSystem</a> singleton to perform any desired action. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>include/mglDataLayer/<a class="el" href="mglDataSource_8h_source.html">mglDataSource.h</a></li>
+<li>src/mglDataLayer/mglDataSource.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -118,7 +139,7 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getType</b> (
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 27 2014 21:45:31 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

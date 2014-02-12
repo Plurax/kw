@@ -11,7 +11,7 @@
 
 #include "mglDataLayer/mglDataSourceManager.h"
 #include "mglDataLayer/mglDataSourceFactory.h"
-#include "mglLogger/mglLogger.h"
+#include "mglDebug/mglLogger.h"
 
 using namespace std;
 

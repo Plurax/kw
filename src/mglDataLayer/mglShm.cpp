@@ -24,7 +24,7 @@
 
 
 #include "mglDataLayer/mglShm.h"
-#include "mglLogger/mglLogger.h"
+#include "mglDebug/mglLogger.h"
 
 mglShm::mglShm(DOMElement* configuration)
 {

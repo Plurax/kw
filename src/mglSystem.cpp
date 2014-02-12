@@ -43,6 +43,8 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
    // Can't call transcode till after Xerces Initialize()
    m_ConfigFileParser = new XercesDOMParser;
 
+   m_FontProvider = new mglFontProvider();
+
 	std::string configfile("Configuration.xml");
 	readConfiguration(configfile);
 
@@ -63,7 +65,6 @@ mglSystem::~mglSystem()
 	for (uiIndex = 0; uiIndex < m_MainFrames.size(); uiIndex++)
 		delete m_MainFrames.at(uiIndex); // delete the root frame objects
 	m_MainFrames.clear(); // clear all registered root frames
-	m_FontProvider->Delete(); // delete the singleton
 }
 
 mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
@@ -285,6 +286,7 @@ void mglSystem::readConfiguration(std::string& configFile)
    XMLCh* TAG_Menus = XMLString::transcode("MENUS");
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
+   XMLCh* TAG_Fonts= XMLString::transcode("Fonts");
 
    try
    {
@@ -338,6 +340,11 @@ void mglSystem::readConfiguration(std::string& configFile)
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
 				{
 					createGUIfromXML(currentNode, NULL, NULL, m_Menus);
+				}
+
+				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
+				{
+					loadFonts(currentNode);
 				}
 			}
 	  }
@@ -526,6 +533,45 @@ mglDataSource* mglSystem::getDataSource(string _name)
 		return itDS->second;
 }
 
+
+
+void mglSystem::loadFonts(DOMNode* _currentElement)
+{
+	INIT_LOG("mglSystem", "loadFonts(DOMNode* _currentElement)");
+
+	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
+
+	DOMNodeList*      children = currentElement->getChildNodes();
+	const  XMLSize_t nodeCount = children->getLength();
+
+	XMLCh* TAG_Font = XMLString::transcode("Font");
+
+	// For all nodes, children of "GUI" in the XML tree.
+	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	{
+		DOMNode* currentNode = children->item(xx);
+		if( currentNode->getNodeType() &&  // true is not NULL
+				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		{
+			// Found node which is an Element. Re-cast node as element
+			DOMElement* currentElement
+						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+			if ( XMLString::equals(currentElement->getTagName(), TAG_Font))
+			{
+				string* name = new string(XMLString::transcode(currentElement->getTextContent()));
+				LOG_TRACE("Got Font from file: " << (*name));
+				m_FontProvider->AddPixMapFont(new FTPixmapFont(name->c_str()));
+			}
+		}
+	}
+
+	XMLString::release(&TAG_Font);
+
+	LOG_TRACE("Initializing data sources...");
+	map<string,mglDataSource*>::iterator itDS;
+	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
+		itDS->second->init();
+}
 
 void mglSystem::destroy()
 {

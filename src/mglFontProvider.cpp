@@ -1,9 +1,7 @@
 
 #include "mglGui/mglFontProvider.h"
-#include "mglLogger/mglLogger.h"
+#include "mglDebug/mglDebug.h"
 
-
-mglFontProvider* mglFontProvider::dInst = NULL;
 
 // constructor
 mglFontProvider::mglFontProvider(void)
@@ -12,40 +10,27 @@ mglFontProvider::mglFontProvider(void)
 
 mglFontProvider::~mglFontProvider()  // destructor
 {
-	while(!PixMapFonts.empty()) delete PixMapFonts.back(), PixMapFonts.pop_back();
+	while(!m_PixMapFonts.empty()) delete m_PixMapFonts.back(), m_PixMapFonts.pop_back();
 
 }
 
-// singleton implementation
-mglFontProvider* mglFontProvider::Inst()
-{
-	if (dInst == 0)
-		dInst = new mglFontProvider();
-	
-	return dInst;
-}
 
 // this will add a font to the list
-void mglFontProvider::AddFont(FTPixmapFont* fontobject)
+void mglFontProvider::AddPixMapFont(FTPixmapFont* fontobject)
 {
 	if (fontobject != NULL)
 	{
-		PixMapFonts.push_back(fontobject);
+		m_PixMapFonts.push_back(fontobject);
 	}
 	else
 	{
-		//Logger << ("Error on loading Font...\n");
+		INIT_LOG("mglFontProvider", "AddPixMapFont(FTPicmapFont* fontobject)");
+		THROW_TECHNICAL_EXCEPTION(1, "Error on loading Font...\n");
 	}
 }
 
 
-void mglFontProvider::Delete()
+FTPixmapFont* mglFontProvider::GetPixMapFontByID(unsigned short index)
 {
-	if (dInst)
-		delete dInst;
-}
-
-FTPixmapFont* mglFontProvider::GetFontByID(unsigned short index)
-{
-	return PixMapFonts.at(index);
+	return m_PixMapFonts.at(index);
 }

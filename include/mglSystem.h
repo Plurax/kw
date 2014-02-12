@@ -7,7 +7,7 @@
 #include <vector>
 
 
-#include "mglLogger/mglLogger.h"
+#include "mglDebug/mglLogger.h"
 #include "mglGui/mglGuiObject.h"
 #include "mglGui/mglInputMessage.h"
 
@@ -69,7 +69,7 @@ public:
 
 	mglDataSource* getDataSource(string _name);
 
-	mglFontProvider *m_FontProvider;
+	mglFontProvider* m_FontProvider;
 
 	mglAppConfiguration m_Configuration;
 
@@ -80,6 +80,7 @@ private:
     XMLCh* m_TAG_root;
     void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglWindowList& listToAdd);
     void createDataLayer(DOMNode* currentElement);
+    void loadFonts(DOMNode* currentElement);
 
     XMLCh* m_TAG_ApplicationSettings;
 

@@ -15,17 +15,18 @@
 class mglFontProvider
 {
 public:	
-	~mglFontProvider();  // destructor
-	mglFontProvider* Inst();
-	void Delete();
-
-	void AddFont(FTPixmapFont* fontobject);
-	FTPixmapFont* GetFontByID(unsigned short index);
-private:
 	mglFontProvider(); // private constructor (singleton class)
-	static mglFontProvider* dInst;
+	~mglFontProvider();  // destructor
 
-	std::vector<FTPixmapFont*> PixMapFonts;
+	void AddPixMapFont(FTPixmapFont* fontobject);
+	FTPixmapFont* GetPixMapFontByID(unsigned short index);
+
+	void AddTexFont(FTTextureFont* fontobject);
+	FTTextureFont* GetTexFontByID(unsigned short index);
+
+private:
+	std::vector<FTPixmapFont*> m_PixMapFonts;
+	std::vector<FTTextureFont*> m_TextureFonts;
 };
 
 
