@@ -9,22 +9,20 @@
 #define MGLLIBHANDLE_H_
 
 #include <string>
+#include "mglLibraryInfo.h"
+using namespace std;
+
 
 class mglLibHandle
 {
 public:
-	mglLibHandle(void* handle, std::string name, std::string version, std::string libraryname);
+	mglLibHandle(void* handle, mglLibraryInfo* libinfo);
 	~mglLibHandle();
 
-	std::string getName();
-	std::string getLibraryName();
-	std::string getVersion();
-private:
-	std::string m_name;
-	std::string m_libraryName;
-	std::string m_version;
-
-
+protected:
+	void* m_handle;
+	mglLibraryInfo* m_LibraryInfo;
 };
+typedef mglLibraryInfo* (*LibInfoRetrieveFunc)();
 
 #endif /* MGLLIBHANDLE_H_ */

@@ -101,7 +101,6 @@ void mglLogger::configure(DOMNode* loggerconfig)
 									nextPtr++;
 									prevPtr = nextPtr;
 								}
-								std::cout << "added classfilter for class: " << newClass << "\n";
 							}
 						}
 

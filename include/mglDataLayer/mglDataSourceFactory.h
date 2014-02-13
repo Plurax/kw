@@ -11,6 +11,7 @@
 
 #include "mglDataLayer/mglDataSourceFactory.h"
 #include "mglDataLayer/mglDataSource.h"
+#include "mglLibHandle.h"
 #include <string>
 #include <memory>
 
@@ -24,6 +25,8 @@
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMText.hpp>
 
+
+
 using namespace std;
 using namespace xercesc;
 
@@ -36,7 +39,6 @@ public:
 
 	virtual mglDataSource* createDataSource(string* classname, DOMElement* configuration);
 };
-
 
 typedef mglDataSourceFactory* (*DataSourceCreateFunc)();
 typedef void (*DataSourceDestroyFunc)(mglDataSourceFactory*);

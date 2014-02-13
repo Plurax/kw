@@ -12,7 +12,11 @@
 #include "mglTechnicalException.h"
 
 #define THROW_TECHNICAL_EXCEPTION(errno, msg) \
-	LOG_EXCEPTION(errno << " " << msg); \
-	throw mglTechnicalException(errno, msg);
+	do { \
+		std::stringstream line; \
+		line << msg; \
+		throw mglTechnicalException(errno, line.str()); \
+	} \
+	while (false);
 
 #endif /* MGLDEBUG_H_ */

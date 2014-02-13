@@ -25,6 +25,8 @@
 
 #include "mglDataLayer/mglDataSourceManager.h"
 #include "mglDataLayer/mglDataSourceFactory.h"
+#include "mglDataLayer/mglDataLibHandle.h"
+
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
@@ -54,7 +56,7 @@ public:
 	mglDataSource* createDataSource(string* libname, string* classname, DOMElement* configuration);
 
 private:
-	map<string, mglDataSourceFactory*> m_loadedDataSources;
+	map<string, mglDataLibHandle*> m_loadedDataSources;
 
 };
 

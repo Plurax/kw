@@ -106,7 +106,7 @@ void mglShm::init()
 	m_semid = semget( m_semkey, 1, 0666 | IPC_CREAT | IPC_EXCL );
 	if ( m_semid == -1 )
 	{
-		LOG_TRACE("main: semget() failed\n");
+		LOG_TRACE("semget() failed\n");
 		m_segptr = NULL;
 	}
 }

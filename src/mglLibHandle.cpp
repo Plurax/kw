@@ -7,32 +7,12 @@
 
 #include "mglLibHandle.h"
 
-mglLibHandle::mglLibHandle(void* handle, std::string name, std::string version, std::string libraryname)
+mglLibHandle::mglLibHandle(void* handle, mglLibraryInfo* libinfo)
 {
-	m_name = name;
-	m_version = version;
-	m_libraryName = libraryname;
+	m_LibraryInfo = libinfo;
 }
 
 mglLibHandle::~mglLibHandle()
 {
 
 }
-
-std::string mglLibHandle::getName()
-{
-	return m_name;
-}
-
-std::string mglLibHandle::getLibraryName()
-{
-	return m_libraryName;
-}
-
-
-std::string mglLibHandle::getVersion()
-{
-	return m_version;
-}
-
-

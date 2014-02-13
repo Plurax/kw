@@ -3,6 +3,7 @@
 #define H_MGL_WINDOW
 #include <stdio.h>
 #include <vector>
+#include <map>
 #include <string>
 
 
@@ -35,12 +36,14 @@
 
 
 using namespace xercesc;
+using namespace std;
 
 
 class mglSystem;
 class mglGuiObject;
 
-typedef std::vector<mglGuiObject*> mglWindowList;
+typedef vector<mglGuiObject*> mglGuiObjectList;
+typedef map<string, mglGuiObject*> mglGuiObjectMap;
 
 class mglGuiObject
 {
@@ -88,14 +91,14 @@ public:
 
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
-	void RemoveChild(std::string ChildName);
-	mglWindowList* getChildren();
+	void RemoveChild(string ChildName);
+	mglGuiObjectList* getChildren();
 	virtual mglGuiObject* getChildByID(unsigned int ID);
 
 	void setState(unsigned short _state);
 	unsigned short getState();
-	const std::string& getName();
-	void setName(std::string name);
+	const string& getName();
+	void setName(string name);
 
 	mglGuiObject* parent();
 	mglGuiObject* prev();
@@ -120,14 +123,14 @@ protected:
 	mglGuiObject* m_pPrev;
 	mglGuiObject* m_pNext;
 
-	mglWindowList m_Children;
+	mglGuiObjectList m_Children;
 
 	unsigned short m_usState; // focus, selected etc
 
 	bool bVisible;
 	bool bHasChildren;
 
-	std::string m_name;
+	string m_name;
 	mglValColor m_BackGroundColor;
 };
 

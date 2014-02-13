@@ -8,10 +8,12 @@
 
 
 
-
+#include "mglReleaseInfo.h"
 #include "mglDataLayer/mglDataSourceManager.h"
 #include "mglDataLayer/mglDataSourceFactory.h"
-#include "mglDebug/mglLogger.h"
+#include "mglDebug/mglDebug.h"
+#include "mglDataLayer/mglDataLibHandle.h"
+#include "mglSystem.h"
 
 using namespace std;
 
@@ -23,19 +25,22 @@ mglDataSourceManager::~mglDataSourceManager()
 void mglDataSourceManager::init()
 {
 	mglDataSourceFactory* defaultObjFactory = new mglDataSourceFactory();
+	mglDataLibHandle* defaultDataSourceLibHandle = new mglDataLibHandle(NULL,
+			mglSystem::Inst().m_libInfo,
+			defaultObjFactory);
 
-	m_loadedDataSources.insert(std::pair<string,mglDataSourceFactory*>(string("mgl"),defaultObjFactory));
+	m_loadedDataSources.insert(std::pair<string,mglDataLibHandle*>(string("mgl"),defaultDataSourceLibHandle));
 }
 
 mglDataSource* mglDataSourceManager::createDataSource(string* libname, string* classname, DOMElement* configuration)
 {
 
 	// Found the requested library in the map?
-	std::map<string,mglDataSourceFactory*>::iterator libIterator = m_loadedDataSources.find(*libname);
+	std::map<string,mglDataLibHandle*>::iterator libIterator = m_loadedDataSources.find(*libname);
 
 	if (libIterator != m_loadedDataSources.end())
 	{
-		return libIterator->second->createDataSource(classname, configuration);
+		return libIterator->second->m_factory->createDataSource(classname, configuration);
 	}
 	else
 	{
@@ -48,8 +53,12 @@ mglDataSource* mglDataSourceManager::createDataSource(string* libname, string* c
 		}
 
 		DataSourceCreateFunc getfactoryfct = (DataSourceCreateFunc) dlsym(handle, "getFactory");
+		LibInfoRetrieveFunc getLibInfofct = (LibInfoRetrieveFunc) dlsym(handle, "getLibInfo");
 		mglDataSourceFactory* factory = getfactoryfct();
-		m_loadedDataSources.insert(std::pair<string,mglDataSourceFactory*>(string(libname->c_str()),factory));
+		mglLibraryInfo* thisInfo = getLibInfofct();
+		mglDataLibHandle* DataSourceLibHandle = new mglDataLibHandle(handle, thisInfo, factory);
+
+		m_loadedDataSources.insert(std::pair<string,mglDataLibHandle*>(*libname,DataSourceLibHandle ));
 		return factory->createDataSource(classname, configuration);
 	}
     return NULL;

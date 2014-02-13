@@ -9,16 +9,21 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <stdexcept>
-
+#include "mglReleaseInfo.h"
 
 #include "mglSystem.h"
 
 using namespace xercesc;
 using namespace std;
 
+mglSystem::mglSystem()
+{
+}
+
 
 void mglSystem::init(GLXContext context, void (*ptr)(void))
 {
+	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
 	// Insert default factory into the list
 	mglGuiLibManager& objManager = mglGuiLibManager::Inst();
 	objManager.init();
@@ -62,9 +67,9 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 mglSystem::~mglSystem()
 {
 	uint uiIndex;
-	for (uiIndex = 0; uiIndex < m_MainFrames.size(); uiIndex++)
-		delete m_MainFrames.at(uiIndex); // delete the root frame objects
-	m_MainFrames.clear(); // clear all registered root frames
+	for (uiIndex = 0; uiIndex < m_lMainFrames.size(); uiIndex++)
+		delete m_lMainFrames.at(uiIndex); // delete the root frame objects
+	m_lMainFrames.clear(); // clear all registered root frames
 }
 
 mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
@@ -171,7 +176,7 @@ void mglSystem::Draw(void)
 	glLoadIdentity();
 
 	// render all the currently active main frame
-	m_MainFrames.at(m_sCurrentMainFrame)->Draw();
+	m_lMainFrames.at(m_sCurrentMainFrame)->Draw();
 
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, 1.0); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
@@ -224,16 +229,16 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 
 mglGuiObject* mglSystem::getMainFrameByID(unsigned int ID)
 {
-	if (ID < m_MainFrames.size())
-		return m_MainFrames.at(ID);
+	if (ID < m_lMainFrames.size())
+		return m_lMainFrames.at(ID);
 	else
 		return 0;
 }
 
 mglGuiObject* mglSystem::getMenuByID(unsigned int ID)
 {
-	if (ID < m_Menus.size())
-		return m_Menus.at(ID);
+	if (ID < m_lMenus.size())
+		return m_lMenus.at(ID);
 	else
 		return 0;
 }
@@ -334,12 +339,12 @@ void mglSystem::readConfiguration(std::string& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_MainFrames);
+					createGUIfromXML(currentNode, NULL, NULL, m_lMainFrames);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_Menus);
+					createGUIfromXML(currentNode, NULL, NULL, m_lMenus);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
@@ -371,7 +376,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 }
 
 // This is recursive creation of the GUI Tree
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglWindowList& listToAdd)
+void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
 
@@ -429,9 +434,12 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				libname = new string(XMLString::transcode(DE_func_libname->getTextContent()));
 				classname = new string(XMLString::transcode(DE_func_classname->getTextContent()));
 
+				// After we created the object we can attach the handler if it exists
 				mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(libname, classname);
 				thisWindow->Connect(funct);
-				// After we created the object we can attach the handler if it exists
+
+				// A created gui object is also registered by its name
+				m_mGuiObjects.insert(std::pair<string,mglGuiObject*>(string(*name),thisWindow));
 
 				// We are at parent level - so this is a main frame
 				if (parent == NULL)
@@ -567,10 +575,6 @@ void mglSystem::loadFonts(DOMNode* _currentElement)
 
 	XMLString::release(&TAG_Font);
 
-	LOG_TRACE("Initializing data sources...");
-	map<string,mglDataSource*>::iterator itDS;
-	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
-		itDS->second->init();
 }
 
 void mglSystem::destroy()

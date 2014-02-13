@@ -63,7 +63,17 @@ typedef struct __static_log_info static_log_info;
 #define LOG_DEBUG(text) LOG_LEVEL(LOG_MASK_DEBUG,"D",text)
 #define LOG_TRACE(text) LOG_LEVEL(LOG_MASK_TRACE,"T",text)
 #define LOG_PANIC(text) LOG_LEVEL(LOG_MASK_PANIC,"P",text)
-#define LOG_EXCEPTION(text) LOG_LEVEL(LOG_MASK_EXCEPTION,"X",text)
+
+#define LOG_EXCEPTION(text) LOG_LEVEL(LOG_MASK_EXCEPTION,"X",text) \
+		do { \
+			std::stringstream line; \
+			line <<  _stat_log_info.psz_libname << ";" << _stat_log_info.psz_file << ";"; \
+			line << _stat_log_info.psz_method << ";" << __LINE__  << ";" << tag << ": "; \
+			line << "######## EXCEPTION Exception exception ########\n## ERRNO: " << errno << "\n" << "## Message: " << text; \
+			mglLogger::Inst().log(level,&_stat_log_info,line); \
+		} \
+		while (false);
+
 
 #define DEF_MAX_LOG_CHANNELS 5
 

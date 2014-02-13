@@ -24,6 +24,7 @@
 #include <dlfcn.h>
 
 #include "mglGui/mglGuiObject.h"
+#include "mglGui/mglGuiLibHandle.h"
 #include "mglGui/mglGuiObjectFactory.h"
 #include "mglGui/mglGuiActionFactory.h"
 
@@ -59,7 +60,7 @@ public:
 	mglGuiActionFunctor* createGuiAction(string* libname, string* classname);
 
 private:
-	map<string, mglGuiObjectFactory*> m_loadedGuiLibraries;
+	map<string, mglGuiLibHandle*> m_loadedGuiLibraries;
 
 	map<string, mglGuiActionFactory*> m_loadedActionLibraries;
 };
