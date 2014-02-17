@@ -16,3 +16,11 @@ mglLibraryInfo::mglLibraryInfo(	string name, string version, string description,
 	m_author = author;
 	m_license = license;
 }
+
+
+string mglLibraryInfo::asString()
+{
+	string ret = "Libname: " + m_name + "\nVersion: " + m_version
+			+ "\nDescription: " + m_description + "\nAuthor: " + m_author + "\nLicense: " + m_license;
+	return ret;
+}

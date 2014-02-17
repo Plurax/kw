@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../src/mglLibHandle.cpp \
 ../src/mglLibraryInfo.cpp \
 ../src/mglMessage.cpp \
+../src/mglSelectionContext.cpp \
 ../src/mglSystem.cpp \
 ../src/mglTimer.cpp 
 
@@ -18,6 +19,7 @@ OBJS += \
 ./src/mglLibHandle.o \
 ./src/mglLibraryInfo.o \
 ./src/mglMessage.o \
+./src/mglSelectionContext.o \
 ./src/mglSystem.o \
 ./src/mglTimer.o 
 
@@ -27,6 +29,7 @@ CPP_DEPS += \
 ./src/mglLibHandle.d \
 ./src/mglLibraryInfo.d \
 ./src/mglMessage.d \
+./src/mglSelectionContext.d \
 ./src/mglSystem.d \
 ./src/mglTimer.d 
 

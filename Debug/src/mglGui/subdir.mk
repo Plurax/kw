@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../src/mglGui/mglGuiActionFactory.cpp \
 ../src/mglGui/mglGuiActionFunctor.cpp \
+../src/mglGui/mglGuiActionLibHandle.cpp \
 ../src/mglGui/mglGuiLibHandle.cpp \
 ../src/mglGui/mglGuiLibManager.cpp \
 ../src/mglGui/mglGuiObject.cpp \
@@ -16,6 +17,7 @@ CPP_SRCS += \
 OBJS += \
 ./src/mglGui/mglGuiActionFactory.o \
 ./src/mglGui/mglGuiActionFunctor.o \
+./src/mglGui/mglGuiActionLibHandle.o \
 ./src/mglGui/mglGuiLibHandle.o \
 ./src/mglGui/mglGuiLibManager.o \
 ./src/mglGui/mglGuiObject.o \
@@ -26,6 +28,7 @@ OBJS += \
 CPP_DEPS += \
 ./src/mglGui/mglGuiActionFactory.d \
 ./src/mglGui/mglGuiActionFunctor.d \
+./src/mglGui/mglGuiActionLibHandle.d \
 ./src/mglGui/mglGuiLibHandle.d \
 ./src/mglGui/mglGuiLibManager.d \
 ./src/mglGui/mglGuiObject.d \

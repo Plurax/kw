@@ -27,6 +27,7 @@
 #include "mglGui/mglGuiLibHandle.h"
 #include "mglGui/mglGuiObjectFactory.h"
 #include "mglGui/mglGuiActionFactory.h"
+#include "mglGui/mglGuiActionLibHandle.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
@@ -37,7 +38,6 @@
 #include <xercesc/dom/DOMNodeIterator.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMText.hpp>
-
 
 
 using namespace std;
@@ -62,7 +62,7 @@ public:
 private:
 	map<string, mglGuiLibHandle*> m_loadedGuiLibraries;
 
-	map<string, mglGuiActionFactory*> m_loadedActionLibraries;
+	map<string, mglGuiActionLibHandle*> m_loadedActionLibraries;
 };
 
 

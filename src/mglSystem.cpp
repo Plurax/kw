@@ -20,7 +20,12 @@ mglSystem::mglSystem()
 {
 }
 
-
+/**
+ * Main initialization routine.
+ *
+ * @param context - opengl context
+ * @param ptr - flushGL function pointer which is called by Draw after rendering.
+ */
 void mglSystem::init(GLXContext context, void (*ptr)(void))
 {
 	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
@@ -53,15 +58,10 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	std::string configfile("Configuration.xml");
 	readConfiguration(configfile);
 
-	/* Create graphics context... */
-	//InitGraphics(context);
-	m_sCurrentMainFrame = 0;
-	m_sCurrentMenu = 0;
-
 	m_CurrentMainFrame = NULL;
 	m_CurrentMenu = NULL;
-	m_CurrentFocus = NULL;
-	m_pCurrentSelectionList = NULL;
+
+	m_vSelectionContexts.push_back(new mglSelectionContext());
 }
 
 mglSystem::~mglSystem()
@@ -72,7 +72,13 @@ mglSystem::~mglSystem()
 	m_lMainFrames.clear(); // clear all registered root frames
 }
 
-mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
+
+/**
+ * Processes an input message.
+ * @param Message
+ * @return
+ */
+mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 {
 	// find the target object
 	if ((Message->getInputType() != eInputIGR) &&
@@ -92,21 +98,21 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 		if (Message->getButton() == BTN_IGR)
 		{
 			// Remap to button 1?
-			if (m_CurrentFocus != NULL)
+			if (m_vSelectionContexts.back()->m_CurrentFocus != NULL)
 			{
-				Message->setTarget(m_CurrentFocus);
-				m_CurrentFocus->ProcessMessage(Message);
+				Message->setTarget(m_vSelectionContexts.back()->m_CurrentFocus);
+				m_vSelectionContexts.back()->m_CurrentFocus->ProcessMessage(Message);
 			}
 			// May be functor logic maps the input onto the mt1 behaviour - so we change the state to focussed again here...
 			if (Message->getInputType() == eInputMouseButtonRelease)
-				m_CurrentFocus->setState(OBJ_STATE_FOCUSSED);
+				m_vSelectionContexts.back()->m_CurrentFocus->setState(OBJ_STATE_FOCUSSED);
 		}
 		else
 		{
 			if (m_CurrentMenu != NULL)
-				m_SelectListParent = m_CurrentMenu;
+				m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
 			else
-				m_SelectListParent = m_CurrentMainFrame;
+				m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMainFrame;
 
 			mglGuiObject* pTemp = NULL;
 			mglGuiObject* pSwap = NULL;
@@ -122,19 +128,19 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 				iCount *= -1;
 			}
 
-			if (m_pCurrentSelectionList == NULL)
+			if (m_vSelectionContexts.back()->m_pCurrentSelectionList == NULL)
 			{
 				bEntry = true;
-				m_pCurrentSelectionList = m_SelectListParent->getChildren();
+				m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
 				if (bForward)
-					pTemp = *(m_pCurrentSelectionList->begin());
+					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
 				else
-					pTemp = *(m_pCurrentSelectionList->rbegin());
+					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
 			}
 			else
 			{
-				pTemp = m_CurrentFocus;
-				m_CurrentFocus->setState(OBJ_STATE_STANDARD);
+				pTemp = m_vSelectionContexts.back()->m_CurrentFocus;
+				m_vSelectionContexts.back()->m_CurrentFocus->setState(OBJ_STATE_STANDARD);
 			}
 
 			while ((iCount != 0) && (pTemp != NULL))
@@ -156,12 +162,12 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 			if (pTemp != NULL)
 			{
 				pTemp->setState(OBJ_STATE_FOCUSSED);
-				m_CurrentFocus = pTemp;
+				m_vSelectionContexts.back()->m_CurrentFocus = pTemp;
 			}
 			else
 			{
-				m_CurrentFocus = NULL;
-				m_pCurrentSelectionList = NULL;
+				m_vSelectionContexts.back()->m_CurrentFocus = NULL;
+				m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
 			}
 		}
 	}
@@ -169,14 +175,16 @@ mglMessage* mglSystem::sendInputMessage(mglInputMessage* Message)
 }
 
 
-
+/**
+ * Render the current shown content (Mainframe and possibly active menu).
+ */
 void mglSystem::Draw(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	// render all the currently active main frame
-	m_lMainFrames.at(m_sCurrentMainFrame)->Draw();
+	m_CurrentMainFrame->Draw();
 
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, 1.0); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
@@ -188,7 +196,12 @@ void mglSystem::Draw(void)
 
 }
 
-
+/**
+ * Determine the gui object which is at the given coordinates.
+ * This function regards mainframes and menus. Only visible marked objects are regarded.
+ * @param pt
+ * @return
+ */
 mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 {
 	mglGuiObject* destination;
@@ -251,15 +264,16 @@ void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 
 void mglSystem::SetMenu(mglGuiObject *Menu)
 {
-	m_pCurrentSelectionList = NULL;
+	m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
 	m_CurrentMenu = Menu;
 	if (Menu == NULL)
-		m_SelectListParent = m_CurrentMainFrame;
+		m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMainFrame;
 }
 
-/*
+/**
  * Reads the complete configuration file and creates the corresponding graphic objects via
  * loading of shared libs and factory pattern.
+ * @param configFile - string containing a full path file for the configuration
  */
 void mglSystem::readConfiguration(std::string& configFile)
 {
@@ -349,7 +363,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
 				{
-					loadFonts(currentNode);
+					m_FontProvider->loadFonts(currentNode);
 				}
 			}
 	  }
@@ -375,7 +389,13 @@ void mglSystem::readConfiguration(std::string& configFile)
    XMLString::release(&TAG_Logging);
 }
 
-// This is recursive creation of the GUI Tree
+/**
+ *
+ * @param GUIELement - GUI Tag (root element for gui definition)
+ * @param parent - parent element for recursive usage
+ * @param prev - previous element for recursive usage
+ * @param listToAdd - pointer to the list where root objects will be added (menus or frames)
+ */
 void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
@@ -467,7 +487,11 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 	XMLString::release(&TAG_mglWindowItem);
 }
 
-
+/**
+ * Creates the datalayer configured below the given element.
+ * After creation of the object each one is initialized.
+ * @param _currentElement
+ */
 void mglSystem::createDataLayer(DOMNode* _currentElement)
 {
 	INIT_LOG("mglSystem", "createDataLayer(DOMNode* _currentElement)");
@@ -532,6 +556,13 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 		itDS->second->init();
 }
 
+
+/**
+ * Retrieve a datasource with the given name.
+ * Application code should know the type as the retrieved object is a general mglDataSource pointer.
+ * @param _name
+ * @return
+ */
 mglDataSource* mglSystem::getDataSource(string _name)
 {
 	mglDataSourceMap::iterator itDS = m_DataSources.find(_name);
@@ -542,40 +573,6 @@ mglDataSource* mglSystem::getDataSource(string _name)
 }
 
 
-
-void mglSystem::loadFonts(DOMNode* _currentElement)
-{
-	INIT_LOG("mglSystem", "loadFonts(DOMNode* _currentElement)");
-
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_Font = XMLString::transcode("Font");
-
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
-	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_Font))
-			{
-				string* name = new string(XMLString::transcode(currentElement->getTextContent()));
-				LOG_TRACE("Got Font from file: " << (*name));
-				m_FontProvider->AddPixMapFont(new FTPixmapFont(name->c_str()));
-			}
-		}
-	}
-
-	XMLString::release(&TAG_Font);
-
-}
 
 void mglSystem::destroy()
 {

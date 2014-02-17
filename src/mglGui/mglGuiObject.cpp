@@ -72,6 +72,7 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 	m_fWidth = width;
 	bVisible = true;
 	bHasChildren = false;
+	m_ulOptionMask = 0;
 }
 
 

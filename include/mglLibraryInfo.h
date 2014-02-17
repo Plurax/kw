@@ -17,6 +17,8 @@ class mglLibraryInfo
 {
 public:
 	mglLibraryInfo(	string name, string version, string description, string author, string license);
+
+	string asString();
 	string m_name;
 	string m_version;
 	string m_description;

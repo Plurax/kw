@@ -16,3 +16,9 @@ mglLibHandle::~mglLibHandle()
 {
 
 }
+
+
+mglLibraryInfo* mglLibHandle::getInfo()
+{
+	return m_LibraryInfo;
+}

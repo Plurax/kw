@@ -18,6 +18,7 @@
 #include "mglBase.h"
 #include "mglMessage.h"
 #include "mglAppConfiguration.h"
+#include "mglSelectionContext.h"
 
 #include "mglLibHandle.h"
 
@@ -57,7 +58,7 @@ public:
 	mglGuiObject* getMainFrameByID(unsigned int ID);
 	mglGuiObject* getMenuByID(unsigned int ID);
 
-	mglMessage* sendInputMessage(mglInputMessage* Message);
+	mglMessage* processInputMessage(mglInputMessage* Message);
 
 	void readConfiguration(std::string& configFile);
 	void (*flushGL)();
@@ -85,7 +86,6 @@ private:
     XMLCh* m_TAG_root;
     void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd);
     void createDataLayer(DOMNode* currentElement);
-    void loadFonts(DOMNode* currentElement);
 
     XMLCh* m_TAG_ApplicationSettings;
 
@@ -96,16 +96,10 @@ private:
 	int m_ScreenXRes;
 	int m_ScreenYRes;
 
-	mglGuiObject *m_CurrentMainFrame;
-	mglGuiObject *m_SelectListParent;
-	mglGuiObject *m_CurrentMenu; // This can also be every mglWindow - but it is shown via zbuffering before the mainframe
+	mglGuiObject* m_CurrentMainFrame;
+	mglGuiObject* m_CurrentMenu;
 
-	mglGuiObjectList* m_pCurrentSelectionList;
-	mglGuiObject *m_CurrentFocus; /* This pointer contains the object which holds focus in time - this is modified by
-									prev/next concatenation of focussable objects by the nextfocus/prevfocus events (ie. IGR increment/decrement)
-									*/
-	short m_sCurrentMainFrame; // defines which one is currently shown
-	short m_sCurrentMenu; // defines which menu is currently shown
+	vector<mglSelectionContext*> m_vSelectionContexts;
 };
 
 

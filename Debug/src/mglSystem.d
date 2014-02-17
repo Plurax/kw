@@ -18,7 +18,9 @@ src/mglSystem.d: ../src/mglSystem.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionLibHandle.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceFactory.h \
@@ -30,6 +32,7 @@ src/mglSystem.d: ../src/mglSystem.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglTimer.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h
 
 /home/cromas/git/mgl/workspace/MGL/include/mglReleaseInfo.h:
@@ -70,7 +73,11 @@ src/mglSystem.d: ../src/mglSystem.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h:
 
+/home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h:
+
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionLibHandle.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglDataLayer/mglDataSourceManager.h:
 
@@ -93,5 +100,7 @@ src/mglSystem.d: ../src/mglSystem.cpp \
 /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h:

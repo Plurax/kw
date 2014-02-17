@@ -18,7 +18,7 @@ class mglLibHandle
 public:
 	mglLibHandle(void* handle, mglLibraryInfo* libinfo);
 	~mglLibHandle();
-
+	mglLibraryInfo* getInfo();
 protected:
 	void* m_handle;
 	mglLibraryInfo* m_LibraryInfo;

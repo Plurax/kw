@@ -14,7 +14,7 @@
 #include <memory>
 
 #include "mglGui/mglGuiObject.h"
-
+#include "mglLibraryInfo.h"
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -34,7 +34,7 @@ class mglGuiObjectFactory
 {
 public:
 	virtual ~mglGuiObjectFactory() {};
-
+	virtual mglLibraryInfo* getLibInfo();
 	virtual mglGuiObject* createGuiObject(string* classname, DOMElement* configuration);
 };
 
