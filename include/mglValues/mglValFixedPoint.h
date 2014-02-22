@@ -9,6 +9,7 @@
 #define MGLVALFIXEDPOINT_H_
 
 #include <string>
+#include "mglValue.h"
 
 using namespace std;
 
@@ -28,8 +29,8 @@ enum class eValFixedPointPrec {
 class mglValFixedPoint
 {
 public:
-
-	static const short precN[7];
+  static const mglValType m_valType = mglValType::mglValFixedPoint;
+	const short precN[7];
 
 	mglValFixedPoint();
 	mglValFixedPoint(eValFixedPointPrec prec);
@@ -54,6 +55,6 @@ private:
 	eValFixedPointPrec m_Precision;
 };
 
-const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
+//const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
 
 #endif /* MGLVALFIXEDPOINT_H_ */

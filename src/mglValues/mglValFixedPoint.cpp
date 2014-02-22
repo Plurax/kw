@@ -10,18 +10,21 @@
 
 
 mglValFixedPoint::mglValFixedPoint()
+  : precN { 2, 4, 6, 8, 10, 12}
 {
 	m_isEmpty = true;
 	m_Precision = eValFixedPointPrec::prec11N6;
 }
 
 mglValFixedPoint::mglValFixedPoint(eValFixedPointPrec prec)
+: precN { 2, 4, 6, 8, 10, 12}
 {
 	m_isEmpty = true;
 	m_Precision = prec;
 }
 
 mglValFixedPoint::mglValFixedPoint(long in, eValFixedPointPrec prec)
+: precN { 2, 4, 6, 8, 10, 12}
 {
 	m_lValue = in;
 	m_Precision = prec;

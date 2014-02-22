@@ -8,10 +8,12 @@
 #ifndef MGLCOORD_H_
 #define MGLCOORD_H_
 
+#include "mglValue.h"
 
 class mglValCoord
 {
 public:
+  static const mglValType m_valType = mglValType::mglValCoord;
 	mglValCoord(int x, int y, int z);
 	mglValCoord(float x, float y, int z);
 

@@ -37,9 +37,15 @@ mglGuiObject* mglGuiLibManager::createGUIObject(string* libname, string* classna
 	// Found the requested library in the map?
 	std::map<string,mglGuiLibHandle*>::iterator libIterator = m_loadedGuiLibraries.find(*libname);
 
+	mglGuiObject* retObject = NULL;
+
 	if (libIterator != m_loadedGuiLibraries.end())
 	{
-		return libIterator->second->m_factory->createGuiObject(classname, configuration);
+		retObject = libIterator->second->m_factory->createGuiObject(classname, configuration);
+		if (retObject)
+			return retObject;
+		else
+			THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of mglGuiObject " << classname);
 	}
 	else
 	{
@@ -62,9 +68,13 @@ mglGuiObject* mglGuiLibManager::createGUIObject(string* libname, string* classna
 		LOG_DEBUG("Loaded GuiObject library: " << GuiLibHandle->getInfo()->asString());
 
 		m_loadedGuiLibraries.insert(std::pair<string,mglGuiLibHandle*>(*libname,GuiLibHandle));
-		return factory->createGuiObject(classname, configuration);
+
+		retObject = factory->createGuiObject(classname, configuration);
+		if (retObject)
+			return retObject;
+		else
+			THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of mglGuiObject " << classname);
 	}
-    return NULL;
 }
 
 mglGuiActionFunctor* mglGuiLibManager::createGuiAction(string* libname, string* classname)

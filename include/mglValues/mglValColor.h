@@ -10,9 +10,11 @@
 
 
 #include <string>
+#include "mglValue.h"
 
 class mglValColor {
 public:
+  static const mglValType m_valType = mglValType::mglValColor;
 	mglValColor();
 	mglValColor(float red, float green, float blue, float alpha);
 	mglValColor(const char* hex);
