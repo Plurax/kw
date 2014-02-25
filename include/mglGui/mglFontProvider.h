@@ -7,7 +7,10 @@
 #include <GL/gl.h>
 #include <stdio.h>
 #include <vector>
+#include <map>
 #include <string>
+
+#include "mglValues/mglValString.h"
 
 
 #include "FTGL/ftgl.h"
@@ -26,6 +29,7 @@
 #include <xercesc/util/XMLUni.hpp>
 
 using namespace xercesc;
+using namespace std;
 
 class mglFontProvider
 {
@@ -35,11 +39,15 @@ public:
 
     void loadFonts(DOMNode* currentElement);
 
-	void AddFont(const char* fontobject);
+	void AddFont(int _size, string* _name, string* _file);
 	FTFont* GetFontByID(unsigned short index);
+	FTFont* GetFontByName(string& _string);
 
 private:
-	std::vector<FTFont*> m_MapFonts;
+    void loadFont(DOMNode* currentElement);
+
+    std::map<std::string, FTFont*> m_MapFonts;
+	std::vector<FTFont*> m_VecFonts;
 };
 
 

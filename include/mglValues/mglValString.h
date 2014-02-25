@@ -9,6 +9,7 @@
 #define MGLVALSTRING_H_
 
 #include <string>
+#include "mglValues/mglValue.h"
 
 using namespace std;
 

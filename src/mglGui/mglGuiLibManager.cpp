@@ -34,6 +34,7 @@ void mglGuiLibManager::init()
 
 mglGuiObject* mglGuiLibManager::createGUIObject(string* libname, string* classname, DOMElement* configuration)
 {
+	INIT_LOG("mglGuiLibManager", "createGUIObject(string* libname, string* classname, DOMElement* configuration)");
 	// Found the requested library in the map?
 	std::map<string,mglGuiLibHandle*>::iterator libIterator = m_loadedGuiLibraries.find(*libname);
 
@@ -79,6 +80,7 @@ mglGuiObject* mglGuiLibManager::createGUIObject(string* libname, string* classna
 
 mglGuiActionFunctor* mglGuiLibManager::createGuiAction(string* libname, string* classname)
 {
+	INIT_LOG("mglGuiLibManager", "createGuiAction(string* libname, string* classname)");
 	// Found the requested library in the map?
 	std::map<string,mglGuiActionLibHandle*>::iterator libIterator = m_loadedActionLibraries.find(*libname);
 

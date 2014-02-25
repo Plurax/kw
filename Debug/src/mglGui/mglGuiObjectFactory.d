@@ -15,6 +15,8 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibHandle.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h \
@@ -66,6 +68,10 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h:
 

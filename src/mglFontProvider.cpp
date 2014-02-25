@@ -10,8 +10,7 @@ mglFontProvider::mglFontProvider(void)
 
 mglFontProvider::~mglFontProvider()  // destructor
 {
-	while(!m_MapFonts.empty()) delete m_MapFonts.back(), m_MapFonts.pop_back();
-
+	while(!m_VecFonts.empty()) delete m_VecFonts.back(), m_VecFonts.pop_back();
 }
 
 
@@ -38,14 +37,13 @@ void mglFontProvider::loadFonts(DOMNode* _currentElement)
 		if( currentNode->getNodeType() &&  // true is not NULL
 				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
 		{
+
 			// Found node which is an Element. Re-cast node as element
 			DOMElement* currentElement
 						= dynamic_cast< xercesc::DOMElement* >( currentNode );
 			if ( XMLString::equals(currentElement->getTagName(), TAG_Font))
 			{
-				string* name = new string(XMLString::transcode(currentElement->getTextContent()));
-				LOG_TRACE("Got Font from file: " << (*name));
-				AddFont(name->c_str());
+				loadFont(currentElement);
 			}
 		}
 	}
@@ -53,29 +51,114 @@ void mglFontProvider::loadFonts(DOMNode* _currentElement)
 	XMLString::release(&TAG_Font);
 
 }
+
+/**
+ * Load all fonts listed below of the given XML element.
+ * Each font tag should contain an absolute path to a font file.
+ * @param _currentElement
+ */
+void mglFontProvider::loadFont(DOMNode* _currentElement)
+{
+	INIT_LOG("mglSystem", "loadFonts(DOMNode* _currentElement)");
+
+	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
+
+	DOMNodeList*      children = currentElement->getChildNodes();
+	const  XMLSize_t nodeCount = children->getLength();
+
+	XMLCh* TAG_FontFile = XMLString::transcode("file");
+	XMLCh* TAG_FontSize = XMLString::transcode("size");
+	XMLCh* TAG_FontName = XMLString::transcode("name");
+
+	int fontsize = 0;
+	string* file_str = NULL;
+	string* name_str = NULL;
+	string* size_str = NULL;
+	// For all nodes, children of "GUI" in the XML tree.
+	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	{
+		DOMNode* currentNode = children->item(xx);
+		if( currentNode->getNodeType() &&  // true is not NULL
+				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		{
+
+			// Found node which is an Element. Re-cast node as element
+			DOMElement* currentElement
+						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+			if ( XMLString::equals(currentElement->getTagName(), TAG_FontFile))
+			{
+				file_str = new string(XMLString::transcode(currentElement->getTextContent()));
+				LOG_TRACE("Got Font from file: " << (*file_str));
+			}
+
+			if ( XMLString::equals(currentElement->getTagName(), TAG_FontSize))
+			{
+				size_str = new string(XMLString::transcode(currentElement->getTextContent()));
+				fontsize = atoi(size_str->c_str());;
+			}
+
+			if ( XMLString::equals(currentElement->getTagName(), TAG_FontName))
+			{
+				name_str = new string(XMLString::transcode(currentElement->getTextContent()));
+			}
+		}
+	}
+
+	AddFont(fontsize, name_str, file_str);
+
+	delete name_str;
+	delete file_str;
+	delete size_str;
+
+	XMLString::release(&TAG_FontFile);
+	XMLString::release(&TAG_FontName);
+	XMLString::release(&TAG_FontSize);
+
+}
+
 // this will add a font to the list
-void mglFontProvider::AddFont(const char* fontobject)
+void mglFontProvider::AddFont(int _size, string* _name, string* _file)
 {
 	bool err = false;
-	if (fontobject != NULL)
-	{
-		FTFont* font = new FTTextureFont(fontobject);
 
-		m_MapFonts.push_back(font);
-	}
-	else
-		err = true;
-
-	if (err)
+	if (_name == NULL)
 	{
 		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");
-		THROW_TECHNICAL_EXCEPTION(1, "Error on loading Font...\n");
+		THROW_TECHNICAL_EXCEPTION(1, "Error on loading Font (name)...\n");
 	}
+
+	if (_size == 0)
+	{
+		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");
+		THROW_TECHNICAL_EXCEPTION(2, "Error on loading Font (size)...\n");
+	}
+
+	if (_file == NULL)
+	{
+		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");
+		THROW_TECHNICAL_EXCEPTION(3, "Error on loading Font (file)...\n");
+	}
+
+	FTFont* font = new FTTextureFont(_file->c_str());
+	font->FaceSize(_size); // Set the size initially - textures are loaded automatically by FTGL (SPEED!)
+	m_VecFonts.push_back(font);
+	m_MapFonts.insert(std::pair<std::string, FTFont*>(*_name, font));
 }
 
 
 FTFont* mglFontProvider::GetFontByID(unsigned short index)
 {
-	return m_MapFonts.at(index);
+	return m_VecFonts.at(index);
+}
+
+FTFont* mglFontProvider::GetFontByName(string& _string)
+{
+	std::map<std::string, FTFont*>::iterator fontIt;
+	fontIt = m_MapFonts.find(_string);
+
+	if (fontIt == m_MapFonts.end())
+		return NULL;
+	else
+		return fontIt->second;
 }
 
