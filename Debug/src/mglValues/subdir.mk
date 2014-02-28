@@ -7,18 +7,21 @@ CPP_SRCS += \
 ../src/mglValues/mglValColor.cpp \
 ../src/mglValues/mglValCoord.cpp \
 ../src/mglValues/mglValFixedPoint.cpp \
+../src/mglValues/mglValString.cpp \
 ../src/mglValues/mglXMLValueReader.cpp 
 
 OBJS += \
 ./src/mglValues/mglValColor.o \
 ./src/mglValues/mglValCoord.o \
 ./src/mglValues/mglValFixedPoint.o \
+./src/mglValues/mglValString.o \
 ./src/mglValues/mglXMLValueReader.o 
 
 CPP_DEPS += \
 ./src/mglValues/mglValColor.d \
 ./src/mglValues/mglValCoord.d \
 ./src/mglValues/mglValFixedPoint.d \
+./src/mglValues/mglValString.d \
 ./src/mglValues/mglXMLValueReader.d 
 
 

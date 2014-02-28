@@ -12,6 +12,8 @@
 
 mglSelectionContext::mglSelectionContext()
 {
-	m_CurrentFocus = NULL;
+	m_Focus = NULL;
 	m_pCurrentSelectionList = NULL;
+	m_Menu = NULL;
+	m_SelectListParent = NULL;
 }

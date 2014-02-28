@@ -9,6 +9,7 @@
 #define MGLVALSTRING_H_
 
 #include <string>
+#include <iostream>
 #include "mglValues/mglValue.h"
 
 using namespace std;
@@ -18,9 +19,33 @@ using namespace std;
  *
  * The only reason to derive it is the possibility to identify its type during runtime.
  */
-class mglValString : std::string
+class mglValString
 {
+public:
 	  static const mglValType m_valType = mglValType::mglValString;
+
+	  mglValString();
+	  mglValString(char* _cstr);
+	  mglValString(const char* _cstr);
+	  mglValString(string& _str);
+	  mglValString(string* _str);
+	  mglValString(const string _str);
+
+	  mglValString(const mglValString& right); // Copy constructor
+	  ~mglValString();
+
+	  int size();
+	  bool empty();
+
+	  mglValString operator + (const mglValString& _right);
+	  bool operator == (const mglValString& _right);
+	  mglValString& operator = (mglValString& _str);
+
+
+	  string* str();
+private:
+	  string* m_string;
+	  bool m_isEmpty;
 };
 
 

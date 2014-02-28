@@ -53,7 +53,11 @@ public:
 
 	void Draw(void);
 	void SetMainFrame(mglGuiObject *MainFrame);
-	void SetMenu(mglGuiObject *Menu);
+
+	void closeMenu();
+	void returnFromMenu();
+	void openMenu(mglGuiObject *Menu);
+
 	void destroy();
 	mglGuiObject* getMainFrameByID(unsigned int ID);
 	mglGuiObject* getMenuByID(unsigned int ID);
@@ -92,6 +96,8 @@ private:
 	Display *m_display;
 	Window m_window;
 	bool m_dbf;
+
+	bool m_lastActionCausedByTouch;
 
 	int m_ScreenXRes;
 	int m_ScreenYRes;

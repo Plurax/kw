@@ -61,6 +61,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	m_CurrentMainFrame = NULL;
 	m_CurrentMenu = NULL;
 
+	m_lastActionCausedByTouch = false;
 	m_vSelectionContexts.push_back(new mglSelectionContext());
 }
 
@@ -98,22 +99,20 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		if (Message->getButton() == BTN_IGR)
 		{
 			// Remap to button 1?
-			if (m_vSelectionContexts.back()->m_CurrentFocus != NULL)
+			if (m_vSelectionContexts.back()->m_Focus != NULL)
 			{
-				Message->setTarget(m_vSelectionContexts.back()->m_CurrentFocus);
-				m_vSelectionContexts.back()->m_CurrentFocus->ProcessMessage(Message);
+				Message->setTarget(m_vSelectionContexts.back()->m_Focus);
+				m_vSelectionContexts.back()->m_Focus->ProcessMessage(Message);
 			}
 			// May be functor logic maps the input onto the mt1 behaviour - so we change the state to focussed again here...
 			if (Message->getInputType() == eInputMouseButtonRelease)
-				m_vSelectionContexts.back()->m_CurrentFocus->setState(OBJ_STATE_FOCUSSED);
+			{
+				if (m_vSelectionContexts.back()->m_Focus != NULL)
+					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
+			}
 		}
 		else
 		{
-			if (m_CurrentMenu != NULL)
-				m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
-			else
-				m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMainFrame;
-
 			mglGuiObject* pTemp = NULL;
 			mglGuiObject* pSwap = NULL;
 
@@ -139,8 +138,8 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			}
 			else
 			{
-				pTemp = m_vSelectionContexts.back()->m_CurrentFocus;
-				m_vSelectionContexts.back()->m_CurrentFocus->setState(OBJ_STATE_STANDARD);
+				pTemp = m_vSelectionContexts.back()->m_Focus;
+				m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
 			}
 
 			while ((iCount != 0) && (pTemp != NULL))
@@ -151,7 +150,15 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 						pSwap = pTemp->next();
 					else
 						pSwap = pTemp->prev();
-
+/*
+					if (pSwap == NULL) // reached end of concatenation
+					{
+						if (bForward)
+							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+						else
+							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+					}
+*/
 					pTemp = pSwap;
 				}
 				if (pTemp)
@@ -162,11 +169,11 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			if (pTemp != NULL)
 			{
 				pTemp->setState(OBJ_STATE_FOCUSSED);
-				m_vSelectionContexts.back()->m_CurrentFocus = pTemp;
+				m_vSelectionContexts.back()->m_Focus = pTemp;
 			}
 			else
 			{
-				m_vSelectionContexts.back()->m_CurrentFocus = NULL;
+				m_vSelectionContexts.back()->m_Focus = NULL;
 				m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
 			}
 		}
@@ -256,19 +263,58 @@ mglGuiObject* mglSystem::getMenuByID(unsigned int ID)
 		return 0;
 }
 
-
+/**
+ * Sets the mainframe to be shown.
+ * This also will change the first selection context object to the newly set frame!
+ * This behaviour allows changing main frames out of menus.
+ * @param MainFrame
+ */
 void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 {
 	m_CurrentMainFrame = MainFrame;
+	m_vSelectionContexts.front()->m_SelectListParent = m_CurrentMainFrame;
+
+	m_vSelectionContexts.front()->m_SelectListParent = m_CurrentMainFrame;
 }
 
-void mglSystem::SetMenu(mglGuiObject *Menu)
+void mglSystem::openMenu(mglGuiObject *Menu)
 {
-	m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+	m_vSelectionContexts.push_back(new mglSelectionContext());
+
 	m_CurrentMenu = Menu;
-	if (Menu == NULL)
-		m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMainFrame;
+
+	m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+
+	m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
+	m_vSelectionContexts.back()->m_Menu = m_CurrentMenu;
 }
+
+/**
+ * This will close the menu.
+ * If there were other menus opened before, all their selections will be thrown away and we go directly to mainframe!
+ */
+void mglSystem::closeMenu()
+{
+	while (m_vSelectionContexts.size() > 1)
+	{
+		delete m_vSelectionContexts.back();
+		m_vSelectionContexts.pop_back();
+	}
+	m_CurrentMenu = NULL;
+}
+
+
+/**
+ * This will return from the currently opened menu to the previous one.
+ * If there was no menu opened before this one, same is done as in close...
+ */
+void mglSystem::returnFromMenu()
+{
+	delete m_vSelectionContexts.back();
+	m_vSelectionContexts.pop_back();
+	m_CurrentMenu = m_vSelectionContexts.back()->m_Menu;
+}
+
 
 /**
  * Reads the complete configuration file and creates the corresponding graphic objects via
