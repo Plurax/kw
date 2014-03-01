@@ -10,7 +10,9 @@
 
 #include <string>
 #include <iostream>
-#include "mglValues/mglValue.h"
+#include "mglValue.h"
+
+
 
 using namespace std;
 

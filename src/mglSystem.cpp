@@ -150,7 +150,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 						pSwap = pTemp->next();
 					else
 						pSwap = pTemp->prev();
-/*
+
 					if (pSwap == NULL) // reached end of concatenation
 					{
 						if (bForward)
@@ -158,7 +158,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 						else
 							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
 					}
-*/
+
 					pTemp = pSwap;
 				}
 				if (pTemp)
@@ -272,7 +272,7 @@ mglGuiObject* mglSystem::getMenuByID(unsigned int ID)
 void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 {
 	m_CurrentMainFrame = MainFrame;
-	m_vSelectionContexts.front()->m_SelectListParent = m_CurrentMainFrame;
+	m_vSelectionContexts.front()->m_pCurrentSelectionList = NULL;
 
 	m_vSelectionContexts.front()->m_SelectListParent = m_CurrentMainFrame;
 }
@@ -282,8 +282,23 @@ void mglSystem::openMenu(mglGuiObject *Menu)
 	m_vSelectionContexts.push_back(new mglSelectionContext());
 
 	m_CurrentMenu = Menu;
+	m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
+	mglGuiObject* obj = NULL;
 
-	m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+	if (!m_lastActionCausedByTouch)
+	{
+		m_vSelectionContexts.back()->m_pCurrentSelectionList = m_CurrentMenu->getChildren();
+		mglGuiObjectList::iterator it = m_vSelectionContexts.back()->m_pCurrentSelectionList->begin();
+		while (it != m_vSelectionContexts.back()->m_pCurrentSelectionList->end())
+		{
+			obj = *it;
+			if (obj->getOptionMask() & OBJ_IGR_SELECTABLE)
+				break;
+		}
+		m_vSelectionContexts.back()->m_Focus = obj;
+	}
+	else
+		m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
 
 	m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
 	m_vSelectionContexts.back()->m_Menu = m_CurrentMenu;

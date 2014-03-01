@@ -16,6 +16,7 @@ class mglLogDevice
 public:
 	virtual void flush() = 0;
 	virtual void operator << (char* str) = 0;
+	virtual void operator << (const char* str) = 0;
 	virtual void operator << (std::string str) = 0;
 
 };

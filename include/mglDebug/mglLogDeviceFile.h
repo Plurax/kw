@@ -23,6 +23,7 @@ public:
 	mglLogDeviceFile(const char* filename);
 	~mglLogDeviceFile();
 	void operator << (char* str);
+	void operator << (const char* str);
 	void operator << (string str);
 
 private:

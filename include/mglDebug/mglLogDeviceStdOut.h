@@ -15,6 +15,7 @@ class mglLogDeviceStdOut : public mglLogDevice
 	void flush();
 
 	void operator << (char* str);
+	void operator << (const char* str);
 	void operator << (std::string str);
 	~mglLogDeviceStdOut();
 };

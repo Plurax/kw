@@ -12,6 +12,8 @@
 #include "mglDebug/mglLogDeviceStdErr.h"
 #include <string>
 #include <sstream>
+#include <stdio.h>
+#include <time.h>
 
 using namespace std;
 
@@ -36,9 +38,24 @@ mglLogChannel::mglLogChannel(string name)
 		}
 }
 
-
+/**
+ * This function will create a local timestamp to be put on the start on the line.
+ * The following appended line comes from the general macros used in the code.
+ * @param line - stringstream line to log
+ */
 void mglLogChannel::log(stringstream& line)
 {
+	time_t now;
+	struct tm * timeinfo;
+	char buffer[20];
+	buffer [14] = (char)0;
+	buffer [15] = (char)0;
+	time(&now);
+	timeinfo = localtime(&now);
+	strftime (buffer,15,"%Y%m%d%H%M%S",timeinfo);
+
+	(*m_logDevice) << buffer;
+	(*m_logDevice) << ":";
 	(*m_logDevice) << line.str();
 	(*m_logDevice) << "\n";
 	m_logDevice->flush();

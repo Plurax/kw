@@ -27,6 +27,11 @@ void mglLogDeviceFile::operator << (char* str)
 	m_outputFile << str;
 }
 
+void mglLogDeviceFile::operator << (const char* str)
+{
+	m_outputFile << str;
+}
+
 
 void mglLogDeviceFile::operator << (std::string str)
 {
