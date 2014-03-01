@@ -8,7 +8,7 @@
 #ifndef MGLDATALAYER_H_
 #define MGLDATALAYER_H_
 
-#include <string>
+#include "mglValues/mglValString.h"
 #include <stdio.h>
 #include <map>
 #include <vector>
@@ -53,10 +53,10 @@ public:
 
 	void init();
 
-	mglDataSource* createDataSource(string* libname, string* classname, DOMElement* configuration);
+	mglDataSource* createDataSource(mglValString* libname, mglValString* classname, DOMElement* configuration);
 
 private:
-	map<string, mglDataLibHandle*> m_loadedDataSources;
+	map<mglValString, mglDataLibHandle*> m_loadedDataSources;
 
 };
 

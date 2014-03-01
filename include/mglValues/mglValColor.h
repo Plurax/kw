@@ -9,7 +9,7 @@
 #define MGLCOLOR_H_
 
 
-#include <string>
+#include "mglValString.h"
 #include "mglValue.h"
 
 class mglValColor {
@@ -19,7 +19,7 @@ public:
 	mglValColor(float red, float green, float blue, float alpha);
 	mglValColor(const char* hex);
 
-	std::string asString();
+	mglValString asString();
 
 	float fRed;
 	float fGreen;

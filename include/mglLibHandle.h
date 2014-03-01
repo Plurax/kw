@@ -8,7 +8,7 @@
 #ifndef MGLLIBHANDLE_H_
 #define MGLLIBHANDLE_H_
 
-#include <string>
+#include "mglValues/mglValString.h"
 #include "mglLibraryInfo.h"
 using namespace std;
 

@@ -19,12 +19,12 @@
 #include <termios.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
 #include <iostream>
 
 
 #include "mglDataLayer/mglShm.h"
 #include "mglDebug/mglLogger.h"
+#include "mglValues/mglValString.h"
 
 mglShm::mglShm(DOMElement* configuration)
 {

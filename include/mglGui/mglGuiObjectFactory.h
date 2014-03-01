@@ -10,7 +10,7 @@
 
 #include "mglGui/mglGuiObjectFactory.h"
 #include "mglGui/mglGuiActionFunctor.h"
-#include <string>
+#include "mglValues/mglValString.h"
 #include <memory>
 
 #include "mglGui/mglGuiObject.h"
@@ -35,7 +35,7 @@ class mglGuiObjectFactory
 public:
 	virtual ~mglGuiObjectFactory() {};
 	virtual mglLibraryInfo* getLibInfo();
-	virtual mglGuiObject* createGuiObject(string* classname, DOMElement* configuration);
+	virtual mglGuiObject* createGuiObject(mglValString* classname, DOMElement* configuration);
 };
 
 

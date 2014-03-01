@@ -10,7 +10,7 @@
 
 #include "mglGui/mglGuiActionFunctor.h"
 #include "mglLibraryInfo.h"
-#include <string>
+#include "mglValues/mglValString.h"
 #include <memory>
 
 using namespace std;
@@ -21,7 +21,7 @@ class mglGuiActionFactory
 public:
 	virtual ~mglGuiActionFactory();
 	virtual mglLibraryInfo* getLibInfo();
-	virtual mglGuiActionFunctor* createGuiAction(string* classname);
+	virtual mglGuiActionFunctor* createGuiAction(mglValString* classname);
 };
 
 

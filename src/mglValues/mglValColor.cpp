@@ -62,7 +62,7 @@ mglValColor::mglValColor(const char* hex)
 	}
 }
 
-std::string mglValColor::asString()
+mglValString mglValColor::asString()
 {
 	std::stringstream str;
 	str << "Color: { " << fRed << ", " << fGreen << ", " << fBlue << ", " << fAlpha << "}";

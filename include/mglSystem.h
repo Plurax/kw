@@ -20,6 +20,8 @@
 #include "mglAppConfiguration.h"
 #include "mglSelectionContext.h"
 
+#include "mglValues/mglValString.h"
+
 #include "mglLibHandle.h"
 
 #include <xercesc/dom/DOM.hpp>
@@ -64,7 +66,7 @@ public:
 
 	mglMessage* processInputMessage(mglInputMessage* Message);
 
-	void readConfiguration(std::string& configFile);
+	void readConfiguration(mglValString& configFile);
 	void (*flushGL)();
 	mglGuiObject* getTargetWindow(mglValCoord pt);
 
@@ -75,7 +77,7 @@ public:
 
 	mglDataSourceMap m_DataSources;
 
-	mglDataSource* getDataSource(string _name);
+	mglDataSource* getDataSource(mglValString _name);
 
 	mglFontProvider* m_FontProvider;
 

@@ -8,7 +8,7 @@
 #ifndef MGLOBJECTMANAGER_H_
 #define MGLOBJECTMANAGER_H_
 
-#include <string>
+#include "mglValues/mglValString.h"
 #include <stdio.h>
 #include <map>
 #include <vector>
@@ -56,13 +56,13 @@ public:
 
 	void init();
 
-	mglGuiObject* createGUIObject(string* libname, string* classname, DOMElement* configuration);
-	mglGuiActionFunctor* createGuiAction(string* libname, string* classname);
+	mglGuiObject* createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration);
+	mglGuiActionFunctor* createGuiAction(mglValString* libname, mglValString* classname);
 
 private:
-	map<string, mglGuiLibHandle*> m_loadedGuiLibraries;
+	map<mglValString, mglGuiLibHandle*> m_loadedGuiLibraries;
 
-	map<string, mglGuiActionLibHandle*> m_loadedActionLibraries;
+	map<mglValString, mglGuiActionLibHandle*> m_loadedActionLibraries;
 };
 
 

@@ -2,9 +2,11 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglSystem.h \
@@ -15,10 +17,10 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibHandle.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionLibHandle.h \
@@ -42,11 +44,15 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h:
+
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h:
 
@@ -68,13 +74,13 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h:
-
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibHandle.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h:
 

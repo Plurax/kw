@@ -201,12 +201,12 @@ void mglGuiObject::setNextWindow(mglGuiObject* parent)
 	m_pNext = parent;
 }
 
-const std::string& mglGuiObject::getName()
+const mglValString& mglGuiObject::getName()
 {
 	return m_name;
 }
 
-void mglGuiObject::setName(std::string name)
+void mglGuiObject::setName(mglValString name)
 {
 	m_name = name;
 }

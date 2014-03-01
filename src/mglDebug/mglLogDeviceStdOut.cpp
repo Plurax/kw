@@ -27,7 +27,7 @@ void mglLogDeviceStdOut::operator << (const char* str)
 }
 
 
-void mglLogDeviceStdOut::operator << (std::string str)
+void mglLogDeviceStdOut::operator << (string str)
 {
 	std::cout << str;
 }

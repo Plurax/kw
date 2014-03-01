@@ -43,10 +43,12 @@ typedef struct __static_log_info static_log_info;
 #define LOG_LEVEL(level,tag,text) \
 	do { \
 		std::stringstream line; \
-		line <<  _stat_log_info.psz_libname << ";" << std::setw(15) << _stat_log_info.psz_file << ";" << std::setw(0) << _stat_log_info.psz_method << ";" << __LINE__  << ";" << tag << ": " << text; \
+		line << _stat_log_info.psz_libname << ";" << _stat_log_info.psz_file << ";" <<  _stat_log_info.psz_method << ";" << __LINE__  << ";" << tag << ": " << text; \
 		mglLogger::Inst().log(level,&_stat_log_info,line); \
 	} \
 	while (false);
+
+
 
 #define LOG_MASK_EXCEPTION (unsigned short)0x0040
 #define LOG_MASK_PANIC (unsigned short)0x0020

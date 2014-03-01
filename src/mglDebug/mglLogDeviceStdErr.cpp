@@ -26,7 +26,7 @@ void mglLogDeviceStdErr::operator << (const char* str)
 	std::cerr << str;
 }
 
-void mglLogDeviceStdErr::operator << (std::string str)
+void mglLogDeviceStdErr::operator << (string str)
 {
 	std::cerr << str;
 }

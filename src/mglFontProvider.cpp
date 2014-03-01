@@ -71,8 +71,8 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 	XMLCh* TAG_FontName = XMLString::transcode("name");
 
 	int fontsize = 0;
-	string* file_str = NULL;
-	string* name_str = NULL;
+	mglValString* file_str = NULL;
+	mglValString* name_str = NULL;
 	string* size_str = NULL;
 	// For all nodes, children of "GUI" in the XML tree.
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -87,8 +87,8 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 						= dynamic_cast< xercesc::DOMElement* >( currentNode );
 			if ( XMLString::equals(currentElement->getTagName(), TAG_FontFile))
 			{
-				file_str = new string(XMLString::transcode(currentElement->getTextContent()));
-				LOG_TRACE("Got Font from file: " << (*file_str));
+				file_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
+				LOG_TRACE("Got Font from file: " << (*file_str).str());
 			}
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_FontSize))
@@ -99,7 +99,7 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_FontName))
 			{
-				name_str = new string(XMLString::transcode(currentElement->getTextContent()));
+				name_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
 			}
 		}
 	}
@@ -117,7 +117,7 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 }
 
 // this will add a font to the list
-void mglFontProvider::AddFont(int _size, string* _name, string* _file)
+void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _file)
 {
 	bool err = false;
 
@@ -139,10 +139,10 @@ void mglFontProvider::AddFont(int _size, string* _name, string* _file)
 		THROW_TECHNICAL_EXCEPTION(3, "Error on loading Font (file)...\n");
 	}
 
-	FTFont* font = new FTTextureFont(_file->c_str());
+	FTFont* font = new FTTextureFont(_file->str()->c_str());
 	font->FaceSize(_size); // Set the size initially - textures are loaded automatically by FTGL (SPEED!)
 	m_VecFonts.push_back(font);
-	m_MapFonts.insert(std::pair<std::string, FTFont*>(*_name, font));
+	m_MapFonts.insert(std::pair<mglValString, FTFont*>(*_name, font));
 }
 
 
@@ -151,9 +151,9 @@ FTFont* mglFontProvider::GetFontByID(unsigned short index)
 	return m_VecFonts.at(index);
 }
 
-FTFont* mglFontProvider::GetFontByName(string& _string)
+FTFont* mglFontProvider::GetFontByName(mglValString& _string)
 {
-	std::map<std::string, FTFont*>::iterator fontIt;
+	std::map<mglValString, FTFont*>::iterator fontIt;
 	fontIt = m_MapFonts.find(_string);
 
 	if (fontIt == m_MapFonts.end())

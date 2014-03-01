@@ -75,7 +75,6 @@ bool mglValString::empty()
 }
 
 
-
 mglValString mglValString::operator + (const mglValString& _right)
 {
 	return mglValString(*this->m_string + *_right.m_string);
@@ -105,7 +104,13 @@ mglValString& mglValString::operator = (mglValString& _str)
 }
 
 
-string* mglValString::str()
+bool mglValString::operator < (const mglValString& _right) const
+{
+	return ((*this->m_string) < (*_right.m_string));
+}
+
+
+const string* mglValString::str() const
 {
 	return m_string;
 }

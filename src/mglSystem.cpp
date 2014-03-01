@@ -55,7 +55,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 
    m_FontProvider = new mglFontProvider();
 
-	std::string configfile("Configuration.xml");
+   mglValString configfile("Configuration.xml");
 	readConfiguration(configfile);
 
 	m_CurrentMainFrame = NULL;
@@ -336,13 +336,13 @@ void mglSystem::returnFromMenu()
  * loading of shared libs and factory pattern.
  * @param configFile - string containing a full path file for the configuration
  */
-void mglSystem::readConfiguration(std::string& configFile)
+void mglSystem::readConfiguration(mglValString& configFile)
 {
 	// Test to see if the file is ok.
    struct stat fileStatus;
 
    errno = 0;
-   if(stat(configFile.c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
+   if(stat(configFile.str()->c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
    {
        if( errno == ENOENT )      // errno declared by include file errno.h
           throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
@@ -370,7 +370,7 @@ void mglSystem::readConfiguration(std::string& configFile)
 
    try
    {
-      m_ConfigFileParser->parse( configFile.c_str() );
+      m_ConfigFileParser->parse( configFile.str()->c_str() );
 
       // no need to free this pointer - owned by the parent parser object
       DOMDocument* xmlDoc = m_ConfigFileParser->getDocument();
@@ -504,23 +504,23 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 
 				// Create the configured element via the factory
 
-				string* name = new string(XMLString::transcode(DE_name->getTextContent()));
-				string* libname = new string(XMLString::transcode(DE_libname->getTextContent()));
-				string* classname = new string(XMLString::transcode(DE_classname->getTextContent()));
+				mglValString* name = new mglValString(XMLString::transcode(DE_name->getTextContent()));
+				mglValString* libname = new mglValString(XMLString::transcode(DE_libname->getTextContent()));
+				mglValString* classname = new mglValString(XMLString::transcode(DE_classname->getTextContent()));
 
 				thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
 													classname,
 													DE_configuration);
 
-				libname = new string(XMLString::transcode(DE_func_libname->getTextContent()));
-				classname = new string(XMLString::transcode(DE_func_classname->getTextContent()));
+				libname = new mglValString(XMLString::transcode(DE_func_libname->getTextContent()));
+				classname = new mglValString(XMLString::transcode(DE_func_classname->getTextContent()));
 
 				// After we created the object we can attach the handler if it exists
 				mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(libname, classname);
 				thisWindow->Connect(funct);
 
 				// A created gui object is also registered by its name
-				m_mGuiObjects.insert(std::pair<string,mglGuiObject*>(string(*name),thisWindow));
+				m_mGuiObjects.insert(std::pair<mglValString,mglGuiObject*>(mglValString(*name),thisWindow));
 
 				// We are at parent level - so this is a main frame
 				if (parent == NULL)
@@ -597,14 +597,14 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 
 				// Create the configured element via the factory
 
-				string* name = new string(XMLString::transcode(DE_name->getTextContent()));
-				string* libname = new string(XMLString::transcode(DE_libname->getTextContent()));
-				string* classname = new string(XMLString::transcode(DE_classname->getTextContent()));
+				mglValString* name = new mglValString(XMLString::transcode(DE_name->getTextContent()));
+				mglValString* libname = new mglValString(XMLString::transcode(DE_libname->getTextContent()));
+				mglValString* classname = new mglValString(XMLString::transcode(DE_classname->getTextContent()));
 
 				thisDS = mglDataSourceManager::Inst().createDataSource(libname,
 													classname,
 													DE_configuration);
-				m_DataSources.insert(pair<string,mglDataSource*>(*name,thisDS));
+				m_DataSources.insert(pair<mglValString,mglDataSource*>(*name,thisDS));
 			}
 		}
 	}
@@ -612,7 +612,7 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 	XMLString::release(&TAG_DataSource);
 
 	LOG_TRACE("Initializing data sources...");
-	map<string,mglDataSource*>::iterator itDS;
+	map<mglValString,mglDataSource*>::iterator itDS;
 	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
 		itDS->second->init();
 }
@@ -624,7 +624,7 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
  * @param _name
  * @return
  */
-mglDataSource* mglSystem::getDataSource(string _name)
+mglDataSource* mglSystem::getDataSource(mglValString _name)
 {
 	mglDataSourceMap::iterator itDS = m_DataSources.find(_name);
 	if (itDS == m_DataSources.end())
@@ -637,7 +637,7 @@ mglDataSource* mglSystem::getDataSource(string _name)
 
 void mglSystem::destroy()
 {
-	map<string, mglDataSource*>::iterator itDS;
+	map<mglValString, mglDataSource*>::iterator itDS;
 	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
 		itDS->second->deInit();
 

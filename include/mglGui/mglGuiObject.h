@@ -43,7 +43,7 @@ class mglSystem;
 class mglGuiObject;
 
 typedef vector<mglGuiObject*> mglGuiObjectList;
-typedef map<string, mglGuiObject*> mglGuiObjectMap;
+typedef map<mglValString, mglGuiObject*> mglGuiObjectMap;
 
 class mglGuiObject
 {
@@ -91,14 +91,14 @@ public:
 
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
-	void RemoveChild(string ChildName);
+	void RemoveChild(mglValString ChildName);
 	mglGuiObjectList* getChildren();
 	virtual mglGuiObject* getChildByID(unsigned int ID);
 
 	void setState(unsigned short _state);
 	unsigned short getState();
-	const string& getName();
-	void setName(string name);
+	const mglValString& getName();
+	void setName(mglValString name);
 
 	mglGuiObject* parent();
 	mglGuiObject* prev();
@@ -130,7 +130,7 @@ protected:
 	bool bVisible;
 	bool bHasChildren;
 
-	string m_name;
+	mglValString m_name;
 	mglValColor m_BackGroundColor;
 };
 

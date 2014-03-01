@@ -12,13 +12,13 @@ mglDataSource::mglDataSource()
 {
 }
 
-mglDataSource::mglDataSource(string _name, unsigned int _type)
+mglDataSource::mglDataSource(mglValString _name, unsigned int _type)
 {
 	m_name = _name;
 	m_type = _type;
 }
 
-string mglDataSource::getName()
+mglValString mglDataSource::getName()
 {
 	return m_name;
 }

@@ -12,7 +12,7 @@
 #include "mglDataLayer/mglDataSourceFactory.h"
 #include "mglDataLayer/mglDataSource.h"
 #include "mglLibHandle.h"
-#include <string>
+#include "mglValues/mglValString.h"
 #include <memory>
 
 #include <xercesc/dom/DOM.hpp>
@@ -37,7 +37,7 @@ class mglDataSourceFactory
 public:
 	virtual ~mglDataSourceFactory();
 
-	virtual mglDataSource* createDataSource(string* classname, DOMElement* configuration);
+	virtual mglDataSource* createDataSource(mglValString* classname, DOMElement* configuration);
 };
 
 typedef mglDataSourceFactory* (*DataSourceCreateFunc)();

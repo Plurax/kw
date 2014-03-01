@@ -12,9 +12,9 @@
 /*
  * For the first time the standard object factory can only return mglWindow!
  */
-mglGuiActionFunctor* mglGuiActionFactory::createGuiAction(string* classname)
+mglGuiActionFunctor* mglGuiActionFactory::createGuiAction(mglValString* classname)
 {
-	if (classname->compare("mglGuiAction") == 0)
+	if (classname->str()->compare("mglGuiAction") == 0)
 		return new mglGuiActionFunctor();
 
 	return NULL;

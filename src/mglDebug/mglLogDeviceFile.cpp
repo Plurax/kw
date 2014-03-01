@@ -33,7 +33,7 @@ void mglLogDeviceFile::operator << (const char* str)
 }
 
 
-void mglLogDeviceFile::operator << (std::string str)
+void mglLogDeviceFile::operator << (string str)
 {
 	m_outputFile << str;
 }

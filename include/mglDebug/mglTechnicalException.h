@@ -8,8 +8,8 @@
 #ifndef MGLEXCEPTION_H_
 #define MGLEXCEPTION_H_
 
+#include "mglValues/mglValString.h"
 #include <string>
-
 using namespace std;
 
 class mglTechnicalException

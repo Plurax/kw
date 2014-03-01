@@ -29,14 +29,14 @@ void mglDataSourceManager::init()
 			mglSystem::Inst().m_libInfo,
 			defaultObjFactory);
 
-	m_loadedDataSources.insert(std::pair<string,mglDataLibHandle*>(string("mgl"),defaultDataSourceLibHandle));
+	m_loadedDataSources.insert(std::pair<mglValString,mglDataLibHandle*>(mglValString("mgl"),defaultDataSourceLibHandle));
 }
 
-mglDataSource* mglDataSourceManager::createDataSource(string* libname, string* classname, DOMElement* configuration)
+mglDataSource* mglDataSourceManager::createDataSource(mglValString* libname, mglValString* classname, DOMElement* configuration)
 {
 
 	// Found the requested library in the map?
-	std::map<string,mglDataLibHandle*>::iterator libIterator = m_loadedDataSources.find(*libname);
+	std::map<mglValString,mglDataLibHandle*>::iterator libIterator = m_loadedDataSources.find(*libname);
 
 	if (libIterator != m_loadedDataSources.end())
 	{
@@ -44,11 +44,11 @@ mglDataSource* mglDataSourceManager::createDataSource(string* libname, string* c
 	}
 	else
 	{
-		void* handle = dlopen(libname->c_str(), RTLD_LAZY);
+		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY);
 
 		if (!handle)
 		{
-			std::cerr << "Cannot open library: " << dlerror() << '\n';
+			std::cerr << "DataSourceManager: Cannot open library: " << dlerror() << '\n';
 			// TODO: Throw exception
 		}
 
@@ -58,7 +58,7 @@ mglDataSource* mglDataSourceManager::createDataSource(string* libname, string* c
 		mglLibraryInfo* thisInfo = getLibInfofct();
 		mglDataLibHandle* DataSourceLibHandle = new mglDataLibHandle(handle, thisInfo, factory);
 
-		m_loadedDataSources.insert(std::pair<string,mglDataLibHandle*>(*libname,DataSourceLibHandle ));
+		m_loadedDataSources.insert(std::pair<mglValString,mglDataLibHandle*>(*libname,DataSourceLibHandle ));
 		return factory->createDataSource(classname, configuration);
 	}
     return NULL;

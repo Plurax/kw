@@ -39,12 +39,13 @@ public:
 	  int size();
 	  bool empty();
 
+
 	  mglValString operator + (const mglValString& _right);
 	  bool operator == (const mglValString& _right);
 	  mglValString& operator = (mglValString& _str);
+	  bool operator < (const mglValString& _right) const;
 
-
-	  string* str();
+	  const string* str() const;
 private:
 	  string* m_string;
 	  bool m_isEmpty;

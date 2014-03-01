@@ -14,9 +14,9 @@ mglDataSourceFactory::~mglDataSourceFactory()
 {
 }
 
-mglDataSource* mglDataSourceFactory::createDataSource(string* classname, DOMElement* configuration)
+mglDataSource* mglDataSourceFactory::createDataSource(mglValString* classname, DOMElement* configuration)
 {
-	if (classname->compare("mglShm") == 0)
+	if (classname->str()->compare("mglShm") == 0)
 		return new mglShm(configuration);
 
 	return NULL;

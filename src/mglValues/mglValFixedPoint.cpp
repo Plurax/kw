@@ -31,7 +31,7 @@ mglValFixedPoint::mglValFixedPoint(long in, eValFixedPointPrec prec)
 	m_isEmpty = false;
 }
 
-string mglValFixedPoint::asString()
+mglValString mglValFixedPoint::asString()
 {
 	int i;
 	char tmp[20] = "";

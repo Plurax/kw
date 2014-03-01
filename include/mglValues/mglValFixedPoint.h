@@ -8,7 +8,7 @@
 #ifndef MGLVALFIXEDPOINT_H_
 #define MGLVALFIXEDPOINT_H_
 
-#include <string>
+#include "mglValString.h"
 #include "mglValue.h"
 
 using namespace std;
@@ -35,7 +35,7 @@ public:
 	mglValFixedPoint();
 	mglValFixedPoint(eValFixedPointPrec prec);
 	mglValFixedPoint(long in, eValFixedPointPrec prec);
-	string asString();
+	mglValString asString();
 
 	bool operator >= (const mglValFixedPoint right);
 	bool operator > (const mglValFixedPoint right);

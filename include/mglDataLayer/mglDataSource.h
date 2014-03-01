@@ -8,7 +8,7 @@
 #ifndef MGLDATASOURCE_H_
 #define MGLDATASOURCE_H_
 
-#include <string>
+#include "mglValues/mglValString.h"
 #include <map>
 
 using namespace std;
@@ -24,16 +24,16 @@ public:
 	mglDataSource();
 	virtual void init() = 0;
 	virtual void deInit() = 0;
-	mglDataSource(string _name, unsigned int _type);
-	string getName();
+	mglDataSource(mglValString _name, unsigned int _type);
+	mglValString getName();
 	unsigned int getType();
 
 protected:
 	unsigned int m_type;
-	string m_name;
+	mglValString m_name;
 };
 
-typedef map<string,mglDataSource*> mglDataSourceMap;
+typedef map<mglValString,mglDataSource*> mglDataSourceMap;
 
 
 #endif /* MGLDATASOURCE_H_ */

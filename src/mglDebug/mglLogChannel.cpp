@@ -23,12 +23,12 @@ mglLogChannel::mglLogChannel(string name)
 	m_classesEmpty = true;
 	m_librariesEmpty = true;
 
-	if (name.compare(string("stdout")) == 0)
+	if (name.compare("stdout") == 0)
 	{
 		m_logDevice = new mglLogDeviceStdOut();
 	}
 	else
-		if (name.compare(string("stderr")) == 0)
+		if (name.compare("stderr") == 0)
 		{
 			m_logDevice = new mglLogDeviceStdErr();
 		}

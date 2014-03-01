@@ -19,7 +19,7 @@ class mglLogDeviceStdErr : public mglLogDevice
 
 	void operator << (char* str);
 	void operator << (const char* str);
-	void operator << (std::string str);
+	void operator << (string str);
 	~mglLogDeviceStdErr();
 };
 

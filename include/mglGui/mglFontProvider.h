@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <vector>
 #include <map>
-#include <string>
 
 #include "mglValues/mglValString.h"
 
@@ -39,14 +38,14 @@ public:
 
     void loadFonts(DOMNode* currentElement);
 
-	void AddFont(int _size, string* _name, string* _file);
+	void AddFont(int _size, mglValString* _name, mglValString* _file);
 	FTFont* GetFontByID(unsigned short index);
-	FTFont* GetFontByName(string& _string);
+	FTFont* GetFontByName(mglValString& _string);
 
 private:
     void loadFont(DOMNode* currentElement);
 
-    std::map<std::string, FTFont*> m_MapFonts;
+    std::map<mglValString, FTFont*> m_MapFonts;
 	std::vector<FTFont*> m_VecFonts;
 };
 
