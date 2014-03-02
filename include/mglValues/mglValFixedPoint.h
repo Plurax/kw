@@ -20,8 +20,7 @@ enum class eValFixedPointPrec {
 	prec11N6,
 	prec9N8,
 	prec7N10,
-	prec5N12,
-	prec3N14
+	prec5N12
 };
 
 
@@ -30,7 +29,7 @@ class mglValFixedPoint
 {
 public:
   static const mglValType m_valType = mglValType::mglValFixedPoint;
-	const short precN[7];
+	static const short precN[7];
 
 	mglValFixedPoint();
 	mglValFixedPoint(eValFixedPointPrec prec);

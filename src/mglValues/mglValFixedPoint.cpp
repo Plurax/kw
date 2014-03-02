@@ -8,23 +8,22 @@
 #include "mglDebug/mglDebug.h"
 #include "mglValues/mglValFixedPoint.h"
 
+const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
+
 
 mglValFixedPoint::mglValFixedPoint()
-  : precN { 2, 4, 6, 8, 10, 12}
 {
 	m_isEmpty = true;
 	m_Precision = eValFixedPointPrec::prec11N6;
 }
 
 mglValFixedPoint::mglValFixedPoint(eValFixedPointPrec prec)
-: precN { 2, 4, 6, 8, 10, 12}
 {
 	m_isEmpty = true;
 	m_Precision = prec;
 }
 
 mglValFixedPoint::mglValFixedPoint(long in, eValFixedPointPrec prec)
-: precN { 2, 4, 6, 8, 10, 12}
 {
 	m_lValue = in;
 	m_Precision = prec;
@@ -42,7 +41,7 @@ mglValString mglValFixedPoint::asString()
 	}
 	tmp[i] = '.';
 
-	return string(tmp);
+	return mglValString(tmp);
 }
 
 bool mglValFixedPoint::operator >= (const mglValFixedPoint right)

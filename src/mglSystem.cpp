@@ -162,7 +162,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					pTemp = pSwap;
 				}
 				if (pTemp)
-					if (pTemp->getOptionMask() & OBJ_IGR_SELECTABLE)
+					if (pTemp->getOptionMask() & OBJ_SELECTABLE)
 						iCount--;
 			}
 
@@ -292,7 +292,7 @@ void mglSystem::openMenu(mglGuiObject *Menu)
 		while (it != m_vSelectionContexts.back()->m_pCurrentSelectionList->end())
 		{
 			obj = *it;
-			if (obj->getOptionMask() & OBJ_IGR_SELECTABLE)
+			if (obj->getOptionMask() & OBJ_SELECTABLE)
 				break;
 		}
 		m_vSelectionContexts.back()->m_Focus = obj;

@@ -49,6 +49,11 @@ typedef struct __static_log_info static_log_info;
 	while (false);
 
 
+// The PLAIN Channels are used to provide logging mechanisms for application level logging (e.g. a socket or seperate application logfile?)
+#define LOG_MASK_PLAIN4 (unsigned short)0x00800
+#define LOG_MASK_PLAIN3 (unsigned short)0x00400
+#define LOG_MASK_PLAIN2 (unsigned short)0x00200
+#define LOG_MASK_PLAIN1 (unsigned short)0x00100
 
 #define LOG_MASK_EXCEPTION (unsigned short)0x0040
 #define LOG_MASK_PANIC (unsigned short)0x0020
