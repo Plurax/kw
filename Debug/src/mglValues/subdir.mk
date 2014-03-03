@@ -8,6 +8,7 @@ CPP_SRCS += \
 ../src/mglValues/mglValCoord.cpp \
 ../src/mglValues/mglValFixedPoint.cpp \
 ../src/mglValues/mglValString.cpp \
+../src/mglValues/mglValue.cpp \
 ../src/mglValues/mglXMLValueReader.cpp 
 
 OBJS += \
@@ -15,6 +16,7 @@ OBJS += \
 ./src/mglValues/mglValCoord.o \
 ./src/mglValues/mglValFixedPoint.o \
 ./src/mglValues/mglValString.o \
+./src/mglValues/mglValue.o \
 ./src/mglValues/mglXMLValueReader.o 
 
 CPP_DEPS += \
@@ -22,6 +24,7 @@ CPP_DEPS += \
 ./src/mglValues/mglValCoord.d \
 ./src/mglValues/mglValFixedPoint.d \
 ./src/mglValues/mglValString.d \
+./src/mglValues/mglValue.d \
 ./src/mglValues/mglXMLValueReader.d 
 
 

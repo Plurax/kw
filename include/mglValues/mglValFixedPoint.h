@@ -25,7 +25,7 @@ enum class eValFixedPointPrec {
 
 
 
-class mglValFixedPoint
+class mglValFixedPoint : public mglValue
 {
 public:
   static const mglValType m_valType = mglValType::mglValFixedPoint;
@@ -36,12 +36,16 @@ public:
 	mglValFixedPoint(long in, eValFixedPointPrec prec);
 	mglValString asString();
 
+	mglValType getType();
+
 	bool operator >= (const mglValFixedPoint right);
 	bool operator > (const mglValFixedPoint right);
 	bool operator <= (const mglValFixedPoint right);
 	bool operator < (const mglValFixedPoint right);
 	mglValFixedPoint operator + (const mglValFixedPoint& right);
+	mglValFixedPoint operator += (const mglValFixedPoint& right);
 	mglValFixedPoint operator - (const mglValFixedPoint& right);
+	mglValFixedPoint operator -= (const mglValFixedPoint& right);
 	mglValFixedPoint operator * (const mglValFixedPoint& right);
 	mglValFixedPoint operator / (const mglValFixedPoint& right);
 

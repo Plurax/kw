@@ -66,6 +66,11 @@ mglValString mglValColor::asString()
 {
 	std::stringstream str;
 	str << "Color: { " << fRed << ", " << fGreen << ", " << fBlue << ", " << fAlpha << "}";
-	return std::string(str.str());
+	return mglValString(str.str());
 }
 
+
+mglValType mglValColor::getType()
+{
+	return m_valType;
+}

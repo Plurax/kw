@@ -10,7 +10,7 @@
 
 #include "mglValue.h"
 
-class mglValCoord
+class mglValCoord : public mglValue
 {
 public:
   static const mglValType m_valType = mglValType::mglValCoord;
@@ -18,6 +18,8 @@ public:
 	mglValCoord(float x, float y, int z);
 
 	~mglValCoord();
+
+	mglValType getType();
 
 	float getX();
 	float getY();

@@ -114,3 +114,8 @@ const string* mglValString::str() const
 {
 	return m_string;
 }
+
+mglValType mglValString::getType()
+{
+	return m_valType;
+}

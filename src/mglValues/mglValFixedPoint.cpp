@@ -33,16 +33,18 @@ mglValFixedPoint::mglValFixedPoint(long in, eValFixedPointPrec prec)
 mglValString mglValFixedPoint::asString()
 {
 	int i;
-	char tmp[20] = "";
+	char tmp[21] = "";
 	snprintf(tmp, 20, "%ld", m_lValue);
-	for (i = strlen(tmp); i > precN[ static_cast<int>(m_Precision)]; i--)
+	int len = strlen(tmp);
+	for (i = len; i > (len - precN[ static_cast<int>(m_Precision)]); i--)
 	{
-		tmp[i+1]=tmp[i];
+		tmp[i]=tmp[i-1];
 	}
 	tmp[i] = '.';
 
 	return mglValString(tmp);
 }
+
 
 bool mglValFixedPoint::operator >= (const mglValFixedPoint right)
 {
@@ -84,6 +86,23 @@ mglValFixedPoint mglValFixedPoint::operator + (const mglValFixedPoint& right)
 	return mglValFixedPoint(this->m_lValue + right.m_lValue, this->m_Precision);
 }
 
+mglValFixedPoint mglValFixedPoint::operator += (const mglValFixedPoint& right)
+{
+	if (this->m_isEmpty || right.m_isEmpty)
+	{
+		INIT_LOG("mglValFixedPoint", "operator +=");
+		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
+	}
+	if (this->m_Precision != right.m_Precision)
+	{
+		INIT_LOG("mglValFixedPoint", "operator +=");
+		THROW_TECHNICAL_EXCEPTION(3, "Operation not allowed - Precision differs between objects");
+	}
+
+	this->m_lValue += right.m_lValue;
+	return *this;
+}
+
 mglValFixedPoint mglValFixedPoint::operator - (const mglValFixedPoint& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
@@ -98,6 +117,23 @@ mglValFixedPoint mglValFixedPoint::operator - (const mglValFixedPoint& right)
 	}
 
 	return mglValFixedPoint(this->m_lValue - right.m_lValue, this->m_Precision);
+}
+
+mglValFixedPoint mglValFixedPoint::operator -= (const mglValFixedPoint& right)
+{
+	if (this->m_isEmpty || right.m_isEmpty)
+	{
+		INIT_LOG("mglValFixedPoint", "operator -");
+		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
+	}
+	if (this->m_Precision != right.m_Precision)
+	{
+		INIT_LOG("mglValFixedPoint", "operator -");
+		THROW_TECHNICAL_EXCEPTION(3, "Operation not allowed - Precision differs between objects");
+	}
+
+	this->m_lValue -= right.m_lValue;
+	return *this;
 }
 
 mglValFixedPoint mglValFixedPoint::operator * (const mglValFixedPoint& right)
@@ -115,6 +151,7 @@ mglValFixedPoint mglValFixedPoint::operator * (const mglValFixedPoint& right)
 
 	return mglValFixedPoint(this->m_lValue * right.m_lValue, this->m_Precision);
 }
+
 
 mglValFixedPoint mglValFixedPoint::operator / (const mglValFixedPoint& right)
 {
@@ -189,4 +226,10 @@ mglValFixedPoint mglValFixedPoint::getWithNewPrecision(eValFixedPointPrec prec)
 	}
 	}
 
+}
+
+
+mglValType mglValFixedPoint::getType()
+{
+	return m_valType;
 }

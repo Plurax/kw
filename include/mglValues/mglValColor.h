@@ -12,7 +12,8 @@
 #include "mglValString.h"
 #include "mglValue.h"
 
-class mglValColor {
+class mglValColor : public mglValue
+{
 public:
   static const mglValType m_valType = mglValType::mglValColor;
 	mglValColor();
@@ -20,6 +21,7 @@ public:
 	mglValColor(const char* hex);
 
 	mglValString asString();
+	mglValType getType();
 
 	float fRed;
 	float fGreen;

@@ -81,6 +81,7 @@ mglSystem::~mglSystem()
  */
 mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 {
+	INIT_LOG("mglSystem", "processInputMessage(mglInputMessage* Message)");
 	// find the target object
 	if ((Message->getInputType() != eInputIGR) &&
 			(Message->getButton() != BTN_IGR))
@@ -101,80 +102,110 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			// Remap to button 1?
 			if (m_vSelectionContexts.back()->m_Focus != NULL)
 			{
-				Message->setTarget(m_vSelectionContexts.back()->m_Focus);
-				m_vSelectionContexts.back()->m_Focus->ProcessMessage(Message);
+				LOG_TRACE("Entering focus handler");
+				if (!m_vSelectionContexts.back()->m_Focus->getOptionMask() & OBJ_EDITABLE)
+				{
+					LOG_TRACE("Object is not editable");
+					Message->setTarget(m_vSelectionContexts.back()->m_Focus);
+					m_vSelectionContexts.back()->m_Focus->ProcessMessage(Message);
+				}
 			}
 			// May be functor logic maps the input onto the mt1 behaviour - so we change the state to focussed again here...
 			if (Message->getInputType() == eInputMouseButtonRelease)
 			{
 				if (m_vSelectionContexts.back()->m_Focus != NULL)
+					if (m_vSelectionContexts.back()->m_Editing == NULL)
+						m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
+
+				LOG_TRACE("Object is editable");
+				if (m_vSelectionContexts.back()->m_Editing == NULL)
+				{
+					m_vSelectionContexts.back()->m_Editing = m_vSelectionContexts.back()->m_Focus;
+					m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
+				}
+				else
+				{
+					m_vSelectionContexts.back()->m_Editing = NULL;
 					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
+				}
 			}
 		}
 		else
 		{
-			mglGuiObject* pTemp = NULL;
-			mglGuiObject* pSwap = NULL;
-
-			int iCount = Message->getIGRCount();
-			bool bForward,bEntry = false;
-
-			if (iCount > 0)
-				bForward = true;
-			else
+			// we are in focus level - step through the selection list
+			if (m_vSelectionContexts.back()->m_Editing == NULL)
 			{
-				bForward = false;
-				iCount *= -1;
-			}
+				mglGuiObject* pTemp = NULL;
+				mglGuiObject* pSwap = NULL;
 
-			if (m_vSelectionContexts.back()->m_pCurrentSelectionList == NULL)
-			{
-				bEntry = true;
-				m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
-				if (bForward)
-					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+				int iCount = Message->getIGRCount();
+				bool bForward,bEntry = false;
+
+				if (iCount > 0)
+					bForward = true;
 				else
-					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
-			}
-			else
-			{
-				pTemp = m_vSelectionContexts.back()->m_Focus;
-				m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
-			}
-
-			while ((iCount != 0) && (pTemp != NULL))
-			{
-				if (!bEntry)
 				{
-					if (bForward)
-						pSwap = pTemp->next();
-					else
-						pSwap = pTemp->prev();
+					bForward = false;
+					iCount *= -1;
+				}
 
-					if (pSwap == NULL) // reached end of concatenation
+				if (m_vSelectionContexts.back()->m_pCurrentSelectionList == NULL)
+				{
+					bEntry = true;
+					m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
+					if (bForward)
+						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+					else
+						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+				}
+				else
+				{
+					pTemp = m_vSelectionContexts.back()->m_Focus;
+					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
+				}
+
+				while ((iCount != 0) && (pTemp != NULL))
+				{
+					if (!bEntry)
 					{
 						if (bForward)
-							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+							pSwap = pTemp->next();
 						else
-							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+							pSwap = pTemp->prev();
+
+						if (pSwap == NULL) // reached end of concatenation
+						{
+							if (bForward)
+								pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+							else
+								pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+						}
+
+						pTemp = pSwap;
 					}
-
-					pTemp = pSwap;
+					if (pTemp)
+						if (pTemp->getOptionMask() & OBJ_SELECTABLE)
+							iCount--;
 				}
-				if (pTemp)
-					if (pTemp->getOptionMask() & OBJ_SELECTABLE)
-						iCount--;
-			}
 
-			if (pTemp != NULL)
-			{
-				pTemp->setState(OBJ_STATE_FOCUSSED);
-				m_vSelectionContexts.back()->m_Focus = pTemp;
+				if (pTemp != NULL)
+				{
+					pTemp->setState(OBJ_STATE_FOCUSSED);
+					m_vSelectionContexts.back()->m_Focus = pTemp;
+				}
+				else
+				{
+					m_vSelectionContexts.back()->m_Focus = NULL;
+					m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+				}
 			}
 			else
 			{
-				m_vSelectionContexts.back()->m_Focus = NULL;
-				m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+				int iCount = Message->getIGRCount();
+				mglGuiObjectEditable* objEditable = static_cast<mglGuiObjectEditable*>(m_vSelectionContexts.back()->m_Editing);
+				// An editable has to implement the additional editable class functions to provide modification via system layer
+				LOG_TRACE("Applying count " << iCount);
+				objEditable->applyIGRCount(iCount);
 			}
 		}
 	}

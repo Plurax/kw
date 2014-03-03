@@ -27,6 +27,7 @@ public:
 	mglGuiObject *m_Focus; /* This pointer contains the object which holds focus in time - this is modified by
 									prev/next concatenation of focussable objects by the nextfocus/prevfocus events (ie. IGR increment/decrement)
 									*/
+	mglGuiObject *m_Editing;
 };
 
 

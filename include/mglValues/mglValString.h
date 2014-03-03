@@ -21,7 +21,7 @@ using namespace std;
  *
  * The only reason to derive it is the possibility to identify its type during runtime.
  */
-class mglValString
+class mglValString : public mglValue
 {
 public:
 	  static const mglValType m_valType = mglValType::mglValString;
@@ -39,6 +39,7 @@ public:
 	  int size();
 	  bool empty();
 
+	  mglValType getType();
 
 	  mglValString operator + (const mglValString& _right);
 	  bool operator == (const mglValString& _right);

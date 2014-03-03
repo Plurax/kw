@@ -16,4 +16,5 @@ mglSelectionContext::mglSelectionContext()
 	m_pCurrentSelectionList = NULL;
 	m_Menu = NULL;
 	m_SelectListParent = NULL;
+	m_Editing = NULL;
 }

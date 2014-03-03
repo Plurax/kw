@@ -10,6 +10,7 @@ CPP_SRCS += \
 ../src/mglGui/mglGuiLibHandle.cpp \
 ../src/mglGui/mglGuiLibManager.cpp \
 ../src/mglGui/mglGuiObject.cpp \
+../src/mglGui/mglGuiObjectEditable.cpp \
 ../src/mglGui/mglGuiObjectFactory.cpp \
 ../src/mglGui/mglInputMessage.cpp \
 ../src/mglGui/mglTextureManager.cpp 
@@ -21,6 +22,7 @@ OBJS += \
 ./src/mglGui/mglGuiLibHandle.o \
 ./src/mglGui/mglGuiLibManager.o \
 ./src/mglGui/mglGuiObject.o \
+./src/mglGui/mglGuiObjectEditable.o \
 ./src/mglGui/mglGuiObjectFactory.o \
 ./src/mglGui/mglInputMessage.o \
 ./src/mglGui/mglTextureManager.o 
@@ -32,6 +34,7 @@ CPP_DEPS += \
 ./src/mglGui/mglGuiLibHandle.d \
 ./src/mglGui/mglGuiLibManager.d \
 ./src/mglGui/mglGuiObject.d \
+./src/mglGui/mglGuiObjectEditable.d \
 ./src/mglGui/mglGuiObjectFactory.d \
 ./src/mglGui/mglInputMessage.d \
 ./src/mglGui/mglTextureManager.d 

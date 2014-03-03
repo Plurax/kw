@@ -74,4 +74,8 @@ void mglValCoord::setZ(int z)
 	m_x = (float)z;
 }
 
+mglValType mglValCoord::getType()
+{
+	return m_valType;
+}
 

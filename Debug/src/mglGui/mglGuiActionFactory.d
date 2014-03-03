@@ -13,8 +13,10 @@ src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectEditable.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
@@ -66,9 +68,13 @@ src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectEditable.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h:
 

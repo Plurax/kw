@@ -26,8 +26,9 @@
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
-#define OBJ_SELECTABLE	(unsigned long)0x00000001
-#define OBJ_EDITABLE	(unsigned long)0x00000002
+#define OBJ_SELECTABLE	(unsigned long)0x00000001 // Can be selected with IGR
+#define OBJ_EDITABLE	(unsigned long)0x00000002 // Implements editable interface
+#define OBJ_ENTERABLE   (unsigned long)0x00000004 // you can step down the tree
 
 
 #define OBJ_STATE_STANDARD	(unsigned short) 0

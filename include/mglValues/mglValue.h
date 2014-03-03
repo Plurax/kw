@@ -9,7 +9,13 @@
 #define MGLVALUE_H_
 
 
-enum class mglValType { mglValInteger, mglValFloat, mglValFixedPoint, mglValString, mglValColor, mglValCoord};
+enum class mglValType { mglValUndefined, mglValInteger, mglValFloat, mglValFixedPoint, mglValString, mglValColor, mglValCoord};
 
+class mglValue
+{
+public:
+	mglValue();
+	virtual mglValType getType();
+};
 
 #endif /* MGLVALUE_H_ */
