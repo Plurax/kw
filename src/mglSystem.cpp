@@ -54,6 +54,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
    m_ConfigFileParser = new XercesDOMParser;
 
    m_FontProvider = new mglFontProvider();
+   m_TextureManager = new mglTextureManager();
 
    mglValString configfile("Configuration.xml");
 	readConfiguration(configfile);
@@ -204,7 +205,6 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				int iCount = Message->getIGRCount();
 				mglGuiObjectEditable* objEditable = static_cast<mglGuiObjectEditable*>(m_vSelectionContexts.back()->m_Editing);
 				// An editable has to implement the additional editable class functions to provide modification via system layer
-				LOG_TRACE("Applying count " << iCount);
 				objEditable->applyIGRCount(iCount);
 			}
 		}
@@ -220,8 +220,9 @@ void mglSystem::Draw(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-
-	// render all the currently active main frame
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // render all the currently active main frame
 	m_CurrentMainFrame->Draw();
 
 	glLoadIdentity();
@@ -369,6 +370,8 @@ void mglSystem::returnFromMenu()
  */
 void mglSystem::readConfiguration(mglValString& configFile)
 {
+	INIT_LOG("mglSystem", "readConfiguration(mglValString& configFile)");
+
 	// Test to see if the file is ok.
    struct stat fileStatus;
 
@@ -398,6 +401,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
    XMLCh* TAG_Fonts= XMLString::transcode("Fonts");
+   XMLCh* TAG_Textures = XMLString::transcode("Textures");
 
    try
    {
@@ -433,6 +437,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
 				{
 					mglLogger::Inst().configure(currentNode);
 				}
+
 				if ( XMLString::equals(currentElement->getTagName(), TAG_AppConfiguration))
 				{
 					m_Configuration.init(currentNode);
@@ -457,6 +462,12 @@ void mglSystem::readConfiguration(mglValString& configFile)
 				{
 					m_FontProvider->loadFonts(currentNode);
 				}
+
+				if ( XMLString::equals(currentElement->getTagName(), TAG_Textures))
+				{
+//					if (true == m_TextureManager->LoadTexture("/home/cromas/Downloads/testbutton.png", GL_RGBA, GL_RGB, 0, 0))
+//						LOG_TRACE("png Texture loaded");
+				}
 			}
 	  }
    }
@@ -472,6 +483,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
       XMLString::release(&TAG_Menus);
       XMLString::release(&TAG_AppConfiguration);
       XMLString::release(&TAG_Logging);
+      XMLString::release(&TAG_Textures);
    }
 
    XMLString::release(&TAG_GUI);
@@ -479,6 +491,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
    XMLString::release(&TAG_Menus);
    XMLString::release(&TAG_AppConfiguration);
    XMLString::release(&TAG_Logging);
+   XMLString::release(&TAG_Textures);
 }
 
 /**

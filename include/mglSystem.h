@@ -81,6 +81,7 @@ public:
 	mglDataSource* getDataSource(mglValString _name);
 
 	mglFontProvider* m_FontProvider;
+	mglTextureManager* m_TextureManager;
 
 	mglAppConfiguration m_Configuration;
 

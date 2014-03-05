@@ -148,7 +148,13 @@ void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _fil
 
 FTFont* mglFontProvider::GetFontByID(unsigned short index)
 {
-	return m_VecFonts.at(index);
+	if (m_VecFonts.empty())
+		return NULL;
+
+	if (m_VecFonts.size() < index)
+		return NULL;
+	else
+		return m_VecFonts.at(index);
 }
 
 FTFont* mglFontProvider::GetFontByName(mglValString& _string)
