@@ -157,13 +157,13 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					if (bForward)
 					{
 						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
-						while (pTemp != NULL)
+						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & OBJ_SELECTABLE)))
 							pTemp = pTemp->next();
 					}
 					else
 					{
 						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
-						while (pTemp != NULL)
+						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & OBJ_SELECTABLE)))
 							pTemp = pTemp->prev();
 					}
 
