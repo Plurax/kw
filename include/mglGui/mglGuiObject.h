@@ -26,6 +26,10 @@
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
+static const char* enObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE" };
+enum class enObjectFlagsBitNums { Obj_Selectable = 0, Obj_Editable, Obj_Enterable };
+enum class enObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4};
+
 #define OBJ_SELECTABLE	(unsigned long)0x00000001 // Can be selected with IGR
 #define OBJ_EDITABLE	(unsigned long)0x00000002 // Implements editable interface
 #define OBJ_ENTERABLE   (unsigned long)0x00000004 // you can step down the tree
@@ -78,6 +82,11 @@ public:
 	void setNextWindow(mglGuiObject* parent);
 	void setPrevWindow(mglGuiObject* parent);
 
+	// Interface for editables - if not used call the parent function
+	virtual void applyIGRCount(int _cnt);
+	virtual mglValue* getIncrement(); // This is for touch (slider?) usage
+	virtual void setValue(mglValue* _val);
+
 	float GetX();
 	float GetY();
 	mglValCoord GetPosition();
@@ -106,6 +115,7 @@ public:
 	mglGuiObject* next();
 
 	unsigned long getOptionMask();
+	unsigned long getOptionMaskFromString(std::string _str);
 
 	virtual bool hasChildren() {return bHasChildren; };
 	virtual bool isVisible() { return bVisible;};

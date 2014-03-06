@@ -8,24 +8,21 @@ CPP_SRCS += \
 ../src/mglValues/mglValCoord.cpp \
 ../src/mglValues/mglValFixedPoint.cpp \
 ../src/mglValues/mglValString.cpp \
-../src/mglValues/mglValue.cpp \
-../src/mglValues/mglXMLValueReader.cpp 
+../src/mglValues/mglValue.cpp 
 
 OBJS += \
 ./src/mglValues/mglValColor.o \
 ./src/mglValues/mglValCoord.o \
 ./src/mglValues/mglValFixedPoint.o \
 ./src/mglValues/mglValString.o \
-./src/mglValues/mglValue.o \
-./src/mglValues/mglXMLValueReader.o 
+./src/mglValues/mglValue.o 
 
 CPP_DEPS += \
 ./src/mglValues/mglValColor.d \
 ./src/mglValues/mglValCoord.d \
 ./src/mglValues/mglValFixedPoint.d \
 ./src/mglValues/mglValString.d \
-./src/mglValues/mglValue.d \
-./src/mglValues/mglXMLValueReader.d 
+./src/mglValues/mglValue.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

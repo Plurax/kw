@@ -4,6 +4,7 @@
 #include "mglDebug/mglLogger.h"
 
 #include <stdio.h>
+#include <string>
 
 using namespace std;
 
@@ -72,7 +73,7 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 	m_fWidth = width;
 	bVisible = true;
 	bHasChildren = false;
-	m_ulOptionMask = 0;
+	m_ulOptionMask = getOptionMaskFromString(string(""));
 }
 
 
@@ -258,4 +259,61 @@ mglGuiObject* mglGuiObject::getChildByID(unsigned int ID)
 		return m_Children.at(ID);
 	}
 	return 0;
+}
+
+/**
+ * If the editable flag is set the system will try to apply IGR counts on the object
+ * This function handles them
+ * @param _cnt
+ */
+void mglGuiObject::applyIGRCount(int _cnt)
+{
+
+}
+
+/**
+ * If the editable flag is set the system will try to apply modifications via external objects
+ * in case of touch modification (sliders etc)
+ * @return
+ */
+mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
+{
+
+}
+
+/**
+ * Hard set the value - this function is separate because the value to be set
+ * is definde by the implementation of the object.
+ * @param _val
+ */
+void mglGuiObject::setValue(mglValue* _val)
+{
+
+}
+
+
+unsigned long mglGuiObject::getOptionMaskFromString(std::string _str)
+{
+	INIT_LOG("mglGuiObject", "getOptionMaskFromString(std::string _str)");
+//	std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems)
+	unsigned long retVal = 0;
+
+	std::stringstream ss(_str);
+	std::string item;
+	while (std::getline(ss, item, ',')) {
+		LOG_TRACE("line: " << item);
+		if (item.empty())
+			continue;
+		if (0 == item.compare(string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Selectable)])))
+			retVal |= (1 << static_cast<int>(enObjectFlagsBitNums::Obj_Selectable));
+		if (0 == item.compare(string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Editable)])))
+			retVal |= (1 << static_cast<int>(enObjectFlagsBitNums::Obj_Editable));
+		if (0 == item.compare(string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Enterable)])))
+			retVal |= (1 << static_cast<int>(enObjectFlagsBitNums::Obj_Enterable));
+		LOG_TRACE("Accesstest: " << string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Selectable)]));
+		LOG_TRACE("Accesstest: " << string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Editable)]));
+		LOG_TRACE("Accesstest: " << string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Enterable)]));
+	}
+	LOG_TRACE("retval = " << retVal);
+	return retVal;
 }

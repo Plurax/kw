@@ -11,7 +11,8 @@ CPP_SRCS += \
 ../src/mglMessage.cpp \
 ../src/mglSelectionContext.cpp \
 ../src/mglSystem.cpp \
-../src/mglTimer.cpp 
+../src/mglTimer.cpp \
+../src/mglXMLValueReader.cpp 
 
 OBJS += \
 ./src/mglAppConfiguration.o \
@@ -21,7 +22,8 @@ OBJS += \
 ./src/mglMessage.o \
 ./src/mglSelectionContext.o \
 ./src/mglSystem.o \
-./src/mglTimer.o 
+./src/mglTimer.o \
+./src/mglXMLValueReader.o 
 
 CPP_DEPS += \
 ./src/mglAppConfiguration.d \
@@ -31,7 +33,8 @@ CPP_DEPS += \
 ./src/mglMessage.d \
 ./src/mglSelectionContext.d \
 ./src/mglSystem.d \
-./src/mglTimer.d 
+./src/mglTimer.d \
+./src/mglXMLValueReader.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

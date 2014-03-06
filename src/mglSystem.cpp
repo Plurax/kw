@@ -155,9 +155,18 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					bEntry = true;
 					m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
 					if (bForward)
+					{
 						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+						while (pTemp != NULL)
+							pTemp = pTemp->next();
+					}
 					else
+					{
 						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+						while (pTemp != NULL)
+							pTemp = pTemp->prev();
+					}
+
 				}
 				else
 				{
@@ -203,9 +212,8 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			else
 			{
 				int iCount = Message->getIGRCount();
-				mglGuiObjectEditable* objEditable = static_cast<mglGuiObjectEditable*>(m_vSelectionContexts.back()->m_Editing);
 				// An editable has to implement the additional editable class functions to provide modification via system layer
-				objEditable->applyIGRCount(iCount);
+				m_vSelectionContexts.back()->m_Editing->applyIGRCount(iCount);
 			}
 		}
 	}

@@ -9,7 +9,6 @@
 
 #include "mglDebug/mglLogger.h"
 #include "mglGui/mglGuiObject.h"
-#include "mglGui/mglGuiObjectEditable.h"
 #include "mglGui/mglInputMessage.h"
 
 #include "mglGui/mglFontProvider.h"
