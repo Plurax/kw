@@ -1,6 +1,7 @@
 src/mglSystem.d: ../src/mglSystem.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglReleaseInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglSystem.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglTimer.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogChannel.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogDevice.h \
@@ -33,7 +34,11 @@ src/mglSystem.d: ../src/mglSystem.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglSystem.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglBase.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTextureManager.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglTimer.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTexture.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglDebug.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglTechnicalException.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h \
@@ -42,6 +47,8 @@ src/mglSystem.d: ../src/mglSystem.cpp \
 /home/cromas/git/mgl/workspace/MGL/include/mglReleaseInfo.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglSystem.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglTimer.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h:
 
@@ -107,7 +114,15 @@ src/mglSystem.d: ../src/mglSystem.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTextureManager.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglTimer.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTexture.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglDebug.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglTechnicalException.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 

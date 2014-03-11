@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <vector>
 
-
+#include "mglTimer.h"
 #include "mglDebug/mglLogger.h"
 #include "mglGui/mglGuiObject.h"
 #include "mglGui/mglInputMessage.h"
@@ -100,6 +100,8 @@ private:
 	Window m_window;
 	bool m_dbf;
 
+	bool m_ButtonDown; // is mouse or IGR button down?
+
 	bool m_lastActionCausedByTouch;
 
 	int m_ScreenXRes;
@@ -109,6 +111,8 @@ private:
 	mglGuiObject* m_CurrentMenu;
 
 	vector<mglSelectionContext*> m_vSelectionContexts;
+
+	mglTimer m_ContextMenuTimer;
 };
 
 

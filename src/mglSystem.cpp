@@ -35,6 +35,8 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
 	dsManager.init();
 
+	m_ButtonDown = false;
+
 	flushGL = ptr;
 	/* Prepare XML Parser */
    try
@@ -83,10 +85,39 @@ mglSystem::~mglSystem()
 mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 {
 	INIT_LOG("mglSystem", "processInputMessage(mglInputMessage* Message)");
-	// find the target object
-	if ((Message->getInputType() != eInputIGR) &&
-			(Message->getButton() != BTN_IGR))
+
+	// If the input message is a mouse or IGR press set the timer!
+	if ((Message->getInputType() == eInputMouseButtonPress) ||
+			(Message->getInputType() == eInputIGRPress))
 	{
+		m_ContextMenuTimer.start();
+		m_ButtonDown = true;
+	}
+
+	// Clear the timer on button release
+	if ((Message->getInputType() == eInputMouseButtonRelease) ||
+			(Message->getInputType() == eInputIGRRelease))
+	{
+		m_ContextMenuTimer.end();
+		m_ContextMenuTimer.clear();
+		m_ButtonDown = false;
+	}
+
+	/**
+	 * This will spawn an animatable object when the button press is longer than a configured value.
+	 * This can be used to call the creation of a context menu.
+	 * As we only allow one menu at a time, this can only be used by mainframes.
+	 */
+	if (m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_sec > 4))
+	{
+		LOG_TRACE("Bounce" << m_ContextMenuTimer.getCurrentDiffTime().tv_sec);
+	}
+
+	// Mouse button press and release cause search for the object and calling its processing functor
+	if ((Message->getInputType() == eInputMouseButtonPress) ||
+			(Message->getInputType() == eInputMouseButtonRelease))
+	{
+		m_lastActionCausedByTouch = true;
 		mglGuiObject *Target = getTargetWindow(Message->getCoord());
 		if (Target != NULL)
 			if (Target->getGuiAction() != NULL)
@@ -98,40 +129,36 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	}
 	else
 	{
-		if (Message->getButton() == BTN_IGR)
+		m_lastActionCausedByTouch = false;
+
+		if (Message->getInputType() == eInputIGRRelease)
 		{
-			// Remap to button 1?
 			if (m_vSelectionContexts.back()->m_Focus != NULL)
 			{
 				LOG_TRACE("Entering focus handler");
-				if (!m_vSelectionContexts.back()->m_Focus->getOptionMask() & OBJ_EDITABLE)
+				if (!(m_vSelectionContexts.back()->m_Focus->getOptionMask() & OBJ_EDITABLE))
 				{
 					LOG_TRACE("Object is not editable");
 					Message->setTarget(m_vSelectionContexts.back()->m_Focus);
 					m_vSelectionContexts.back()->m_Focus->ProcessMessage(Message);
 				}
-			}
-			// May be functor logic maps the input onto the mt1 behaviour - so we change the state to focussed again here...
-			if (Message->getInputType() == eInputMouseButtonRelease)
-			{
-				if (m_vSelectionContexts.back()->m_Focus != NULL)
-					if (m_vSelectionContexts.back()->m_Editing == NULL)
-						m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
-
-				LOG_TRACE("Object is editable");
-				if (m_vSelectionContexts.back()->m_Editing == NULL)
-				{
-					m_vSelectionContexts.back()->m_Editing = m_vSelectionContexts.back()->m_Focus;
-					m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
-				}
 				else
 				{
-					m_vSelectionContexts.back()->m_Editing = NULL;
-					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
+					LOG_TRACE("Object is editable");
+					if (m_vSelectionContexts.back()->m_Editing == NULL)
+					{
+						m_vSelectionContexts.back()->m_Editing = m_vSelectionContexts.back()->m_Focus;
+						m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
+					}
+					else
+					{
+						m_vSelectionContexts.back()->m_Editing = NULL;
+						m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
+					}
 				}
 			}
 		}
-		else
+		else if (Message->getInputType() == eInputIGR)
 		{
 			// we are in focus level - step through the selection list
 			if (m_vSelectionContexts.back()->m_Editing == NULL)
@@ -329,12 +356,13 @@ void mglSystem::openMenu(mglGuiObject *Menu)
 	{
 		m_vSelectionContexts.back()->m_pCurrentSelectionList = m_CurrentMenu->getChildren();
 		mglGuiObjectList::iterator it = m_vSelectionContexts.back()->m_pCurrentSelectionList->begin();
-		while (it != m_vSelectionContexts.back()->m_pCurrentSelectionList->end())
+		for (; it != m_vSelectionContexts.back()->m_pCurrentSelectionList->end(); it++)
 		{
 			obj = *it;
 			if (obj->getOptionMask() & OBJ_SELECTABLE)
 				break;
 		}
+
 		m_vSelectionContexts.back()->m_Focus = obj;
 	}
 	else
@@ -473,8 +501,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Textures))
 				{
-//					if (true == m_TextureManager->LoadTexture("/home/cromas/Downloads/testbutton.png", GL_RGBA, GL_RGB, 0, 0))
-//						LOG_TRACE("png Texture loaded");
+					m_TextureManager->initTextures(currentNode);
 				}
 			}
 	  }

@@ -19,8 +19,11 @@ enum eInputType
 	eInputMouseButtonRelease,
 	eInputKeyPress,
 	eInputKeyRelease,
+	eInputTimedRefresh, // is used for context menu opening - no move but already mouse/IGR down... send cyclic events!
 	eInputMouseMove, // should be sent in time slots (every 20 ms?)
-	eInputIGR
+	eInputIGR, // This is the IGR increment or decrement!
+	eInputIGRPress, // this is the IGR button
+	eInputIGRRelease // this is the IGR button
 };
 
 #define BTN_MOUSE1 1

@@ -15,9 +15,12 @@ class mglTimer
 public:
 	void start();
 	void end();
+	void clear();
+
+	mglTimer();
 
 	timespec getDiffTime();
-
+	timespec getCurrentDiffTime();
 private:
 	timespec m_startTs;
 	timespec m_endTs;

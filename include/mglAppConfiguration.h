@@ -32,9 +32,16 @@ public:
 
 	unsigned short getYRes();
 	unsigned short getXRes();
+	unsigned short contextDelay();
 
 private:
-	unsigned short m_yres, m_xres;
+	unsigned short m_yres;
+	unsigned short m_xres;
+	/**
+	 * This is a milli second value which sets the time difference for opening a context menu.
+	 * The context menu can be opened by holding the touchdown or the IGR press longer than this time span.
+	 */
+	unsigned short m_contextDelay;
 };
 
 #endif /* MGLAPPCONFIGURATION_H_ */

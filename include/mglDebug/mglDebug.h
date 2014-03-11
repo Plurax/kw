@@ -15,7 +15,7 @@
 	do { \
 		std::stringstream line; \
 		line << msg; \
-		LOG_EXCEPTION("########## EXCEPTION Exception exception ##########\n" << errno << ":" << msg) \
+		LOG_EXCEPTION("\n########## EXCEPTION Exception exception ##########\n## Errnr.: " << errno << "\n## Msg.: " << msg << "\n########## ######### ######### ######### ##########\n") \
 		throw mglTechnicalException(errno, line.str()); \
 	} \
 	while (false);

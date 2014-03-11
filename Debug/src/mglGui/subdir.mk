@@ -12,6 +12,7 @@ CPP_SRCS += \
 ../src/mglGui/mglGuiObject.cpp \
 ../src/mglGui/mglGuiObjectFactory.cpp \
 ../src/mglGui/mglInputMessage.cpp \
+../src/mglGui/mglTexture.cpp \
 ../src/mglGui/mglTextureManager.cpp 
 
 OBJS += \
@@ -23,6 +24,7 @@ OBJS += \
 ./src/mglGui/mglGuiObject.o \
 ./src/mglGui/mglGuiObjectFactory.o \
 ./src/mglGui/mglInputMessage.o \
+./src/mglGui/mglTexture.o \
 ./src/mglGui/mglTextureManager.o 
 
 CPP_DEPS += \
@@ -34,6 +36,7 @@ CPP_DEPS += \
 ./src/mglGui/mglGuiObject.d \
 ./src/mglGui/mglGuiObjectFactory.d \
 ./src/mglGui/mglInputMessage.d \
+./src/mglGui/mglTexture.d \
 ./src/mglGui/mglTextureManager.d 
 
 
