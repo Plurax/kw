@@ -238,9 +238,9 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			}
 			else
 			{
-				int iCount = Message->getIGRCount();
-				// An editable has to implement the additional editable class functions to provide modification via system layer
-				m_vSelectionContexts.back()->m_Editing->applyIGRCount(iCount);
+				// Editables are detected via the flag, but the functor has to implement the IGR count management
+				Message->setTarget(m_vSelectionContexts.back()->m_Editing);
+				return m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
 			}
 		}
 	}
