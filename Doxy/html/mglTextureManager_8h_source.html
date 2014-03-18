@@ -97,41 +97,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00017"></a>00017 <span class="preprocessor">#include &quot;FreeImage.h&quot;</span>
 <a name="l00018"></a>00018 <span class="preprocessor">#include &lt;map&gt;</span>
 <a name="l00019"></a>00019 
-<a name="l00020"></a><a class="code" href="classTextureManager.html">00020</a> <span class="keyword">class </span><a class="code" href="classTextureManager.html">TextureManager</a>
-<a name="l00021"></a>00021 {
-<a name="l00022"></a>00022 <span class="keyword">public</span>:
-<a name="l00023"></a>00023         <span class="keyword">static</span> <a class="code" href="classTextureManager.html">TextureManager</a>* Inst();
-<a name="l00024"></a>00024         <span class="keyword">virtual</span> ~<a class="code" href="classTextureManager.html">TextureManager</a>();
+<a name="l00020"></a>00020 <span class="preprocessor">#include &quot;mglGui/mglTexture.h&quot;</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &quot;mglDebug/mglDebug.h&quot;</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include &quot;mglValues/mglValString.h&quot;</span>
+<a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026         <span class="comment">//load a texture an make it the current texture</span>
-<a name="l00027"></a>00027         <span class="comment">//if texID is already in use, it will be unloaded and replaced with this texture</span>
-<a name="l00028"></a>00028         <span class="keywordtype">bool</span> LoadTexture(<span class="keyword">const</span> <span class="keywordtype">char</span>* filename,  <span class="comment">//where to load the file from</span>
-<a name="l00029"></a>00029                 <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> texID,                       <span class="comment">//arbitrary id you will reference the texture by</span>
-<a name="l00030"></a>00030                                                                                         <span class="comment">//does not have to be generated with glGenTextures</span>
-<a name="l00031"></a>00031                 GLenum image_format = GL_RGB,           <span class="comment">//format the image is in</span>
-<a name="l00032"></a>00032                 GLint internal_format = GL_RGB,         <span class="comment">//format to store the image in</span>
-<a name="l00033"></a>00033                 GLint level = 0,                                        <span class="comment">//mipmapping level</span>
-<a name="l00034"></a>00034                 GLint border = 0);                                      <span class="comment">//border size</span>
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036         <span class="comment">//free the memory for a texture</span>
-<a name="l00037"></a>00037         <span class="keywordtype">bool</span> UnloadTexture(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> texID);
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <span class="comment">//set the current texture</span>
-<a name="l00040"></a>00040         <span class="keywordtype">bool</span> BindTexture(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> texID);
-<a name="l00041"></a>00041 
-<a name="l00042"></a>00042         <span class="comment">//free all texture memory</span>
-<a name="l00043"></a>00043         <span class="keywordtype">void</span> UnloadAllTextures();
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045 <span class="keyword">protected</span>:
-<a name="l00046"></a>00046         <a class="code" href="classTextureManager.html">TextureManager</a>();
-<a name="l00047"></a>00047         <a class="code" href="classTextureManager.html">TextureManager</a>(<span class="keyword">const</span> <a class="code" href="classTextureManager.html">TextureManager</a>&amp; tm);
-<a name="l00048"></a>00048         <a class="code" href="classTextureManager.html">TextureManager</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classTextureManager.html">TextureManager</a>&amp; tm);
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050         <span class="keyword">static</span> <a class="code" href="classTextureManager.html">TextureManager</a>* m_inst;
-<a name="l00051"></a>00051         std::map&lt;unsigned int, GLuint&gt; m_texID;
-<a name="l00052"></a>00052 };
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="preprocessor">#endif</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;xercesc/dom/DOM.hpp&gt;</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;xercesc/dom/DOMDocument.hpp&gt;</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;xercesc/dom/DOMDocumentType.hpp&gt;</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;xercesc/dom/DOMElement.hpp&gt;</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include &lt;xercesc/dom/DOMImplementation.hpp&gt;</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include &lt;xercesc/dom/DOMImplementationLS.hpp&gt;</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;xercesc/dom/DOMNodeIterator.hpp&gt;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;xercesc/dom/DOMNodeList.hpp&gt;</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;xercesc/dom/DOMText.hpp&gt;</span>
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;xercesc/parsers/XercesDOMParser.hpp&gt;</span>
+<a name="l00038"></a>00038 <span class="preprocessor">#include &lt;xercesc/util/XMLUni.hpp&gt;</span>
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 <span class="keyword">using namespace </span>xercesc;
+<a name="l00042"></a>00042 
+<a name="l00043"></a><a class="code" href="classmglTextureManager.html">00043</a> <span class="keyword">class </span><a class="code" href="classmglTextureManager.html">mglTextureManager</a>
+<a name="l00044"></a>00044 {
+<a name="l00045"></a>00045 <span class="keyword">public</span>:
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047         <a class="code" href="classmglTextureManager.html">mglTextureManager</a>();
+<a name="l00048"></a>00048         ~<a class="code" href="classmglTextureManager.html">mglTextureManager</a>();
+<a name="l00049"></a>00049         <span class="keywordtype">void</span> initTextures(DOMNode* _currentElement);
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051         <span class="comment">//load a texture an make it the current texture</span>
+<a name="l00052"></a>00052         <span class="comment">//if texID is already in use, it will be unloaded and replaced with this texture</span>
+<a name="l00053"></a>00053         <span class="keywordtype">void</span> RegisterTexture(<span class="keyword">const</span> <span class="keywordtype">char</span>* filename,      <span class="comment">//where to load the file from</span>
+<a name="l00054"></a>00054                 GLenum image_format = GL_RGB,           <span class="comment">//format the image is in</span>
+<a name="l00055"></a>00055                 GLint internal_format = GL_RGB,         <span class="comment">//format to store the image in</span>
+<a name="l00056"></a>00056                 GLint level = 0);                                       <span class="comment">//mipmapping level</span>
+<a name="l00057"></a>00057 <span class="comment">//              GLint border = 0);                                      //border size</span>
+<a name="l00058"></a>00058 
+<a name="l00059"></a>00059         <span class="comment">//free the memory for a texture</span>
+<a name="l00060"></a>00060         <span class="keywordtype">bool</span> UnloadTexture(<a class="code" href="classmglValString.html">mglValString</a> texFile);
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062         <span class="comment">//set the current texture</span>
+<a name="l00063"></a>00063         <span class="keywordtype">bool</span> BindTexture(<a class="code" href="classmglValString.html">mglValString</a> texFile);
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065         <span class="comment">//free all texture memory</span>
+<a name="l00066"></a>00066         <span class="keywordtype">void</span> UnloadAllTextures();
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <span class="keyword">protected</span>:
+<a name="l00069"></a>00069         std::map&lt;mglValString, mglTexture*&gt; m_mTextures;
+<a name="l00070"></a>00070 };
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -150,7 +168,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 18 2014 20:01:32 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

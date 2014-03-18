@@ -8,6 +8,7 @@
 #ifndef MGLVALUE_H_
 #define MGLVALUE_H_
 
+class mglValString;
 
 enum class mglValType { mglValUndefined, mglValInteger, mglValFloat, mglValFixedPoint, mglValString, mglValColor, mglValCoord};
 
@@ -16,6 +17,7 @@ class mglValue
 public:
 	mglValue();
 	virtual mglValType getType();
+	//virtual mglValString serialize();
 };
 
 #endif /* MGLVALUE_H_ */

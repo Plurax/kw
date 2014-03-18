@@ -11,6 +11,7 @@
 #include "mglMessage.h"
 #include "mglValues/mglValCoord.h"
 #include "mglGuiObject.h"
+#include <time.h>
 
 // This is the type of input! Not special keys or smth else
 enum eInputType
@@ -50,6 +51,9 @@ public:
 	void setIGRCount(int _cnt);
 	int getIGRCount();
 
+	void setDiffTime(timespec _tspec);
+	timespec getDiffTime();
+
 private:
 	mglValCoord m_Coord;
 	int m_InputType;
@@ -57,6 +61,7 @@ private:
 	unsigned long m_keySym;
 	int m_iIGRCount;
 	mglGuiObject* m_target;
+	timespec m_DiffTime;
 };
 
 #endif /* MGLINPUTMESSAGE_H_ */

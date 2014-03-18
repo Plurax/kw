@@ -115,6 +115,17 @@ float mglGuiObject::GetHeight()
 	return m_fHeight;
 }
 
+mglValCoord mglGuiObject::GetPosition()
+{
+	return mglValCoord(m_fXpos, m_fYpos, 0.0f);
+}
+
+void mglGuiObject::SetPosition(mglValCoord pt)
+{
+	m_fYpos = pt.getY();
+	m_fXpos = pt.getX();
+}
+
 
 float mglGuiObject::GetWidth()
 {

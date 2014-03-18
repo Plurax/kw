@@ -1,3 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classmglLibHandle.html" title="mglLibHandle" alt="" coords="5,5,107,35"/>
+<area shape="rect" id="node1" href="$classmglLibHandle.html" title="mglLibHandle" alt="" coords="5,59,107,88"/>
+<area shape="rect" id="node3" href="$classmglDataLibHandle.html" title="mglDataLibHandle" alt="" coords="171,5,299,35"/>
+<area shape="rect" id="node5" href="$classmglGuiActionLibHandle.html" title="mglGuiActionLibHandle" alt="" coords="156,59,313,88"/>
+<area shape="rect" id="node7" href="$classmglGuiLibHandle.html" title="mglGuiLibHandle" alt="" coords="175,112,295,141"/>
 </map>

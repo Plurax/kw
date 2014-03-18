@@ -1,4 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classmglFontProvider.html" title="mglFontProvider" alt="" coords="5,5,123,35"/>
-<area shape="rect" id="node4" href="$classmglAppConfiguration.html" title="mglAppConfiguration" alt="" coords="147,5,288,35"/>
+<area shape="rect" id="node2" href="$classmglTextureManager.html" title="mglTextureManager" alt="" coords="5,5,141,35"/>
+<area shape="rect" id="node4" href="$classmglFontProvider.html" title="mglFontProvider" alt="" coords="165,5,283,35"/>
+<area shape="rect" id="node6" href="$classmglLibraryInfo.html" title="mglLibraryInfo" alt="" coords="307,5,411,35"/>
+<area shape="rect" id="node8" href="$classmglAppConfiguration.html" title="mglAppConfiguration" alt="" coords="435,5,576,35"/>
 </map>

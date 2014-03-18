@@ -17,6 +17,7 @@ public:
 	mglValCoord(int x, int y, int z);
 	mglValCoord(float x, float y, int z);
 
+	mglValCoord();
 	~mglValCoord();
 
 	mglValType getType();

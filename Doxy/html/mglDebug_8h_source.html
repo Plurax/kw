@@ -92,10 +92,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00012"></a>00012 <span class="preprocessor">#include &quot;mglTechnicalException.h&quot;</span>
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="preprocessor">#define THROW_TECHNICAL_EXCEPTION(errno, msg) \</span>
-<a name="l00015"></a>00015 <span class="preprocessor">        LOG_EXCEPTION(errno &lt;&lt; &quot; &quot; &lt;&lt; msg); \</span>
-<a name="l00016"></a>00016 <span class="preprocessor">        throw mglTechnicalException(errno, msg);</span>
-<a name="l00017"></a>00017 <span class="preprocessor"></span>
-<a name="l00018"></a>00018 <span class="preprocessor">#endif </span><span class="comment">/* MGLDEBUG_H_ */</span>
+<a name="l00015"></a>00015 <span class="preprocessor">        do { \</span>
+<a name="l00016"></a>00016 <span class="preprocessor">                std::stringstream line; \</span>
+<a name="l00017"></a>00017 <span class="preprocessor">                line &lt;&lt; msg; \</span>
+<a name="l00018"></a>00018 <span class="preprocessor">                LOG_EXCEPTION(&quot;\n########## EXCEPTION Exception exception ##########\n## Errnr.: &quot; &lt;&lt; errno &lt;&lt; &quot;\n## Msg.: &quot; &lt;&lt; msg &lt;&lt; &quot;\n########## ######### ######### ######### ##########\n&quot;) \</span>
+<a name="l00019"></a>00019 <span class="preprocessor">                throw mglTechnicalException(errno, line.str()); \</span>
+<a name="l00020"></a>00020 <span class="preprocessor">        } \</span>
+<a name="l00021"></a>00021 <span class="preprocessor">        while (false);</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span>
+<a name="l00023"></a>00023 <span class="preprocessor">#endif </span><span class="comment">/* MGLDEBUG_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -114,7 +119,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 18 2014 20:01:32 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

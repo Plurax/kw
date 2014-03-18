@@ -99,44 +99,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00019"></a>00019         eInputMouseButtonRelease,
 <a name="l00020"></a>00020         eInputKeyPress,
 <a name="l00021"></a>00021         eInputKeyRelease,
-<a name="l00022"></a>00022         eInputMouseMove, <span class="comment">// should be sent in time slots (every 20 ms?)</span>
-<a name="l00023"></a>00023         eInputIGR
-<a name="l00024"></a>00024 };
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#define BTN_MOUSE1 1</span>
-<a name="l00027"></a>00027 <span class="preprocessor"></span><span class="preprocessor">#define BTN_MOUSE2 2</span>
-<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">#define BTN_MOUSE3 3</span>
-<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#define BTN_IGR 4</span>
-<a name="l00030"></a>00030 <span class="preprocessor"></span>
-<a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="classmglInputMessage.html">00032</a> <span class="keyword">class </span><a class="code" href="classmglInputMessage.html">mglInputMessage</a> : <span class="keyword">public</span> <a class="code" href="classmglMessage.html">mglMessage</a>
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 <span class="keyword">public</span>:
-<a name="l00035"></a>00035         <a class="code" href="classmglInputMessage.html">mglInputMessage</a>(<span class="keywordtype">int</span> messagetype);
-<a name="l00036"></a>00036         <a class="code" href="classmglInputMessage.html">mglInputMessage</a>(<span class="keywordtype">int</span> messagetype, <a class="code" href="classmglValCoord.html">mglValCoord</a> coord, <span class="keywordtype">int</span> inputtype, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> mousebutton, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> key);
-<a name="l00037"></a>00037         ~<a class="code" href="classmglInputMessage.html">mglInputMessage</a>();
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <a class="code" href="classmglValCoord.html">mglValCoord</a> getCoord();
-<a name="l00040"></a>00040         <span class="keywordtype">void</span> setCoord(<a class="code" href="classmglValCoord.html">mglValCoord</a> coord);
+<a name="l00022"></a>00022         eInputTimedRefresh, <span class="comment">// is used for context menu opening - no move but already mouse/IGR down... send cyclic events!</span>
+<a name="l00023"></a>00023         eInputMouseMove, <span class="comment">// should be sent in time slots (every 20 ms?)</span>
+<a name="l00024"></a>00024         eInputIGR, <span class="comment">// This is the IGR increment or decrement!</span>
+<a name="l00025"></a>00025         eInputIGRPress, <span class="comment">// this is the IGR button</span>
+<a name="l00026"></a>00026         eInputIGRRelease <span class="comment">// this is the IGR button</span>
+<a name="l00027"></a>00027 };
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029 <span class="preprocessor">#define BTN_MOUSE1 1</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span><span class="preprocessor">#define BTN_MOUSE2 2</span>
+<a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define BTN_MOUSE3 3</span>
+<a name="l00032"></a>00032 <span class="preprocessor"></span><span class="preprocessor">#define BTN_IGR 4</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span>
+<a name="l00034"></a>00034 
+<a name="l00035"></a><a class="code" href="classmglInputMessage.html">00035</a> <span class="keyword">class </span><a class="code" href="classmglInputMessage.html">mglInputMessage</a> : <span class="keyword">public</span> <a class="code" href="classmglMessage.html">mglMessage</a>
+<a name="l00036"></a>00036 {
+<a name="l00037"></a>00037 <span class="keyword">public</span>:
+<a name="l00038"></a>00038         <a class="code" href="classmglInputMessage.html">mglInputMessage</a>(<span class="keywordtype">int</span> messagetype);
+<a name="l00039"></a>00039         <a class="code" href="classmglInputMessage.html">mglInputMessage</a>(<span class="keywordtype">int</span> messagetype, <a class="code" href="classmglValCoord.html">mglValCoord</a> coord, <span class="keywordtype">int</span> inputtype, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> mousebutton, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> key);
+<a name="l00040"></a>00040         ~<a class="code" href="classmglInputMessage.html">mglInputMessage</a>();
 <a name="l00041"></a>00041 
-<a name="l00042"></a>00042         <span class="keywordtype">int</span> getInputType();
-<a name="l00043"></a>00043         <span class="keywordtype">int</span> getButton();
-<a name="l00044"></a>00044         <span class="keywordtype">void</span> setTarget(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* _target);
-<a name="l00045"></a>00045         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* getTarget();
-<a name="l00046"></a>00046 
-<a name="l00047"></a>00047         <span class="keywordtype">void</span> setIGRCount(<span class="keywordtype">int</span> _cnt);
-<a name="l00048"></a>00048         <span class="keywordtype">int</span> getIGRCount();
+<a name="l00042"></a>00042         <a class="code" href="classmglValCoord.html">mglValCoord</a> getCoord();
+<a name="l00043"></a>00043         <span class="keywordtype">void</span> setCoord(<a class="code" href="classmglValCoord.html">mglValCoord</a> coord);
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045         <span class="keywordtype">int</span> getInputType();
+<a name="l00046"></a>00046         <span class="keywordtype">int</span> getButton();
+<a name="l00047"></a>00047         <span class="keywordtype">void</span> setTarget(<a class="code" href="classmglGuiObject.html">mglGuiObject</a>* _target);
+<a name="l00048"></a>00048         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* getTarget();
 <a name="l00049"></a>00049 
-<a name="l00050"></a>00050 <span class="keyword">private</span>:
-<a name="l00051"></a>00051         <a class="code" href="classmglValCoord.html">mglValCoord</a> m_Coord;
-<a name="l00052"></a>00052         <span class="keywordtype">int</span> m_InputType;
-<a name="l00053"></a>00053         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> m_MouseButton;
-<a name="l00054"></a>00054         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m_keySym;
-<a name="l00055"></a>00055         <span class="keywordtype">int</span> m_iIGRCount;
-<a name="l00056"></a>00056         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_target;
-<a name="l00057"></a>00057 };
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="preprocessor">#endif </span><span class="comment">/* MGLINPUTMESSAGE_H_ */</span>
+<a name="l00050"></a>00050         <span class="keywordtype">void</span> setIGRCount(<span class="keywordtype">int</span> _cnt);
+<a name="l00051"></a>00051         <span class="keywordtype">int</span> getIGRCount();
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053 <span class="keyword">private</span>:
+<a name="l00054"></a>00054         <a class="code" href="classmglValCoord.html">mglValCoord</a> m_Coord;
+<a name="l00055"></a>00055         <span class="keywordtype">int</span> m_InputType;
+<a name="l00056"></a>00056         <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> m_MouseButton;
+<a name="l00057"></a>00057         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m_keySym;
+<a name="l00058"></a>00058         <span class="keywordtype">int</span> m_iIGRCount;
+<a name="l00059"></a>00059         <a class="code" href="classmglGuiObject.html">mglGuiObject</a>* m_target;
+<a name="l00060"></a>00060 };
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062 <span class="preprocessor">#endif </span><span class="comment">/* MGLINPUTMESSAGE_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -155,7 +158,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 18 2014 20:01:32 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

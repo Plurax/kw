@@ -91,38 +91,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00011"></a>00011 
 <a name="l00012"></a>00012 <span class="preprocessor">#include &quot;mglDataLayer/mglDataSourceFactory.h&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;mglDataLayer/mglDataSource.h&quot;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;memory&gt;</span>
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;xercesc/dom/DOM.hpp&gt;</span>
-<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;xercesc/dom/DOMDocument.hpp&gt;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;xercesc/dom/DOMDocumentType.hpp&gt;</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;xercesc/dom/DOMElement.hpp&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;xercesc/dom/DOMImplementation.hpp&gt;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;xercesc/dom/DOMImplementationLS.hpp&gt;</span>
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;xercesc/dom/DOMNodeIterator.hpp&gt;</span>
-<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;xercesc/dom/DOMNodeList.hpp&gt;</span>
-<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;xercesc/dom/DOMText.hpp&gt;</span>
-<a name="l00026"></a>00026 
-<a name="l00027"></a>00027 <span class="keyword">using namespace </span>std;
-<a name="l00028"></a>00028 <span class="keyword">using namespace </span>xercesc;
+<a name="l00014"></a>00014 <span class="preprocessor">#include &quot;mglLibHandle.h&quot;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &quot;mglValues/mglValString.h&quot;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;memory&gt;</span>
+<a name="l00017"></a>00017 
+<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;xercesc/dom/DOM.hpp&gt;</span>
+<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;xercesc/dom/DOMDocument.hpp&gt;</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;xercesc/dom/DOMDocumentType.hpp&gt;</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;xercesc/dom/DOMElement.hpp&gt;</span>
+<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;xercesc/dom/DOMImplementation.hpp&gt;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;xercesc/dom/DOMImplementationLS.hpp&gt;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;xercesc/dom/DOMNodeIterator.hpp&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;xercesc/dom/DOMNodeList.hpp&gt;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;xercesc/dom/DOMText.hpp&gt;</span>
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 
 <a name="l00029"></a>00029 
-<a name="l00030"></a>00030 
-<a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="classmglDataSourceFactory.html">00032</a> <span class="keyword">class </span><a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 <span class="keyword">public</span>:
-<a name="l00035"></a>00035         <span class="keyword">virtual</span> ~<a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>();
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037         <span class="keyword">virtual</span> <a class="code" href="classmglDataSource.html">mglDataSource</a>* createDataSource(<span class="keywordtype">string</span>* classname, DOMElement* configuration);
-<a name="l00038"></a>00038 };
+<a name="l00030"></a>00030 <span class="keyword">using namespace </span>std;
+<a name="l00031"></a>00031 <span class="keyword">using namespace </span>xercesc;
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 
+<a name="l00035"></a><a class="code" href="classmglDataSourceFactory.html">00035</a> <span class="keyword">class </span><a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>
+<a name="l00036"></a>00036 {
+<a name="l00037"></a>00037 <span class="keyword">public</span>:
+<a name="l00038"></a>00038         <span class="keyword">virtual</span> ~<a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>();
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="keyword">typedef</span> <a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>* (*DataSourceCreateFunc)();
-<a name="l00042"></a>00042 <span class="keyword">typedef</span> void (*DataSourceDestroyFunc)(<a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>*);
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045 <span class="preprocessor">#endif </span><span class="comment">/* MGLGUIACTIONFUNCTORFACTORY_H_ */</span>
+<a name="l00040"></a>00040         <span class="keyword">virtual</span> <a class="code" href="classmglDataSource.html">mglDataSource</a>* createDataSource(<a class="code" href="classmglValString.html">mglValString</a>* classname, DOMElement* configuration);
+<a name="l00041"></a>00041 };
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043 <span class="keyword">typedef</span> <a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>* (*DataSourceCreateFunc)();
+<a name="l00044"></a>00044 <span class="keyword">typedef</span> void (*DataSourceDestroyFunc)(<a class="code" href="classmglDataSourceFactory.html">mglDataSourceFactory</a>*);
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 <span class="preprocessor">#endif </span><span class="comment">/* MGLGUIACTIONFUNCTORFACTORY_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -141,7 +143,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 18 2014 20:01:32 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

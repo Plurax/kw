@@ -72,8 +72,6 @@ public:
 	 */
 	virtual void Draw();
 
-	void SetPosition(mglValCoord pt);
-
 	float GetWidth();
 	void SetWidth(float uiWidth);
 
@@ -90,6 +88,7 @@ public:
 	float GetX();
 	float GetY();
 	mglValCoord GetPosition();
+	void SetPosition(mglValCoord pt);
 
 	float GetHeight();
 	void SetHeight(float uiHeight);

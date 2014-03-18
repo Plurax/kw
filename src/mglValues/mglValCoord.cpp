@@ -22,6 +22,12 @@ mglValCoord::mglValCoord(float x, float y, int z)
 	m_z = z;
 }
 
+mglValCoord::mglValCoord()
+{
+	m_x = 0.0f;
+	m_y = 0.0f;
+	m_z = 0.0f;
+}
 
 mglValCoord::~mglValCoord()
 {

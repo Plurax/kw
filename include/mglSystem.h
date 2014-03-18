@@ -113,6 +113,7 @@ private:
 	vector<mglSelectionContext*> m_vSelectionContexts;
 
 	mglTimer m_ContextMenuTimer;
+	mglGuiObject* m_ContextAnimation;
 };
 
 

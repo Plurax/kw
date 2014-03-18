@@ -83,6 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 This is the complete list of members for <a class="el" href="classmglGuiObject.html">mglGuiObject</a>, including all inherited members.<table>
   <tr bgcolor="#f0f0f0"><td><b>AddChild</b>(mglGuiObject *Child) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classmglGuiObject.html#a63620222aec1fae865ff91e70e8f7794">applyIGRCount</a>(int _cnt)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>bHasChildren</b> (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [protected]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>bVisible</b> (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [protected]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>Connect</b>(mglGuiActionFunctor *func) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [virtual]</code></td></tr>
@@ -92,8 +93,10 @@ This is the complete list of members for <a class="el" href="classmglGuiObject.h
   <tr bgcolor="#f0f0f0"><td><b>getChildren</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getGuiAction</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>GetHeight</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classmglGuiObject.html#a830553031b78e2237da7d45a8f2bf894">getIncrement</a>()</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getName</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getOptionMask</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>getOptionMaskFromString</b>(std::string _str) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>GetPosition</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>getState</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>GetWidth</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
@@ -121,14 +124,15 @@ This is the complete list of members for <a class="el" href="classmglGuiObject.h
   <tr bgcolor="#f0f0f0"><td><b>prev</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>ProcessMessage</b>(mglMessage *message) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>RemoveChild</b>(uint ChildID) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>RemoveChild</b>(std::string ChildName) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>RemoveChild</b>(mglValString ChildName) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>SetHeight</b>(float uiHeight) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>setName</b>(std::string name) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>setName</b>(mglValString name) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>setNextWindow</b>(mglGuiObject *parent) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>setParentWindow</b>(mglGuiObject *parent) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>SetPosition</b>(mglValCoord pt) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>setPrevWindow</b>(mglGuiObject *parent) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>setState</b>(unsigned short _state) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classmglGuiObject.html#aab9ec041596ee7c1dde0214fb8800f73">setValue</a>(mglValue *_val)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>SetWidth</b>(float uiWidth) (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>uiElementState</b> (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [protected]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>~mglGuiObject</b>() (defined in <a class="el" href="classmglGuiObject.html">mglGuiObject</a>)</td><td><a class="el" href="classmglGuiObject.html">mglGuiObject</a></td><td><code> [virtual]</code></td></tr>
@@ -150,7 +154,7 @@ This is the complete list of members for <a class="el" href="classmglGuiObject.h
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 18 2014 20:01:33 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

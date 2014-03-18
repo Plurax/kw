@@ -12,6 +12,7 @@
 #include "mglReleaseInfo.h"
 
 #include "mglSystem.h"
+#include "mglValues/mglValCoord.h"
 
 using namespace xercesc;
 using namespace std;
@@ -34,7 +35,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	objManager.init();
 	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
 	dsManager.init();
-
+	m_ContextAnimation = NULL;
 	m_ButtonDown = false;
 
 	flushGL = ptr;
@@ -100,7 +101,10 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	{
 		m_ContextMenuTimer.end();
 		m_ContextMenuTimer.clear();
+		Message->setDiffTime(m_ContextMenuTimer.getDiffTime());
 		m_ButtonDown = false;
+		delete m_ContextAnimation;
+		m_ContextAnimation = NULL;
 	}
 
 	/**
@@ -108,8 +112,30 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	 * This can be used to call the creation of a context menu.
 	 * As we only allow one menu at a time, this can only be used by mainframes.
 	 */
-	if (m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_sec > 4))
+	if (m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_sec > 1))
 	{
+		if (m_ContextAnimation == NULL)
+		{
+			mglValString* libname = new mglValString("libmy2dObjects.so");
+			mglValString* name = new mglValString("myContextAnimation");
+
+			m_ContextAnimation = mglGuiLibManager::Inst().createGUIObject(libname, name, NULL);
+
+			delete libname;
+			delete name;
+
+			mglValCoord spawnCoord;
+			if (m_vSelectionContexts.back()->m_Focus != NULL)
+			{
+				spawnCoord = m_vSelectionContexts.back()->m_Focus->GetPosition();
+			}
+			else
+				spawnCoord = Message->getCoord();
+
+			LOG_TRACE("Created context animation object at X " << spawnCoord.getX() << " Y " << spawnCoord.getY());
+
+			m_ContextAnimation->SetPosition(spawnCoord);
+		}
 		LOG_TRACE("Bounce" << m_ContextMenuTimer.getCurrentDiffTime().tv_sec);
 	}
 
@@ -265,6 +291,12 @@ void mglSystem::Draw(void)
 
 	if (m_CurrentMenu != NULL)
 		m_CurrentMenu->Draw();
+
+	glLoadIdentity();
+
+
+	if (m_ContextAnimation != NULL)
+		m_ContextAnimation->Draw();
 
 	(*flushGL)();
 

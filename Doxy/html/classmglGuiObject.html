@@ -89,7 +89,7 @@ Collaboration diagram for mglGuiObject:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmglGuiObject__coll__graph.png" border="0" usemap="#mglGuiObject_coll__map" alt="Collaboration graph"/></div>
 <map name="mglGuiObject_coll__map" id="mglGuiObject_coll__map">
-<area shape="rect" id="node3" href="classmglGuiActionFunctor.html" title="mglGuiActionFunctor" alt="" coords="5,5,149,35"/><area shape="rect" id="node5" href="classmglValColor.html" title="mglValColor" alt="" coords="173,5,267,35"/></map>
+<area shape="rect" id="node3" href="classmglValString.html" title="mglValString" alt="" coords="5,85,101,115"/><area shape="rect" id="node5" href="classmglValue.html" title="mglValue" alt="" coords="85,5,160,35"/><area shape="rect" id="node9" href="classmglValColor.html" title="mglValColor" alt="" coords="125,85,219,115"/><area shape="rect" id="node7" href="classmglGuiActionFunctor.html" title="mglGuiActionFunctor" alt="" coords="249,85,393,115"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classmglGuiObject-members.html">List of all members.</a></p>
@@ -112,6 +112,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setParentWindow</b> (
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setNextWindow</b> (<a class="el" href="classmglGuiObject.html">mglGuiObject</a> *parent)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a02729cc5af18403fed91b1f8b6783b43"></a><!-- doxytag: member="mglGuiObject::setPrevWindow" ref="a02729cc5af18403fed91b1f8b6783b43" args="(mglGuiObject *parent)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setPrevWindow</b> (<a class="el" href="classmglGuiObject.html">mglGuiObject</a> *parent)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmglGuiObject.html#a63620222aec1fae865ff91e70e8f7794">applyIGRCount</a> (int _cnt)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classmglValue.html">mglValue</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmglGuiObject.html#a830553031b78e2237da7d45a8f2bf894">getIncrement</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmglGuiObject.html#aab9ec041596ee7c1dde0214fb8800f73">setValue</a> (<a class="el" href="classmglValue.html">mglValue</a> *_val)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e2843a7c555ff55cf13211f0942ba95"></a><!-- doxytag: member="mglGuiObject::GetX" ref="a3e2843a7c555ff55cf13211f0942ba95" args="()" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><b>GetX</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3fa7760760bfec508ca478c47cc433bc"></a><!-- doxytag: member="mglGuiObject::GetY" ref="a3fa7760760bfec508ca478c47cc433bc" args="()" -->
@@ -132,20 +135,20 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Connect</b> (
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>AddChild</b> (<a class="el" href="classmglGuiObject.html">mglGuiObject</a> *Child)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1394407054253988526b49418777b35c"></a><!-- doxytag: member="mglGuiObject::RemoveChild" ref="a1394407054253988526b49418777b35c" args="(uint ChildID)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>RemoveChild</b> (uint ChildID)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6e267b3dc6ccf6463893d332fd4b5a7"></a><!-- doxytag: member="mglGuiObject::RemoveChild" ref="ae6e267b3dc6ccf6463893d332fd4b5a7" args="(std::string ChildName)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>RemoveChild</b> (std::string ChildName)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0a6fb0c53438278c58bb317fd0d8adb6"></a><!-- doxytag: member="mglGuiObject::getChildren" ref="a0a6fb0c53438278c58bb317fd0d8adb6" args="()" -->
-mglWindowList *&#160;</td><td class="memItemRight" valign="bottom"><b>getChildren</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a730386947a8af6f7e89f946171b60f"></a><!-- doxytag: member="mglGuiObject::RemoveChild" ref="a2a730386947a8af6f7e89f946171b60f" args="(mglValString ChildName)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>RemoveChild</b> (<a class="el" href="classmglValString.html">mglValString</a> ChildName)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abf3222f6c4d32b4cdfd14ba5d30e984a"></a><!-- doxytag: member="mglGuiObject::getChildren" ref="abf3222f6c4d32b4cdfd14ba5d30e984a" args="()" -->
+mglGuiObjectList *&#160;</td><td class="memItemRight" valign="bottom"><b>getChildren</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65a137ead2aaec9fca797c2d4769084c"></a><!-- doxytag: member="mglGuiObject::getChildByID" ref="a65a137ead2aaec9fca797c2d4769084c" args="(unsigned int ID)" -->
 virtual <a class="el" href="classmglGuiObject.html">mglGuiObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getChildByID</b> (unsigned int ID)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a36bfb1dfb714c0a73755b060eb25fa8d"></a><!-- doxytag: member="mglGuiObject::setState" ref="a36bfb1dfb714c0a73755b060eb25fa8d" args="(unsigned short _state)" -->
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setState</b> (unsigned short _state)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae809e18795e0dbdeae5ab415a95bb68"></a><!-- doxytag: member="mglGuiObject::getState" ref="aae809e18795e0dbdeae5ab415a95bb68" args="()" -->
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>getState</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abc0ceefe0b46741542decf33528df2e6"></a><!-- doxytag: member="mglGuiObject::getName" ref="abc0ceefe0b46741542decf33528df2e6" args="()" -->
-const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af1f05031339fd23a58deff4c172c865c"></a><!-- doxytag: member="mglGuiObject::setName" ref="af1f05031339fd23a58deff4c172c865c" args="(std::string name)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (std::string name)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a23103afc5148cf357137d78cc293344c"></a><!-- doxytag: member="mglGuiObject::getName" ref="a23103afc5148cf357137d78cc293344c" args="()" -->
+const <a class="el" href="classmglValString.html">mglValString</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7c80af4ea46c2a969cd3257440c5293"></a><!-- doxytag: member="mglGuiObject::setName" ref="ad7c80af4ea46c2a969cd3257440c5293" args="(mglValString name)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (<a class="el" href="classmglValString.html">mglValString</a> name)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80ec993479db7edaabc0115790fbb7d9"></a><!-- doxytag: member="mglGuiObject::parent" ref="a80ec993479db7edaabc0115790fbb7d9" args="()" -->
 <a class="el" href="classmglGuiObject.html">mglGuiObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parent</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a48e026e97073c17685e9a6c645852c74"></a><!-- doxytag: member="mglGuiObject::prev" ref="a48e026e97073c17685e9a6c645852c74" args="()" -->
@@ -154,6 +157,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (std::str
 <a class="el" href="classmglGuiObject.html">mglGuiObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae07da2c4dd6faac6c9aab4dcc56537f1"></a><!-- doxytag: member="mglGuiObject::getOptionMask" ref="ae07da2c4dd6faac6c9aab4dcc56537f1" args="()" -->
 unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>getOptionMask</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd613ab38d0d97b6ea725a6f4c8f5f4b"></a><!-- doxytag: member="mglGuiObject::getOptionMaskFromString" ref="abd613ab38d0d97b6ea725a6f4c8f5f4b" args="(std::string _str)" -->
+unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>getOptionMaskFromString</b> (std::string _str)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeba9787a1a79d3fb96431189e42f2013"></a><!-- doxytag: member="mglGuiObject::hasChildren" ref="aeba9787a1a79d3fb96431189e42f2013" args="()" -->
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasChildren</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2af3630f4dcc84300e372e937c7439a4"></a><!-- doxytag: member="mglGuiObject::isVisible" ref="a2af3630f4dcc84300e372e937c7439a4" args="()" -->
@@ -180,16 +185,16 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>m_fWidth</b></td></t
 <a class="el" href="classmglGuiObject.html">mglGuiObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_pPrev</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af69d5c0bed29ff5ce106e20cb74b4693"></a><!-- doxytag: member="mglGuiObject::m_pNext" ref="af69d5c0bed29ff5ce106e20cb74b4693" args="" -->
 <a class="el" href="classmglGuiObject.html">mglGuiObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>m_pNext</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8bca3da80f1283c734b004869ad72dba"></a><!-- doxytag: member="mglGuiObject::m_Children" ref="a8bca3da80f1283c734b004869ad72dba" args="" -->
-mglWindowList&#160;</td><td class="memItemRight" valign="bottom"><b>m_Children</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad1308cc02eaee43a5497a3c09954cdb7"></a><!-- doxytag: member="mglGuiObject::m_Children" ref="ad1308cc02eaee43a5497a3c09954cdb7" args="" -->
+mglGuiObjectList&#160;</td><td class="memItemRight" valign="bottom"><b>m_Children</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65d7bbe36e23faed7e2852eb5c43292d"></a><!-- doxytag: member="mglGuiObject::m_usState" ref="a65d7bbe36e23faed7e2852eb5c43292d" args="" -->
 unsigned short&#160;</td><td class="memItemRight" valign="bottom"><b>m_usState</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a639c19e3d8e5b03a5ae9a4583ffa9703"></a><!-- doxytag: member="mglGuiObject::bVisible" ref="a639c19e3d8e5b03a5ae9a4583ffa9703" args="" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>bVisible</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7f5ef98f77830bdfcc99a7161b117b8"></a><!-- doxytag: member="mglGuiObject::bHasChildren" ref="af7f5ef98f77830bdfcc99a7161b117b8" args="" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>bHasChildren</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa98ea0bc107e7d5ee20082a8608676e9"></a><!-- doxytag: member="mglGuiObject::m_name" ref="aa98ea0bc107e7d5ee20082a8608676e9" args="" -->
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc37a42fcfcb746ad3e57ea19b81d4c0"></a><!-- doxytag: member="mglGuiObject::m_name" ref="afc37a42fcfcb746ad3e57ea19b81d4c0" args="" -->
+<a class="el" href="classmglValString.html">mglValString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa04c1a5e9b2c8a691c8168ab76032873"></a><!-- doxytag: member="mglGuiObject::m_BackGroundColor" ref="aa04c1a5e9b2c8a691c8168ab76032873" args="" -->
 <a class="el" href="classmglValColor.html">mglValColor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_BackGroundColor</b></td></tr>
 </table>
@@ -219,6 +224,30 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a63620222aec1fae865ff91e70e8f7794"></a><!-- doxytag: member="mglGuiObject::applyIGRCount" ref="a63620222aec1fae865ff91e70e8f7794" args="(int _cnt)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classmglGuiObject.html#a63620222aec1fae865ff91e70e8f7794">mglGuiObject::applyIGRCount</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>_cnt</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>If the editable flag is set the system will try to apply IGR counts on the object This function handles them </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_cnt</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="aba28b3f55e2e9823ad01b91c4005b7bd"></a><!-- doxytag: member="mglGuiObject::Draw" ref="aba28b3f55e2e9823ad01b91c4005b7bd" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -234,6 +263,48 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td
 </div>
 <div class="memdoc">
 <p>The Draw function is propably the most important function for any GUI object. Siblings must overwrite this function to implement their own rendering. </p>
+
+</div>
+</div>
+<a class="anchor" id="a830553031b78e2237da7d45a8f2bf894"></a><!-- doxytag: member="mglGuiObject::getIncrement" ref="a830553031b78e2237da7d45a8f2bf894" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmglValue.html">mglValue</a> * <a class="el" href="classmglGuiObject.html#a830553031b78e2237da7d45a8f2bf894">mglGuiObject::getIncrement</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>If the editable flag is set the system will try to apply modifications via external objects in case of touch modification (sliders etc) </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd></dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aab9ec041596ee7c1dde0214fb8800f73"></a><!-- doxytag: member="mglGuiObject::setValue" ref="aab9ec041596ee7c1dde0214fb8800f73" args="(mglValue *_val)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classmglGuiObject.html#aab9ec041596ee7c1dde0214fb8800f73">mglGuiObject::setValue</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmglValue.html">mglValue</a> *&#160;</td>
+          <td class="paramname"><em>_val</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Hard set the value - this function is separate because the value to be set is definde by the implementation of the object. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_val</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -259,7 +330,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>m_name</b></td
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 12 2014 21:49:47 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Mar 18 2014 20:01:33 for MGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -74,3 +74,15 @@ int mglInputMessage::getIGRCount()
 	return m_iIGRCount;
 }
 
+
+void mglInputMessage::setDiffTime(timespec _tspec)
+{
+	m_DiffTime = _tspec;
+}
+
+
+timespec mglInputMessage::getDiffTime()
+{
+	return m_DiffTime;
+}
+
