@@ -26,13 +26,16 @@
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
-static const char* enObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE" };
-enum class enObjectFlagsBitNums { Obj_Selectable = 0, Obj_Editable, Obj_Enterable };
-enum class enObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4};
+static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE" };
+enum class enumObjectFlagsBitNums {
+	Obj_Selectable = 0, /** Object can be selected - this will cause input processing (touch) and focus selection (IGR) for this object if occurs */
+	Obj_Editable, /** The object is editable, that means it contains a modifiable value. When selected an edit object is spawned (touch)
+					or this object will receive further inputs (IGR). */
+	Obj_Enterable, /** This object can be used as grouping layer for IGR inputs. Selecting will cause stepping down the selection list to its children. */
+	Obj_PositionRelative /** Should be clear */
+};
+enum class enumObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4, Obj_PositionRelative = 8};
 
-#define OBJ_SELECTABLE	(unsigned long)0x00000001 // Can be selected with IGR
-#define OBJ_EDITABLE	(unsigned long)0x00000002 // Implements editable interface
-#define OBJ_ENTERABLE   (unsigned long)0x00000004 // you can step down the tree
 
 
 #define OBJ_STATE_STANDARD	(unsigned short) 0
@@ -89,6 +92,7 @@ public:
 	float GetY();
 	mglValCoord GetPosition();
 	void SetPosition(mglValCoord pt);
+	mglValCoord calcPosition();
 
 	float GetHeight();
 	void SetHeight(float uiHeight);
@@ -116,16 +120,17 @@ public:
 	unsigned long getOptionMask();
 	unsigned long getOptionMaskFromString(std::string _str);
 
-	virtual bool hasChildren() {return bHasChildren; };
-	virtual bool isVisible() { return bVisible;};
+	virtual bool hasChildren() {return m_bHasChildren; };
+	virtual bool isVisible() { return m_bVisible;};
+
 protected:
 	uint uiElementState; // State of element, inactive, focussed, selected
 	unsigned long m_ulOptionMask;
 
 	mglGuiActionFunctor* m_GuiAction;
 
-	float m_fXpos;
-	float m_fYpos;
+	mglValCoord m_Position;
+
 	float m_fHeight;
 	float m_fWidth;
 
@@ -137,8 +142,8 @@ protected:
 
 	unsigned short m_usState; // focus, selected etc
 
-	bool bVisible;
-	bool bHasChildren;
+	bool m_bVisible;
+	bool m_bHasChildren;
 
 	mglValString m_name;
 	mglValColor m_BackGroundColor;

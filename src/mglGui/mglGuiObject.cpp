@@ -67,12 +67,11 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 		}
 	}
 	m_GuiAction = NULL; // on creation there is no function defined!
-	m_fXpos = x;
-	m_fYpos = y;
+	m_Position = mglValCoord(x, y, 0);
 	m_fHeight = height;
 	m_fWidth = width;
-	bVisible = true;
-	bHasChildren = false;
+	m_bVisible = true;
+	m_bHasChildren = false;
 	m_ulOptionMask = getOptionMaskFromString(string(""));
 }
 
@@ -99,31 +98,70 @@ mglGuiActionFunctor* mglGuiObject::getGuiAction()
 	return m_GuiAction;
 }
 
+
+/**
+ * Returns the X coordinate of the position of this object. Relative positioning is not regarded.
+ * @return
+ */
 float mglGuiObject::GetX()
 {
-	return m_fXpos;
+	return m_Position.m_fX;
 }
 
 
+/**
+ * Returns the Y coordinate of the position of this object. Relative positioning is not regarded.
+ * @return
+ */
 float mglGuiObject::GetY()
 {
-	return m_fYpos;
+	return m_Position.m_fY;
 }
 
+
+/**
+ * Returns the height of the object.
+ * @return
+ */
 float mglGuiObject::GetHeight()
 {
 	return m_fHeight;
 }
 
+/**
+ * This method returns the position which is set for this object. Relative positioning is not regarded.
+ * @return
+ */
 mglValCoord mglGuiObject::GetPosition()
 {
-	return mglValCoord(m_fXpos, m_fYpos, 0.0f);
+	return m_Position;
 }
+
+
+/**
+ * In contrast to the getposition method, this method returns the position coordinate with regard to relative positioning.
+ * That means if the current object is positioned relatively this function will step up to the parents until it gets the first
+ * absolute position. All positions are added and the result is returned.
+ * @return
+ */
+mglValCoord mglGuiObject::calcPosition()
+{
+	INIT_LOG("mglGuiObject", "calcPosition");
+	if (m_ulOptionMask & static_cast<unsigned long>(enumObjectFlags::Obj_PositionRelative))
+	{
+		mglValCoord cParent = m_pParent->calcPosition();
+		mglValCoord ret = mglValCoord(cParent.m_fX + m_Position.m_fX, cParent.m_fY - m_Position.m_fY, cParent.m_fZ + m_Position.m_fZ);;
+
+		return ret;
+	}
+	else
+		return m_Position;
+}
+
 
 void mglGuiObject::SetPosition(mglValCoord pt)
 {
-	m_fYpos = pt.getY();
-	m_fXpos = pt.getX();
+	m_Position = pt;
 }
 
 
@@ -139,10 +177,10 @@ void mglGuiObject::Draw(void)
 
 	glBegin (GL_QUADS);
 
-	glVertex2f(m_fXpos, m_fYpos); // Unten links der Textur und des Quadrats
-	glVertex2f(m_fXpos + m_fWidth, m_fYpos); // Unten rechts der Textur und des Quadrats
-	glVertex2f(m_fXpos + m_fWidth, m_fYpos - m_fHeight); // Oben rechts der Textur und des Quadrats
-	glVertex2f(m_fXpos, m_fYpos - m_fHeight);
+	glVertex2f(m_Position.m_fX, m_Position.m_fY); // Unten links der Textur und des Quadrats
+	glVertex2f(m_Position.m_fX + m_fWidth, m_Position.m_fY); // Unten rechts der Textur und des Quadrats
+	glVertex2f(m_Position.m_fX + m_fWidth, m_Position.m_fY - m_fHeight); // Oben rechts der Textur und des Quadrats
+	glVertex2f(m_Position.m_fX, m_Position.m_fY - m_fHeight);
 	glEnd ();
 
 	// assure painting of all children
@@ -155,13 +193,13 @@ void mglGuiObject::AddChild(mglGuiObject *Child)
 	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child");
 	LOG_TRACE("Added child");
 
-	if (bHasChildren)
+	if (m_bHasChildren)
 	{
 		m_Children.back()->setNextWindow(Child);
 		Child->setPrevWindow(m_Children.back());
 	}
 	else
-		bHasChildren = true;
+		m_bHasChildren = true;
 
 	m_Children.push_back(Child);
 }
@@ -233,18 +271,20 @@ mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 {
 	const mglGuiObjectList::const_iterator it_end = m_Children.end();
 	
-	if (!bHasChildren)
+	if (!m_bHasChildren)
 		return this;
-
+	mglValCoord coord;
 	mglGuiObjectList::const_iterator child;
 	for (child = m_Children.begin(); child != it_end; ++child)
 	{
 		if ((*child)->isVisible())
 		{
-			if ((pt.getX() >= (*child)->GetX()) &&
-				(pt.getX() < ((*child)->GetX() + (*child)->GetWidth())) &&
-				(pt.getY() <= (*child)->GetY()) &&
-				(pt.getY() > ((*child)->GetY() - (*child)->GetHeight())))
+			coord = (*child)->calcPosition();
+
+			if ((pt.m_fX >= coord.m_fX) &&
+				(pt.m_fX < (coord.m_fX + (*child)->GetWidth())) &&
+				(pt.m_fY <= coord.m_fY) &&
+				(pt.m_fY > (coord.m_fY - (*child)->GetHeight())))
 			{
 				if ((*child)->hasChildren())
 				{
@@ -265,7 +305,7 @@ mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 
 mglGuiObject* mglGuiObject::getChildByID(unsigned int ID)
 {
-	if ((bHasChildren) && (m_Children.size() > ID))
+	if ((m_bHasChildren) && (m_Children.size() > ID))
 	{
 		return m_Children.at(ID);
 	}
@@ -315,16 +355,16 @@ unsigned long mglGuiObject::getOptionMaskFromString(std::string _str)
 		LOG_TRACE("line: " << item);
 		if (item.empty())
 			continue;
-		if (0 == item.compare(string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Selectable)])))
-			retVal |= (1 << static_cast<int>(enObjectFlagsBitNums::Obj_Selectable));
-		if (0 == item.compare(string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Editable)])))
-			retVal |= (1 << static_cast<int>(enObjectFlagsBitNums::Obj_Editable));
-		if (0 == item.compare(string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Enterable)])))
-			retVal |= (1 << static_cast<int>(enObjectFlagsBitNums::Obj_Enterable));
-		LOG_TRACE("Accesstest: " << string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Selectable)]));
-		LOG_TRACE("Accesstest: " << string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Editable)]));
-		LOG_TRACE("Accesstest: " << string(enObjectFlagNames[static_cast<int>(enObjectFlagsBitNums::Obj_Enterable)]));
+		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_Selectable)])))
+			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_Selectable));
+		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_Editable)])))
+			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_Editable));
+		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_Enterable)])))
+			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_Enterable));
+		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_PositionRelative)])))
+			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_PositionRelative));
 	}
 	LOG_TRACE("retval = " << retVal);
 	return retVal;
 }
+

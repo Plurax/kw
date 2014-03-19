@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <iostream>
 
+#include "mglValues/mglValString.h"
+
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -32,7 +34,11 @@ public:
 
 	unsigned short getYRes();
 	unsigned short getXRes();
-	unsigned short contextDelay();
+	unsigned int getContextAnimationDelayStart();
+	unsigned int getContextAnimationDelayEnd();
+
+	mglValString* getContextAnimationClass();
+	mglValString* getContextAnimationLib();
 
 private:
 	unsigned short m_yres;
@@ -41,7 +47,11 @@ private:
 	 * This is a milli second value which sets the time difference for opening a context menu.
 	 * The context menu can be opened by holding the touchdown or the IGR press longer than this time span.
 	 */
-	unsigned short m_contextDelay;
+	unsigned int m_contextDelayStart;
+	unsigned int m_contextDelayEnd;
+
+	mglValString* m_ContextAnimationClass;
+	mglValString* m_ContextAnimationLib;
 };
 
 #endif /* MGLAPPCONFIGURATION_H_ */

@@ -86,3 +86,14 @@ timespec mglInputMessage::getDiffTime()
 	return m_DiffTime;
 }
 
+
+void mglInputMessage::setContextTimeEnd(bool flag)
+{
+	m_ContextAnimationCompleted = flag;
+}
+
+bool mglInputMessage::getContextTimeEnd()
+{
+	return m_ContextAnimationCompleted;
+}
+

@@ -100,8 +100,13 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			(Message->getInputType() == eInputIGRRelease))
 	{
 		m_ContextMenuTimer.end();
+		timespec tmpTs = m_ContextMenuTimer.getDiffTime();
 		m_ContextMenuTimer.clear();
-		Message->setDiffTime(m_ContextMenuTimer.getDiffTime());
+		Message->setDiffTime(tmpTs);
+		if (tmpTs.tv_sec >= m_Configuration.getContextAnimationDelayEnd())
+			Message->setContextTimeEnd(true);
+		else
+			Message->setContextTimeEnd(false);
 		m_ButtonDown = false;
 		delete m_ContextAnimation;
 		m_ContextAnimation = NULL;
@@ -112,17 +117,12 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	 * This can be used to call the creation of a context menu.
 	 * As we only allow one menu at a time, this can only be used by mainframes.
 	 */
-	if (m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_sec > 1))
+	if (m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_nsec >= m_Configuration.getContextAnimationDelayStart()))
 	{
 		if (m_ContextAnimation == NULL)
 		{
-			mglValString* libname = new mglValString("libmy2dObjects.so");
-			mglValString* name = new mglValString("myContextAnimation");
-
-			m_ContextAnimation = mglGuiLibManager::Inst().createGUIObject(libname, name, NULL);
-
-			delete libname;
-			delete name;
+			m_ContextAnimation = mglGuiLibManager::Inst().createGUIObject(m_Configuration.getContextAnimationLib(),
+					m_Configuration.getContextAnimationClass(), NULL);
 
 			mglValCoord spawnCoord;
 			if (m_vSelectionContexts.back()->m_Focus != NULL)
@@ -132,11 +132,10 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			else
 				spawnCoord = Message->getCoord();
 
-			LOG_TRACE("Created context animation object at X " << spawnCoord.getX() << " Y " << spawnCoord.getY());
+			LOG_TRACE("Created context animation object at X " << spawnCoord.m_fX << " Y " << spawnCoord.m_fY);
 
 			m_ContextAnimation->SetPosition(spawnCoord);
 		}
-		LOG_TRACE("Bounce" << m_ContextMenuTimer.getCurrentDiffTime().tv_sec);
 	}
 
 	// Mouse button press and release cause search for the object and calling its processing functor
@@ -162,7 +161,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			if (m_vSelectionContexts.back()->m_Focus != NULL)
 			{
 				LOG_TRACE("Entering focus handler");
-				if (!(m_vSelectionContexts.back()->m_Focus->getOptionMask() & OBJ_EDITABLE))
+				if (!(m_vSelectionContexts.back()->m_Focus->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable)))
 				{
 					LOG_TRACE("Object is not editable");
 					Message->setTarget(m_vSelectionContexts.back()->m_Focus);
@@ -210,13 +209,13 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					if (bForward)
 					{
 						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
-						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & OBJ_SELECTABLE)))
+						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
 							pTemp = pTemp->next();
 					}
 					else
 					{
 						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
-						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & OBJ_SELECTABLE)))
+						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
 							pTemp = pTemp->prev();
 					}
 
@@ -247,7 +246,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 						pTemp = pSwap;
 					}
 					if (pTemp)
-						if (pTemp->getOptionMask() & OBJ_SELECTABLE)
+						if (pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))
 							iCount--;
 				}
 
@@ -311,7 +310,7 @@ void mglSystem::Draw(void)
 mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 {
 	mglGuiObject* destination;
-
+	mglValCoord coord;
 	destination = m_CurrentMenu; // set target to current menu if not null
 
 	if (destination != NULL)
@@ -320,10 +319,11 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 			return 0;
 
 		// then search within the concatenation for the final input target
-		if ((pt.getX() >= (m_CurrentMenu)->GetX()) &&
-			(pt.getX() < ((m_CurrentMenu)->GetX() + (m_CurrentMenu)->GetWidth())) &&
-			(pt.getY() <= (m_CurrentMenu)->GetY()) &&
-			(pt.getY() > ((m_CurrentMenu)->GetY() - (m_CurrentMenu)->GetHeight())))
+		coord = (m_CurrentMenu)->calcPosition();
+		if ((pt.m_fX >= coord.m_fX) &&
+			(pt.m_fX < (coord.m_fX + (m_CurrentMenu)->GetWidth())) &&
+			(pt.m_fY <= coord.m_fY) &&
+			(pt.m_fY > (coord.m_fY - (m_CurrentMenu)->GetHeight())))
 		{
 			destination = m_CurrentMenu->getChildAtPosition(pt);
 			return destination;
@@ -334,11 +334,12 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 	if (!destination->isVisible())
 		return 0;
 
+	coord = (m_CurrentMainFrame)->calcPosition();
 	// then search within the concatenation for the final input target
-	if ((pt.getX() >= (m_CurrentMainFrame)->GetX()) &&
-		(pt.getX() < ((m_CurrentMainFrame)->GetX() + (m_CurrentMainFrame)->GetWidth())) &&
-		(pt.getY() <= (m_CurrentMainFrame)->GetY()) &&
-		(pt.getY() > ((m_CurrentMainFrame)->GetY() - (m_CurrentMainFrame)->GetHeight())))
+	if ((pt.m_fX >= coord.m_fX) &&
+		(pt.m_fX < (coord.m_fX + (m_CurrentMainFrame)->GetWidth())) &&
+		(pt.m_fY <= coord.m_fY) &&
+		(pt.m_fY > (coord.m_fY - (m_CurrentMainFrame)->GetHeight())))
 	{
 		destination = m_CurrentMainFrame->getChildAtPosition(pt);
 		return destination;
@@ -376,11 +377,13 @@ void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
 	m_vSelectionContexts.front()->m_SelectListParent = m_CurrentMainFrame;
 }
 
-void mglSystem::openMenu(mglGuiObject *Menu)
+void mglSystem::openMenu(mglGuiObject *Menu, mglValCoord _coord)
 {
 	m_vSelectionContexts.push_back(new mglSelectionContext());
 
 	m_CurrentMenu = Menu;
+	if (!_coord.empty())
+		Menu->SetPosition(_coord);
 	m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
 	mglGuiObject* obj = NULL;
 
@@ -391,7 +394,7 @@ void mglSystem::openMenu(mglGuiObject *Menu)
 		for (; it != m_vSelectionContexts.back()->m_pCurrentSelectionList->end(); it++)
 		{
 			obj = *it;
-			if (obj->getOptionMask() & OBJ_SELECTABLE)
+			if (obj->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))
 				break;
 		}
 

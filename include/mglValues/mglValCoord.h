@@ -22,10 +22,6 @@ public:
 
 	mglValType getType();
 
-	float getX();
-	float getY();
-	float getZ();
-
 	void setX(float x);
 	void setY(float y);
 	void setZ(float z);
@@ -34,10 +30,14 @@ public:
 	void setY(int y);
 	void setZ(int z);
 
+	bool empty();
+
+	float m_fX;
+	float m_fY;
+	float m_fZ;
+
 protected:
-	float m_x;
-	float m_y;
-	float m_z;
+	bool m_isEmpty;
 };
 
 

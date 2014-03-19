@@ -54,6 +54,9 @@ public:
 	void setDiffTime(timespec _tspec);
 	timespec getDiffTime();
 
+	void setContextTimeEnd(bool flag);
+	bool getContextTimeEnd();
+
 private:
 	mglValCoord m_Coord;
 	int m_InputType;
@@ -62,6 +65,7 @@ private:
 	int m_iIGRCount;
 	mglGuiObject* m_target;
 	timespec m_DiffTime;
+	bool m_ContextAnimationCompleted;
 };
 
 #endif /* MGLINPUTMESSAGE_H_ */

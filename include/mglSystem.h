@@ -58,7 +58,7 @@ public:
 
 	void closeMenu();
 	void returnFromMenu();
-	void openMenu(mglGuiObject *Menu);
+	void openMenu(mglGuiObject *Menu, mglValCoord _coord);
 
 	void destroy();
 	mglGuiObject* getMainFrameByID(unsigned int ID);

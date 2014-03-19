@@ -19,8 +19,17 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 	XMLCh* TAG_yres = XMLString::transcode("yres");
 	XMLCh* TAG_xres = XMLString::transcode("xres");
 
+	XMLCh* TAG_contextanimationclass = XMLString::transcode("ContextAnimationClass");
+	XMLCh* TAG_contextanimationlib = XMLString::transcode("ContextAnimationLib");
+	XMLCh* TAG_ContextDelayStart = XMLString::transcode("ContextDelayStart");
+	XMLCh* TAG_ContextDelayEnd = XMLString::transcode("ContextDelayEnd");
+
 	unsigned int uisReadVal = 0;
 	char* valTagText;
+
+	m_contextDelayStart = 10;
+	m_contextDelayEnd = 10;
+
 
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
 	{
@@ -60,6 +69,34 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 							m_yres = (unsigned short)uisReadVal;
 							XMLString::release(&valTagText);
 						}
+
+						if ( XMLString::equals(child_Element->getTagName(), TAG_contextanimationclass))
+						{
+							m_ContextAnimationClass = new mglValString(XMLString::transcode(child_Element->getTextContent()));
+							XMLString::release(&valTagText);
+						}
+
+						if ( XMLString::equals(child_Element->getTagName(), TAG_contextanimationlib))
+						{
+							m_ContextAnimationLib = new mglValString(XMLString::transcode(child_Element->getTextContent()));
+							XMLString::release(&valTagText);
+						}
+
+						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayStart))
+						{
+							valTagText = XMLString::transcode(child_Element->getTextContent());
+							sscanf(valTagText, "%u", &uisReadVal);
+							m_contextDelayStart = (unsigned short)uisReadVal;
+							XMLString::release(&valTagText);
+						}
+
+						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayEnd))
+						{
+							valTagText = XMLString::transcode(child_Element->getTextContent());
+							sscanf(valTagText, "%u", &uisReadVal);
+							m_contextDelayEnd = (unsigned short)uisReadVal;
+							XMLString::release(&valTagText);
+						}
 					}
 				}
 			}
@@ -77,4 +114,26 @@ unsigned short mglAppConfiguration::getXRes()
 {
 	return m_xres;
 }
+
+
+mglValString* mglAppConfiguration::getContextAnimationClass()
+{
+	return m_ContextAnimationClass;
+}
+
+mglValString* mglAppConfiguration::getContextAnimationLib()
+{
+	return m_ContextAnimationLib;
+}
+
+unsigned int mglAppConfiguration::getContextAnimationDelayStart()
+{
+	return m_contextDelayStart;
+}
+
+unsigned int mglAppConfiguration::getContextAnimationDelayEnd()
+{
+	return m_contextDelayEnd;
+}
+
 
