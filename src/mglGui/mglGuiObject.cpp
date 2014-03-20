@@ -245,6 +245,11 @@ unsigned long mglGuiObject::getOptionMask()
 	return m_ulOptionMask;
 }
 
+void mglGuiObject::setOptionMask(unsigned long _mask)
+{
+	m_ulOptionMask = _mask;
+}
+
 
 void mglGuiObject::setNextWindow(mglGuiObject* parent)
 {
@@ -334,10 +339,20 @@ mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
 
 /**
  * Hard set the value - this function is separate because the value to be set
- * is definde by the implementation of the object.
+ * is defined by the implementation of the object.
  * @param _val
  */
 void mglGuiObject::setValue(mglValue* _val)
+{
+
+}
+
+/**
+ * Get the value - this function is separate because the value to be set
+ * is defined by the implementation of the object.
+ * @param _val
+ */
+mglValue mglGuiObject::getValue()
 {
 
 }

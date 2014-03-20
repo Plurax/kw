@@ -36,6 +36,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
 	dsManager.init();
 	m_ContextAnimation = NULL;
+	m_NonIGREditable = NULL;
 	m_ButtonDown = false;
 
 	flushGL = ptr;
@@ -69,6 +70,9 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	m_vSelectionContexts.push_back(new mglSelectionContext());
 }
 
+/**
+ * Destructor - deletes all mainframes.
+ */
 mglSystem::~mglSystem()
 {
 	uint uiIndex;
@@ -80,6 +84,8 @@ mglSystem::~mglSystem()
 
 /**
  * Processes an input message.
+ * An additional degree of freedom is implemented to allow a context menu to be opened at the touch position.
+ * The context menu is also supported with IGR pressing, so you can implement context menus which can be selected via IGR.
  * @param Message
  * @return
  */
@@ -117,7 +123,9 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	 * This can be used to call the creation of a context menu.
 	 * As we only allow one menu at a time, this can only be used by mainframes.
 	 */
-	if (m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_nsec >= m_Configuration.getContextAnimationDelayStart()))
+	if ((m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_nsec >= m_Configuration.getContextAnimationDelayStart())) &&
+			(m_NonIGREditable == NULL) &&
+			(m_CurrentMenu == NULL))
 	{
 		if (m_ContextAnimation == NULL)
 		{
@@ -145,12 +153,41 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		m_lastActionCausedByTouch = true;
 		mglGuiObject *Target = getTargetWindow(Message->getCoord());
 		if (Target != NULL)
-			if (Target->getGuiAction() != NULL)
+		{
+			// If the target is editable we can open a corresponding editable dialog.
+			if (Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable))
 			{
-				Message->setTarget(Target);
+				if (Message->getInputType() == eInputMouseButtonRelease)
+				{
+					m_NonIGREditable = *m_lEditors.begin();
 
-				return Target->ProcessMessage(Message);
+					mglValCoord spawnCoord;
+					spawnCoord = Message->getCoord();
+					spawnCoord.setY(spawnCoord.m_fY + 100); // hack to avoid clipping
+					m_NonIGREditable->SetPosition(spawnCoord);
+					LOG_TRACE("Opened editor");
+				}
 			}
+			else
+			{
+				if (Target->getGuiAction() != NULL)
+				{
+					Message->setTarget(Target);
+
+					return Target->ProcessMessage(Message);
+				}
+			}
+		}
+		else
+		{
+			/**
+			 * In this case - we cancel the input because the context editor was open but the user clicked aside of it
+			 */
+			if (m_NonIGREditable != NULL)
+			{
+				m_NonIGREditable = NULL;
+			}
+		}
 	}
 	else
 	{
@@ -286,16 +323,22 @@ void mglSystem::Draw(void)
 	m_CurrentMainFrame->Draw();
 
 	glLoadIdentity();
-	glTranslatef(0.0, 0.0, 1.0); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
+	glTranslatef(0.0, 0.0, 0.1); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
 
 	if (m_CurrentMenu != NULL)
 		m_CurrentMenu->Draw();
 
 	glLoadIdentity();
-
+	glTranslatef(0.0, 0.0, 0.2); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
 
 	if (m_ContextAnimation != NULL)
 		m_ContextAnimation->Draw();
+
+	glLoadIdentity();
+	glTranslatef(0.0, 0.0, 0.3); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
+
+	if (m_NonIGREditable != NULL)
+		m_NonIGREditable->Draw();
 
 	(*flushGL)();
 
@@ -311,22 +354,40 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 {
 	mglGuiObject* destination;
 	mglValCoord coord;
+	destination = m_NonIGREditable; // set target to non IGR editor object (keyboard, slider etc)
+
+	if (destination != NULL)
+	{
+
+		// then search within the concatenation for the final input target
+		coord = (m_NonIGREditable)->calcPosition();
+		if ((pt.m_fX >= coord.m_fX) &&
+			(pt.m_fX < (coord.m_fX + (m_NonIGREditable)->GetWidth())) &&
+			(pt.m_fY <= coord.m_fY) &&
+			(pt.m_fY > (coord.m_fY - (m_NonIGREditable)->GetHeight())))
+		{
+			destination = m_NonIGREditable->getChildAtPosition(pt);
+			return destination;
+		}
+		return NULL; /** A context editor menu is modal - if we press aside of it - we cancel the input */
+	}
+
 	destination = m_CurrentMenu; // set target to current menu if not null
 
 	if (destination != NULL)
 	{
-		if (!destination->isVisible())
-			return 0;
-
-		// then search within the concatenation for the final input target
-		coord = (m_CurrentMenu)->calcPosition();
-		if ((pt.m_fX >= coord.m_fX) &&
-			(pt.m_fX < (coord.m_fX + (m_CurrentMenu)->GetWidth())) &&
-			(pt.m_fY <= coord.m_fY) &&
-			(pt.m_fY > (coord.m_fY - (m_CurrentMenu)->GetHeight())))
+		if (destination->isVisible())
 		{
-			destination = m_CurrentMenu->getChildAtPosition(pt);
-			return destination;
+			// then search within the concatenation for the final input target
+			coord = (m_CurrentMenu)->calcPosition();
+			if ((pt.m_fX >= coord.m_fX) &&
+				(pt.m_fX < (coord.m_fX + (m_CurrentMenu)->GetWidth())) &&
+				(pt.m_fY <= coord.m_fY) &&
+				(pt.m_fY > (coord.m_fY - (m_CurrentMenu)->GetHeight())))
+			{
+				destination = m_CurrentMenu->getChildAtPosition(pt);
+				return destination;
+			}
 		}
 	}
 
@@ -344,6 +405,7 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 		destination = m_CurrentMainFrame->getChildAtPosition(pt);
 		return destination;
 	}
+
 	return 0;
 }
 
@@ -469,6 +531,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
    XMLCh* TAG_GUI = XMLString::transcode("GUI");
    XMLCh* TAG_DataLayer= XMLString::transcode("DataLayer");
    XMLCh* TAG_Menus = XMLString::transcode("MENUS");
+   XMLCh* TAG_Editors = XMLString::transcode("EDITORS");
    XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
    XMLCh* TAG_Fonts= XMLString::transcode("Fonts");
@@ -529,6 +592,11 @@ void mglSystem::readConfiguration(mglValString& configFile)
 					createGUIfromXML(currentNode, NULL, NULL, m_lMenus);
 				}
 
+				if ( XMLString::equals(currentElement->getTagName(), TAG_Editors))
+				{
+					createGUIfromXML(currentNode, NULL, NULL, m_lEditors);
+				}
+
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
 				{
 					m_FontProvider->loadFonts(currentNode);
@@ -551,6 +619,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
       XMLString::release(&TAG_GUI);
       XMLString::release(&TAG_DataLayer);
       XMLString::release(&TAG_Menus);
+      XMLString::release(&TAG_Editors);
       XMLString::release(&TAG_AppConfiguration);
       XMLString::release(&TAG_Logging);
       XMLString::release(&TAG_Textures);
@@ -629,9 +698,14 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				libname = new mglValString(XMLString::transcode(DE_func_libname->getTextContent()));
 				classname = new mglValString(XMLString::transcode(DE_func_classname->getTextContent()));
 
-				// After we created the object we can attach the handler if it exists
-				mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(libname, classname);
-				thisWindow->Connect(funct);
+				if ((libname->str()->size() == 0) || (classname->str()->size() == 0))
+					thisWindow->Connect(NULL);
+				else
+				{
+					// After we created the object we can attach the handler if it exists
+					mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(libname, classname);
+					thisWindow->Connect(funct);
+				}
 
 				// A created gui object is also registered by its name
 				m_mGuiObjects.insert(std::pair<mglValString,mglGuiObject*>(mglValString(*name),thisWindow));

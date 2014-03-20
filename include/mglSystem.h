@@ -72,6 +72,7 @@ public:
 
 	mglGuiObjectList m_lMainFrames;
 	mglGuiObjectList m_lMenus;
+	mglGuiObjectList m_lEditors;
 
 	mglGuiObjectMap m_mGuiObjects;
 
@@ -114,6 +115,8 @@ private:
 
 	mglTimer m_ContextMenuTimer;
 	mglGuiObject* m_ContextAnimation;
+
+	mglGuiObject* m_NonIGREditable;
 };
 
 

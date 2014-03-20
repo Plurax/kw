@@ -26,15 +26,16 @@
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
-static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE" };
+static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLE" };
 enum class enumObjectFlagsBitNums {
 	Obj_Selectable = 0, /** Object can be selected - this will cause input processing (touch) and focus selection (IGR) for this object if occurs */
 	Obj_Editable, /** The object is editable, that means it contains a modifiable value. When selected an edit object is spawned (touch)
 					or this object will receive further inputs (IGR). */
 	Obj_Enterable, /** This object can be used as grouping layer for IGR inputs. Selecting will cause stepping down the selection list to its children. */
-	Obj_PositionRelative /** Should be clear */
+	Obj_PositionRelative, /** Should be clear */
+	Obj_Draggable
 };
-enum class enumObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4, Obj_PositionRelative = 8};
+enum class enumObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4, Obj_PositionRelative = 8, Obj_Draggable = 16};
 
 
 
@@ -83,10 +84,11 @@ public:
 	void setNextWindow(mglGuiObject* parent);
 	void setPrevWindow(mglGuiObject* parent);
 
-	// Interface for editables - if not used call the parent function
+	// Interface for editables - if not used call the parent function (and nothing happens)
 	virtual void applyIGRCount(int _cnt);
 	virtual mglValue* getIncrement(); // This is for touch (slider?) usage
 	virtual void setValue(mglValue* _val);
+	virtual mglValue getValue();
 
 	float GetX();
 	float GetY();
@@ -118,6 +120,7 @@ public:
 	mglGuiObject* next();
 
 	unsigned long getOptionMask();
+	void setOptionMask(unsigned long _mask);
 	unsigned long getOptionMaskFromString(std::string _str);
 
 	virtual bool hasChildren() {return m_bHasChildren; };
