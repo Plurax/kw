@@ -65,7 +65,7 @@ void mglValCoord::setZ(int z)
 	m_fZ = (float)z;
 }
 
-mglValType mglValCoord::getType()
+enumValType mglValCoord::getType()
 {
 	return m_valType;
 }

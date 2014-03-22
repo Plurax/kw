@@ -13,14 +13,14 @@
 class mglValCoord : public mglValue
 {
 public:
-  static const mglValType m_valType = mglValType::mglValCoord;
+  static const enumValType m_valType = enumValType::mglValCoord;
 	mglValCoord(int x, int y, int z);
 	mglValCoord(float x, float y, int z);
 
 	mglValCoord();
 	~mglValCoord();
 
-	mglValType getType();
+	enumValType getType();
 
 	void setX(float x);
 	void setY(float y);

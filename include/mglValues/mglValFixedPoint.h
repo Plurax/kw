@@ -28,8 +28,9 @@ enum class enumValFixedPointPrec {
 class mglValFixedPoint : public mglValue
 {
 public:
-  static const mglValType m_valType = mglValType::mglValFixedPoint;
+  static const enumValType m_valType = enumValType::mglValFixedPoint;
 	static const short precN[7];
+	static const long precNScalings[7];
 
 	mglValFixedPoint();
 	mglValFixedPoint(mglValString _string);
@@ -37,7 +38,7 @@ public:
 	mglValFixedPoint(long in, enumValFixedPointPrec prec);
 	mglValString asString();
 
-	mglValType getType();
+	enumValType getType();
 
 	bool operator >= (const mglValFixedPoint right);
 	bool operator > (const mglValFixedPoint right);
@@ -51,6 +52,10 @@ public:
 	mglValFixedPoint operator / (const mglValFixedPoint& right);
 
 	mglValFixedPoint getWithNewPrecision(enumValFixedPointPrec prec);
+
+	enumValFixedPointPrec getPrecision();
+
+	float asFloat();
 private:
 	enumValFixedPointPrec getPrecisionFromString(char* _str);
 	long m_lValue;

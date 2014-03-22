@@ -87,11 +87,11 @@ public:
 
 	// Interface for editables - if not used call the parent function (and nothing happens)
 	virtual void applyIGRCount(int _cnt);
-	virtual mglValue getIncrement(); // This is for touch (slider?) usage
-	virtual mglValue getUpperLimit();
-	virtual mglValue getLowerLimit();
+	virtual mglValue* getIncrement(); // This is for touch (slider?) usage
+	virtual mglValue* getUpperLimit();
+	virtual mglValue* getLowerLimit();
 	virtual void setValue(mglValue* _val);
-	virtual mglValue getValue();
+	virtual mglValue* getValue();
 	virtual void InitEditable(mglGuiObject* edited);
 
 	// Those functions are for draggable objects to avoid move out of their limits

@@ -115,7 +115,7 @@ const string* mglValString::str() const
 	return m_string;
 }
 
-mglValType mglValString::getType()
+enumValType mglValString::getType()
 {
 	return m_valType;
 }

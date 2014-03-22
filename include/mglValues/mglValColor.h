@@ -15,13 +15,13 @@
 class mglValColor : public mglValue
 {
 public:
-  static const mglValType m_valType = mglValType::mglValColor;
+  static const enumValType m_valType = enumValType::mglValColor;
 	mglValColor();
 	mglValColor(float red, float green, float blue, float alpha);
 	mglValColor(const char* hex);
 
 	mglValString asString();
-	mglValType getType();
+	enumValType getType();
 
 	float fRed;
 	float fGreen;

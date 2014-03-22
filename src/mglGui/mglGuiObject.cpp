@@ -351,7 +351,7 @@ void mglGuiObject::applyIGRCount(int _cnt)
  * in case of touch modification (sliders etc)
  * @return
  */
-mglValue mglGuiObject::getIncrement() // This is for touch (slider?) usage
+mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
 {
 
 }
@@ -371,7 +371,7 @@ void mglGuiObject::setValue(mglValue* _val)
  * is defined by the implementation of the object.
  * @param _val
  */
-mglValue mglGuiObject::getValue()
+mglValue* mglGuiObject::getValue()
 {
 
 }
@@ -382,12 +382,12 @@ void mglGuiObject::InitEditable(mglGuiObject* edited)
 }
 
 
-mglValue mglGuiObject::getUpperLimit()
+mglValue* mglGuiObject::getUpperLimit()
 {
 
 }
 
-mglValue mglGuiObject::getLowerLimit()
+mglValue* mglGuiObject::getLowerLimit()
 {
 
 }

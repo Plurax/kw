@@ -81,6 +81,14 @@ mglSystem::~mglSystem()
 	for (uiIndex = 0; uiIndex < m_lMainFrames.size(); uiIndex++)
 		delete m_lMainFrames.at(uiIndex); // delete the root frame objects
 	m_lMainFrames.clear(); // clear all registered root frames
+
+	for (uiIndex = 0; uiIndex < m_lMenus.size(); uiIndex++)
+		delete m_lMenus.at(uiIndex); // delete the root frame objects
+	m_lMenus.clear();
+
+	for (uiIndex = 0; uiIndex < m_lEditors.size(); uiIndex++)
+		delete m_lEditors.at(uiIndex); // delete the root frame objects
+	m_lEditors.clear();
 }
 
 
@@ -161,7 +169,6 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			if ((Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableX)) ||
 				(Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableY)))
 			{
-				LOG_TRACE("Creating Draggable context");
 				m_DraggingContext = new mglDraggingContext;
 				m_DraggingContext->m_DraggingObject = Target;
 				m_DraggingContext->m_StartingObjectCoord = Target->GetPosition();
@@ -198,6 +205,9 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					{
 						if (m_ValueEditor == NULL)
 						{
+							// First we need to decide which editor has to be opened
+							enumValType valType = Target->getValue()->getType();
+
 							m_ValueEditor = *m_lEditors.begin();
 
 							/**
@@ -243,6 +253,13 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				if (m_ValueEditor != NULL)
 				{
 					m_ValueEditor = NULL;
+					if (m_vSelectionContexts.back()->m_Focus != m_vSelectionContexts.back()->m_Editing)
+						m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_STANDARD);
+					else
+						if (m_vSelectionContexts.back()->m_Focus == m_vSelectionContexts.back()->m_Editing)
+								m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
+
+					m_vSelectionContexts.back()->m_Editing = NULL;
 				}
 			}
 		}
@@ -284,6 +301,22 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			}
 
 			m_DraggingContext->m_DraggingObject->SetPosition(newCoord);
+
+			/**
+			 * Attention - now we check if an editor is opened - to realize modifications on the target object we call the edited
+			 * value functor with the information editor object. The functor then can implement the modification of the values.
+			 */
+			if (m_vSelectionContexts.back()->m_Editing != NULL)
+			{
+				Message->setTarget(m_vSelectionContexts.back()->m_Editing);
+				Message->setEditorObject(m_DraggingContext->m_DraggingObject);
+
+				/**
+				 * This will send the movement message of the editor to the target object - we assume that only the target object should know
+				 * how the movement is mapped onto the value manipulation of the target object.
+				 */
+				m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
+			}
 		}
 	}
 

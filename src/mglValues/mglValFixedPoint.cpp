@@ -10,6 +10,7 @@
 #include <string>
 
 const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
+const long mglValFixedPoint::precNScalings[7] = { 100, 10000, 1000000, 100000000, 10000000000, 1000000000000};
 
 
 mglValFixedPoint::mglValFixedPoint()
@@ -189,7 +190,8 @@ mglValFixedPoint mglValFixedPoint::operator * (const mglValFixedPoint& right)
 		THROW_TECHNICAL_EXCEPTION(3, "Operation not allowed - Precision differs between objects");
 	}
 
-	return mglValFixedPoint(this->m_lValue * right.m_lValue, this->m_Precision);
+	// As we assure that the precision is the same for both objects, we divide once by the precision to get the result corrected
+	return mglValFixedPoint((this->m_lValue * right.m_lValue) / precNScalings[static_cast<unsigned long>(this->m_Precision)], this->m_Precision);
 }
 
 
@@ -206,7 +208,7 @@ mglValFixedPoint mglValFixedPoint::operator / (const mglValFixedPoint& right)
 		THROW_TECHNICAL_EXCEPTION(3, "Operation not allowed - Precision differs between objects");
 	}
 
-	return mglValFixedPoint(this->m_lValue / right.m_lValue, this->m_Precision);
+	return mglValFixedPoint((this->m_lValue / right.m_lValue) * precNScalings[static_cast<unsigned long>(this->m_Precision)], this->m_Precision);
 
 }
 
@@ -223,41 +225,41 @@ mglValFixedPoint mglValFixedPoint::getWithNewPrecision(enumValFixedPointPrec pre
 	switch ( static_cast<int>(prec) -  static_cast<int>(this->m_Precision))
 	{
 	case 2:
-		return mglValFixedPoint(this->m_lValue * 100, prec);
+		return mglValFixedPoint(this->m_lValue * precNScalings[0], prec);
 		break;
 	case 4:
-		return mglValFixedPoint(this->m_lValue * 10000, prec);
+		return mglValFixedPoint(this->m_lValue * precNScalings[1], prec);
 		break;
 	case 6:
-		return mglValFixedPoint(this->m_lValue * 1000000, prec);
+		return mglValFixedPoint(this->m_lValue * precNScalings[2], prec);
 		break;
 	case 8:
-		return mglValFixedPoint(this->m_lValue * 100000000, prec);
+		return mglValFixedPoint(this->m_lValue * precNScalings[3], prec);
 		break;
 	case 10:
-		return mglValFixedPoint(this->m_lValue * 10000000000, prec);
+		return mglValFixedPoint(this->m_lValue * precNScalings[4], prec);
 		break;
 	case 12:
-		return mglValFixedPoint(this->m_lValue * 1000000000000, prec);
+		return mglValFixedPoint(this->m_lValue * precNScalings[5], prec);
 		break;
 
 	case -2:
-		return mglValFixedPoint(this->m_lValue / 100, prec);
+		return mglValFixedPoint(this->m_lValue / precNScalings[0], prec);
 		break;
 	case -4:
-		return mglValFixedPoint(this->m_lValue / 10000, prec);
+		return mglValFixedPoint(this->m_lValue / precNScalings[1], prec);
 		break;
 	case -6:
-		return mglValFixedPoint(this->m_lValue / 1000000, prec);
+		return mglValFixedPoint(this->m_lValue / precNScalings[2], prec);
 		break;
 	case -8:
-		return mglValFixedPoint(this->m_lValue / 100000000, prec);
+		return mglValFixedPoint(this->m_lValue / precNScalings[3], prec);
 		break;
 	case -10:
-		return mglValFixedPoint(this->m_lValue / 10000000000, prec);
+		return mglValFixedPoint(this->m_lValue / precNScalings[4], prec);
 		break;
 	case -12:
-		return mglValFixedPoint(this->m_lValue / 1000000000000, prec);
+		return mglValFixedPoint(this->m_lValue / precNScalings[5], prec);
 		break;
 	default:
 	{
@@ -269,7 +271,7 @@ mglValFixedPoint mglValFixedPoint::getWithNewPrecision(enumValFixedPointPrec pre
 }
 
 
-mglValType mglValFixedPoint::getType()
+enumValType mglValFixedPoint::getType()
 {
 	return m_valType;
 }
@@ -299,3 +301,13 @@ enumValFixedPointPrec mglValFixedPoint::getPrecisionFromString(char* _str)
 	return retval;
 }
 
+float mglValFixedPoint::asFloat()
+{
+	return ((float)m_lValue) / (float)precNScalings[static_cast<unsigned long>(this->m_Precision)];
+}
+
+
+enumValFixedPointPrec mglValFixedPoint::getPrecision()
+{
+	return m_Precision;
+}

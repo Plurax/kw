@@ -70,7 +70,7 @@ mglValString mglValColor::asString()
 }
 
 
-mglValType mglValColor::getType()
+enumValType mglValColor::getType()
 {
 	return m_valType;
 }

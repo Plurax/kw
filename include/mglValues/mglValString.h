@@ -24,7 +24,7 @@ using namespace std;
 class mglValString : public mglValue
 {
 public:
-	  static const mglValType m_valType = mglValType::mglValString;
+	  static const enumValType m_valType = enumValType::mglValString;
 
 	  mglValString();
 	  mglValString(char* _cstr);
@@ -39,7 +39,7 @@ public:
 	  int size();
 	  bool empty();
 
-	  mglValType getType();
+	  enumValType getType();
 
 	  mglValString operator + (const mglValString& _right);
 	  bool operator == (const mglValString& _right);

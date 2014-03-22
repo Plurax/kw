@@ -97,3 +97,33 @@ bool mglInputMessage::getContextTimeEnd()
 	return m_ContextAnimationCompleted;
 }
 
+void mglInputMessage::setEditorObject(mglGuiObject* _edited)
+{
+	m_EditorObject = _edited;
+}
+
+mglGuiObject* mglInputMessage::getEditorObject()
+{
+	return m_EditorObject;
+}
+
+
+float mglInputMessage::getDragDeltaX()
+{
+	return m_fDragDeltaX;
+}
+
+void mglInputMessage::setDragDeltaX(float _deltax)
+{
+	m_fDragDeltaX = _deltax;
+}
+
+float mglInputMessage::getDragDeltaY()
+{
+	return m_fDragDeltaY;
+}
+
+void mglInputMessage::setDragDeltaY(float _deltay)
+{
+	m_fDragDeltaY = _deltay;
+}

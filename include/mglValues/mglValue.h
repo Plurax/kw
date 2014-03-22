@@ -10,13 +10,13 @@
 
 class mglValString;
 
-enum class mglValType { mglValUndefined, mglValInteger, mglValFloat, mglValFixedPoint, mglValString, mglValColor, mglValCoord};
+enum class enumValType { mglValUndefined, mglValInteger, mglValFloat, mglValFixedPoint, mglValString, mglValColor, mglValCoord};
 
 class mglValue
 {
 public:
 	mglValue();
-	virtual mglValType getType();
+	virtual enumValType getType();
 	//virtual mglValString serialize();
 };
 

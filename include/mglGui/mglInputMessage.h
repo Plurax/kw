@@ -24,7 +24,8 @@ enum eInputType
 	eInputMouseMove, // should be sent in time slots (every 20 ms?)
 	eInputIGR, // This is the IGR increment or decrement!
 	eInputIGRPress, // this is the IGR button
-	eInputIGRRelease // this is the IGR button
+	eInputIGRRelease, // this is the IGR button
+	eEditorInput // If an editor window is openened - this event is used to inform the editede object about modifications
 };
 
 #define BTN_MOUSE1 1
@@ -57,6 +58,13 @@ public:
 	void setContextTimeEnd(bool flag);
 	bool getContextTimeEnd();
 
+	void setEditorObject(mglGuiObject* _edited);
+	mglGuiObject* getEditorObject();
+
+	float getDragDeltaX();
+	void setDragDeltaX(float _deltax);
+	float getDragDeltaY();
+	void setDragDeltaY(float _deltay);
 private:
 	mglValCoord m_Coord;
 	int m_InputType;
@@ -66,6 +74,10 @@ private:
 	mglGuiObject* m_target;
 	timespec m_DiffTime;
 	bool m_ContextAnimationCompleted;
+	mglGuiObject* m_EditorObject;
+
+	float m_fDragDeltaX;
+	float m_fDragDeltaY;
 };
 
 #endif /* MGLINPUTMESSAGE_H_ */
