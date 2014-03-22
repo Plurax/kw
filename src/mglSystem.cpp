@@ -208,7 +208,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 							// First we need to decide which editor has to be opened
 							enumValType valType = Target->getValue()->getType();
 
-							m_ValueEditor = *m_lEditors.begin();
+							m_ValueEditor = m_lEditors.at(static_cast<unsigned long>(valType) - 1); // 0 is undefined - so decrement it
 
 							/**
 							 * If the user decides to use IGR instead of touch - we preload the editable to allow this.

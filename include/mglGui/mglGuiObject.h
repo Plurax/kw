@@ -26,7 +26,7 @@
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
-static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLEX", "DRAGGABLEY" };
+static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLEX", "DRAGGABLEY", "FIXEDEDITOR" };
 enum class enumObjectFlagsBitNums {
 	Obj_Selectable = 0, /** Object can be selected - this will cause input processing (touch) and focus selection (IGR) for this object if occurs */
 	Obj_Editable, /** The object is editable, that means it contains a modifiable value. When selected an edit object is spawned (touch)
@@ -34,9 +34,18 @@ enum class enumObjectFlagsBitNums {
 	Obj_Enterable, /** This object can be used as grouping layer for IGR inputs. Selecting will cause stepping down the selection list to its children. */
 	Obj_PositionRelative, /** Should be clear */
 	Obj_DraggableX,
-	Obj_DraggableY
+	Obj_DraggableY,
+	Obj_FixedEditor // This editor is not positioned at opening, it has always the same position as configured
 };
-enum class enumObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4, Obj_PositionRelative = 8, Obj_DraggableX = 16, Obj_DraggableY = 32};
+enum class enumObjectFlags {
+	Obj_Selectable = 1,
+	Obj_Editable = 2,
+	Obj_Enterable = 4,
+	Obj_PositionRelative = 8,
+	Obj_DraggableX = 16,
+	Obj_DraggableY = 32,
+	Obj_FixedEditor = 64
+};
 
 
 

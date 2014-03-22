@@ -10,7 +10,7 @@
 
 class mglValString;
 
-enum class enumValType { mglValUndefined, mglValInteger, mglValFloat, mglValFixedPoint, mglValString, mglValColor, mglValCoord};
+enum class enumValType { mglValUndefined, mglValFixedPoint, mglValString, mglValInteger, mglValFloat, mglValColor, mglValCoord};
 
 class mglValue
 {
