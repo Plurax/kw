@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/mglGui/mglDraggingContext.cpp \
 ../src/mglGui/mglGuiActionFactory.cpp \
 ../src/mglGui/mglGuiActionFunctor.cpp \
 ../src/mglGui/mglGuiActionLibHandle.cpp \
@@ -16,6 +17,7 @@ CPP_SRCS += \
 ../src/mglGui/mglTextureManager.cpp 
 
 OBJS += \
+./src/mglGui/mglDraggingContext.o \
 ./src/mglGui/mglGuiActionFactory.o \
 ./src/mglGui/mglGuiActionFunctor.o \
 ./src/mglGui/mglGuiActionLibHandle.o \
@@ -28,6 +30,7 @@ OBJS += \
 ./src/mglGui/mglTextureManager.o 
 
 CPP_DEPS += \
+./src/mglGui/mglDraggingContext.d \
 ./src/mglGui/mglGuiActionFactory.d \
 ./src/mglGui/mglGuiActionFunctor.d \
 ./src/mglGui/mglGuiActionLibHandle.d \

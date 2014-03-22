@@ -36,8 +36,10 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
 	dsManager.init();
 	m_ContextAnimation = NULL;
-	m_NonIGREditable = NULL;
+	m_ValueEditor = NULL;
 	m_ButtonDown = false;
+
+	m_DraggingContext = NULL;
 
 	flushGL = ptr;
 	/* Prepare XML Parser */
@@ -92,6 +94,7 @@ mglSystem::~mglSystem()
 mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 {
 	INIT_LOG("mglSystem", "processInputMessage(mglInputMessage* Message)");
+	mglGuiObject* Target;
 
 	// If the input message is a mouse or IGR press set the timer!
 	if ((Message->getInputType() == eInputMouseButtonPress) ||
@@ -124,7 +127,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	 * As we only allow one menu at a time, this can only be used by mainframes.
 	 */
 	if ((m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_nsec >= m_Configuration.getContextAnimationDelayStart())) &&
-			(m_NonIGREditable == NULL) &&
+			(m_ValueEditor == NULL) &&
 			(m_CurrentMenu == NULL))
 	{
 		if (m_ContextAnimation == NULL)
@@ -133,7 +136,8 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					m_Configuration.getContextAnimationClass(), NULL);
 
 			mglValCoord spawnCoord;
-			if (m_vSelectionContexts.back()->m_Focus != NULL)
+			if ((m_vSelectionContexts.back()->m_Focus != NULL) &&
+					(!m_lastActionCausedByTouch))
 			{
 				spawnCoord = m_vSelectionContexts.back()->m_Focus->GetPosition();
 			}
@@ -147,165 +151,280 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	}
 
 	// Mouse button press and release cause search for the object and calling its processing functor
-	if ((Message->getInputType() == eInputMouseButtonPress) ||
-			(Message->getInputType() == eInputMouseButtonRelease))
+	if (Message->getInputType() == eInputMouseButtonPress)
 	{
 		m_lastActionCausedByTouch = true;
-		mglGuiObject *Target = getTargetWindow(Message->getCoord());
+
+		Target = getTargetWindow(Message->getCoord());
 		if (Target != NULL)
 		{
-			// If the target is editable we can open a corresponding editable dialog.
-			if (Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable))
+			if ((Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableX)) ||
+				(Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableY)))
 			{
-				if (Message->getInputType() == eInputMouseButtonRelease)
-				{
-					m_NonIGREditable = *m_lEditors.begin();
+				LOG_TRACE("Creating Draggable context");
+				m_DraggingContext = new mglDraggingContext;
+				m_DraggingContext->m_DraggingObject = Target;
+				m_DraggingContext->m_StartingObjectCoord = Target->GetPosition();
+				m_DraggingContext->m_StartingCoord = Message->getCoord();
+			}
 
-					mglValCoord spawnCoord;
-					spawnCoord = Message->getCoord();
-					spawnCoord.setY(spawnCoord.m_fY + 100); // hack to avoid clipping
-					m_NonIGREditable->SetPosition(spawnCoord);
-					LOG_TRACE("Opened editor");
+			if (Target->getGuiAction() != NULL)
+			{
+				Message->setTarget(Target);
+
+				return Target->ProcessMessage(Message);
+			}
+		}
+	}
+
+	if (Message->getInputType() == eInputMouseButtonRelease)
+	{
+		m_lastActionCausedByTouch = true;
+
+		if (m_DraggingContext != NULL)
+		{
+			delete m_DraggingContext;
+			m_DraggingContext = NULL;
+		}
+		else
+		{
+			Target = getTargetWindow(Message->getCoord());
+			if (Target != NULL)
+			{
+				// If the target is editable we can open a corresponding editable dialog.
+				if (Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable))
+				{
+					if (Message->getInputType() == eInputMouseButtonRelease)
+					{
+						if (m_ValueEditor == NULL)
+						{
+							m_ValueEditor = *m_lEditors.begin();
+
+							/**
+							 * If the user decides to use IGR instead of touch - we preload the editable to allow this.
+							 * This could be used to do wide range with touch and fine tuning with IGR
+							 * Attention - we dont use the focus here - and we will not return to it!
+							 */
+							m_vSelectionContexts.back()->m_Editing = Target;
+							m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
+
+							mglValCoord spawnCoord;
+							spawnCoord = Message->getCoord();
+							spawnCoord.setY(spawnCoord.m_fY + 100); // hack to avoid clipping
+							m_ValueEditor->SetPosition(spawnCoord);
+							m_ValueEditor->InitEditable(Target);
+							LOG_TRACE("Opened editor");
+						}
+						else
+						{
+							// Hide the editor menu - this is used as "commit"
+							m_vSelectionContexts.back()->m_Editing = NULL;
+							m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
+							m_ValueEditor = NULL;
+							LOG_TRACE("Closed editor");
+						}
+					}
+				}
+				else
+				{
+					if (Target->getGuiAction() != NULL)
+					{
+						Message->setTarget(Target);
+
+						return Target->ProcessMessage(Message);
+					}
 				}
 			}
 			else
 			{
-				if (Target->getGuiAction() != NULL)
+				/**
+				 * In this case - we cancel the input because the context editor was open but the user clicked aside of it
+				 */
+				if (m_ValueEditor != NULL)
 				{
-					Message->setTarget(Target);
-
-					return Target->ProcessMessage(Message);
+					m_ValueEditor = NULL;
 				}
+			}
+		}
+	}
+
+	if (Message->getInputType() == eInputMouseMove)
+	{
+		// In case of Mouse move we need to check if the mouse is already down and a dragging object is caught
+		if (m_DraggingContext != NULL)
+		{
+			float xDiff = 0.0;
+			float yDiff = 0.0;
+
+			if (m_DraggingContext->m_DraggingObject->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableX))
+				xDiff = m_DraggingContext->m_StartingCoord.m_fX - Message->getCoord().m_fX;
+
+			if (m_DraggingContext->m_DraggingObject->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableY))
+				yDiff = m_DraggingContext->m_StartingCoord.m_fY - Message->getCoord().m_fY;
+
+			mglValCoord newCoord = mglValCoord(m_DraggingContext->m_StartingObjectCoord.m_fX, // + xDiff,
+					m_DraggingContext->m_StartingObjectCoord.m_fY + yDiff,
+					m_DraggingContext->m_StartingObjectCoord.m_fZ);
+
+			// Limit the position to the drag limits of the object
+
+			if (m_DraggingContext->m_DraggingObject->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableX))
+			{
+				if (newCoord.m_fX < m_DraggingContext->m_DraggingObject->getMinDragX())
+					newCoord.m_fX = m_DraggingContext->m_DraggingObject->getMinDragX();
+				if (newCoord.m_fX > m_DraggingContext->m_DraggingObject->getMaxDragX())
+					newCoord.m_fX = m_DraggingContext->m_DraggingObject->getMaxDragX();
+			}
+			if (m_DraggingContext->m_DraggingObject->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableY))
+			{
+				if (newCoord.m_fY < m_DraggingContext->m_DraggingObject->getMinDragY())
+					newCoord.m_fY = m_DraggingContext->m_DraggingObject->getMinDragY();
+				if (newCoord.m_fY > m_DraggingContext->m_DraggingObject->getMaxDragY())
+					newCoord.m_fY = m_DraggingContext->m_DraggingObject->getMaxDragY();
+			}
+
+			m_DraggingContext->m_DraggingObject->SetPosition(newCoord);
+		}
+	}
+
+	if (Message->getInputType() == eInputIGRRelease)
+	{
+		m_lastActionCausedByTouch = false;
+
+		/**
+		 * The user opened a touch editor but he committed with the IGR button
+		 */
+		if (m_ValueEditor != NULL)
+		{
+			if (m_DraggingContext != NULL)
+			{
+				//TODO: Call the process handler of the value object to allow reaction on commit (e.g. sending values to controller)
+				m_DraggingContext = NULL;
+			}
+			m_ValueEditor = NULL;
+			if (m_vSelectionContexts.back()->m_Focus != m_vSelectionContexts.back()->m_Editing)
+				m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_STANDARD);
+			else
+				if (m_vSelectionContexts.back()->m_Focus == m_vSelectionContexts.back()->m_Editing)
+						m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
+
+			m_vSelectionContexts.back()->m_Editing = NULL;
+		}
+		else
+		if (m_vSelectionContexts.back()->m_Focus != NULL)
+		{
+			LOG_TRACE("Entering focus handler");
+			if (!(m_vSelectionContexts.back()->m_Focus->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable)))
+			{
+				LOG_TRACE("Object is not editable");
+				Message->setTarget(m_vSelectionContexts.back()->m_Focus);
+				m_vSelectionContexts.back()->m_Focus->ProcessMessage(Message);
+			}
+			else
+			{
+				LOG_TRACE("Object is editable");
+				if (m_vSelectionContexts.back()->m_Editing == NULL)
+				{
+					m_vSelectionContexts.back()->m_Editing = m_vSelectionContexts.back()->m_Focus;
+					m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
+				}
+				else
+				{
+					m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
+					m_vSelectionContexts.back()->m_Editing = NULL;
+				}
+			}
+		}
+	}
+
+	if (Message->getInputType() == eInputIGR)
+	{
+		m_lastActionCausedByTouch = false;
+
+		// we are in focus level - step through the selection list
+		if (m_vSelectionContexts.back()->m_Editing == NULL)
+		{
+			mglGuiObject* pTemp = NULL;
+			mglGuiObject* pSwap = NULL;
+
+			int iCount = Message->getIGRCount();
+			bool bForward,bEntry = false;
+
+			if (iCount > 0)
+				bForward = true;
+			else
+			{
+				bForward = false;
+				iCount *= -1;
+			}
+
+			if (m_vSelectionContexts.back()->m_pCurrentSelectionList == NULL)
+			{
+				bEntry = true;
+				m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
+				if (bForward)
+				{
+					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+					while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
+						pTemp = pTemp->next();
+				}
+				else
+				{
+					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+					while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
+						pTemp = pTemp->prev();
+				}
+
+			}
+			else
+			{
+				pTemp = m_vSelectionContexts.back()->m_Focus;
+				m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
+			}
+
+			while ((iCount != 0) && (pTemp != NULL))
+			{
+				if (!bEntry)
+				{
+					if (bForward)
+						pSwap = pTemp->next();
+					else
+						pSwap = pTemp->prev();
+
+					if (pSwap == NULL) // reached end of concatenation
+					{
+						if (bForward)
+							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
+						else
+							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
+					}
+
+					pTemp = pSwap;
+				}
+				if (pTemp)
+					if (pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))
+						iCount--;
+			}
+
+			if (pTemp != NULL)
+			{
+				pTemp->setState(OBJ_STATE_FOCUSSED);
+				m_vSelectionContexts.back()->m_Focus = pTemp;
+			}
+			else
+			{
+				m_vSelectionContexts.back()->m_Focus = NULL;
+				m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
 			}
 		}
 		else
 		{
-			/**
-			 * In this case - we cancel the input because the context editor was open but the user clicked aside of it
-			 */
-			if (m_NonIGREditable != NULL)
-			{
-				m_NonIGREditable = NULL;
-			}
+			// Editables are detected via the flag, but the functor has to implement the IGR count management
+			Message->setTarget(m_vSelectionContexts.back()->m_Editing);
+			return m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
 		}
 	}
-	else
-	{
-		m_lastActionCausedByTouch = false;
 
-		if (Message->getInputType() == eInputIGRRelease)
-		{
-			if (m_vSelectionContexts.back()->m_Focus != NULL)
-			{
-				LOG_TRACE("Entering focus handler");
-				if (!(m_vSelectionContexts.back()->m_Focus->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable)))
-				{
-					LOG_TRACE("Object is not editable");
-					Message->setTarget(m_vSelectionContexts.back()->m_Focus);
-					m_vSelectionContexts.back()->m_Focus->ProcessMessage(Message);
-				}
-				else
-				{
-					LOG_TRACE("Object is editable");
-					if (m_vSelectionContexts.back()->m_Editing == NULL)
-					{
-						m_vSelectionContexts.back()->m_Editing = m_vSelectionContexts.back()->m_Focus;
-						m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
-					}
-					else
-					{
-						m_vSelectionContexts.back()->m_Editing = NULL;
-						m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_FOCUSSED);
-					}
-				}
-			}
-		}
-		else if (Message->getInputType() == eInputIGR)
-		{
-			// we are in focus level - step through the selection list
-			if (m_vSelectionContexts.back()->m_Editing == NULL)
-			{
-				mglGuiObject* pTemp = NULL;
-				mglGuiObject* pSwap = NULL;
-
-				int iCount = Message->getIGRCount();
-				bool bForward,bEntry = false;
-
-				if (iCount > 0)
-					bForward = true;
-				else
-				{
-					bForward = false;
-					iCount *= -1;
-				}
-
-				if (m_vSelectionContexts.back()->m_pCurrentSelectionList == NULL)
-				{
-					bEntry = true;
-					m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
-					if (bForward)
-					{
-						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
-						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
-							pTemp = pTemp->next();
-					}
-					else
-					{
-						pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
-						while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
-							pTemp = pTemp->prev();
-					}
-
-				}
-				else
-				{
-					pTemp = m_vSelectionContexts.back()->m_Focus;
-					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
-				}
-
-				while ((iCount != 0) && (pTemp != NULL))
-				{
-					if (!bEntry)
-					{
-						if (bForward)
-							pSwap = pTemp->next();
-						else
-							pSwap = pTemp->prev();
-
-						if (pSwap == NULL) // reached end of concatenation
-						{
-							if (bForward)
-								pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
-							else
-								pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
-						}
-
-						pTemp = pSwap;
-					}
-					if (pTemp)
-						if (pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))
-							iCount--;
-				}
-
-				if (pTemp != NULL)
-				{
-					pTemp->setState(OBJ_STATE_FOCUSSED);
-					m_vSelectionContexts.back()->m_Focus = pTemp;
-				}
-				else
-				{
-					m_vSelectionContexts.back()->m_Focus = NULL;
-					m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
-				}
-			}
-			else
-			{
-				// Editables are detected via the flag, but the functor has to implement the IGR count management
-				Message->setTarget(m_vSelectionContexts.back()->m_Editing);
-				return m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
-			}
-		}
-	}
 	return NULL;
 }
 
@@ -337,8 +456,8 @@ void mglSystem::Draw(void)
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, 0.3); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
 
-	if (m_NonIGREditable != NULL)
-		m_NonIGREditable->Draw();
+	if (m_ValueEditor != NULL)
+		m_ValueEditor->Draw();
 
 	(*flushGL)();
 
@@ -354,19 +473,19 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 {
 	mglGuiObject* destination;
 	mglValCoord coord;
-	destination = m_NonIGREditable; // set target to non IGR editor object (keyboard, slider etc)
+	destination = m_ValueEditor; // set target to non IGR editor object (keyboard, slider etc)
 
 	if (destination != NULL)
 	{
 
 		// then search within the concatenation for the final input target
-		coord = (m_NonIGREditable)->calcPosition();
+		coord = (m_ValueEditor)->calcPosition();
 		if ((pt.m_fX >= coord.m_fX) &&
-			(pt.m_fX < (coord.m_fX + (m_NonIGREditable)->GetWidth())) &&
+			(pt.m_fX < (coord.m_fX + (m_ValueEditor)->GetWidth())) &&
 			(pt.m_fY <= coord.m_fY) &&
-			(pt.m_fY > (coord.m_fY - (m_NonIGREditable)->GetHeight())))
+			(pt.m_fY > (coord.m_fY - (m_ValueEditor)->GetHeight())))
 		{
-			destination = m_NonIGREditable->getChildAtPosition(pt);
+			destination = m_ValueEditor->getChildAtPosition(pt);
 			return destination;
 		}
 		return NULL; /** A context editor menu is modal - if we press aside of it - we cancel the input */
@@ -699,7 +818,10 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				classname = new mglValString(XMLString::transcode(DE_func_classname->getTextContent()));
 
 				if ((libname->str()->size() == 0) || (classname->str()->size() == 0))
+				{
 					thisWindow->Connect(NULL);
+					LOG_TRACE("Connected NULL");
+				}
 				else
 				{
 					// After we created the object we can attach the handler if it exists

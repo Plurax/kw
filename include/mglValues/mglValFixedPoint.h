@@ -13,8 +13,8 @@
 
 using namespace std;
 
-
-enum class eValFixedPointPrec {
+static const char* enumValFixedPointPrecNames[] = { "prec15N2", "prec13N4", "prec11N6", "prec9N8", "prec7N10", "prec5N12" };
+enum class enumValFixedPointPrec {
 	prec15N2,
 	prec13N4,
 	prec11N6,
@@ -32,8 +32,9 @@ public:
 	static const short precN[7];
 
 	mglValFixedPoint();
-	mglValFixedPoint(eValFixedPointPrec prec);
-	mglValFixedPoint(long in, eValFixedPointPrec prec);
+	mglValFixedPoint(mglValString _string);
+	mglValFixedPoint(enumValFixedPointPrec prec);
+	mglValFixedPoint(long in, enumValFixedPointPrec prec);
 	mglValString asString();
 
 	mglValType getType();
@@ -49,13 +50,13 @@ public:
 	mglValFixedPoint operator * (const mglValFixedPoint& right);
 	mglValFixedPoint operator / (const mglValFixedPoint& right);
 
-	mglValFixedPoint getWithNewPrecision(eValFixedPointPrec prec);
-
+	mglValFixedPoint getWithNewPrecision(enumValFixedPointPrec prec);
 private:
+	enumValFixedPointPrec getPrecisionFromString(char* _str);
 	long m_lValue;
 
 	bool m_isEmpty;
-	eValFixedPointPrec m_Precision;
+	enumValFixedPointPrec m_Precision;
 };
 
 //const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};

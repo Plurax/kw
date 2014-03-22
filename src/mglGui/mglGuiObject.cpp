@@ -23,8 +23,11 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 	XMLCh* TAG_width = XMLString::transcode("width");
 	XMLCh* TAG_height = XMLString::transcode("height");
 	XMLCh* TAG_backgroundcolor = XMLString::transcode("backgroundcolor");
+	XMLCh* TAG_optionflags= XMLString::transcode("optionflags");
 
 	int x,y,width,height;
+
+	m_ulOptionMask = 0;
 
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
 	{
@@ -64,15 +67,29 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
 				m_BackGroundColor = mglValColor(xstr.c_str());
 			}
+
+			if ( XMLString::equals(currentElement->getTagName(), TAG_optionflags))
+			{
+				char* optionflags = XMLString::transcode(currentElement->getTextContent());
+				m_ulOptionMask = mglGuiObject::getOptionMaskFromString(string(optionflags));
+			}
 		}
 	}
+
+
+	XMLString::release(&TAG_xpos);
+	XMLString::release(&TAG_ypos);
+	XMLString::release(&TAG_width);
+	XMLString::release(&TAG_height);
+	XMLString::release(&TAG_backgroundcolor);
+	XMLString::release(&TAG_optionflags);
+
 	m_GuiAction = NULL; // on creation there is no function defined!
 	m_Position = mglValCoord(x, y, 0);
 	m_fHeight = height;
 	m_fWidth = width;
 	m_bVisible = true;
 	m_bHasChildren = false;
-	m_ulOptionMask = getOptionMaskFromString(string(""));
 }
 
 
@@ -172,15 +189,17 @@ float mglGuiObject::GetWidth()
 
 void mglGuiObject::Draw(void)
 {
+	mglValCoord calcPos = calcPosition();
+
 	// the position coordinates always point to the top left!
-	glColor3f(m_BackGroundColor.fRed,m_BackGroundColor.fGreen,m_BackGroundColor.fBlue);
+	glColor4f(m_BackGroundColor.fRed,m_BackGroundColor.fGreen,m_BackGroundColor.fBlue,m_BackGroundColor.fAlpha);
 
 	glBegin (GL_QUADS);
 
-	glVertex2f(m_Position.m_fX, m_Position.m_fY); // Unten links der Textur und des Quadrats
-	glVertex2f(m_Position.m_fX + m_fWidth, m_Position.m_fY); // Unten rechts der Textur und des Quadrats
-	glVertex2f(m_Position.m_fX + m_fWidth, m_Position.m_fY - m_fHeight); // Oben rechts der Textur und des Quadrats
-	glVertex2f(m_Position.m_fX, m_Position.m_fY - m_fHeight);
+	glVertex2f(calcPos.m_fX, calcPos.m_fY); // Unten links der Textur und des Quadrats
+	glVertex2f(calcPos.m_fX + m_fWidth, calcPos.m_fY); // Unten rechts der Textur und des Quadrats
+	glVertex2f(calcPos.m_fX + m_fWidth, calcPos.m_fY - m_fHeight); // Oben rechts der Textur und des Quadrats
+	glVertex2f(calcPos.m_fX, calcPos.m_fY - m_fHeight);
 	glEnd ();
 
 	// assure painting of all children
@@ -190,7 +209,7 @@ void mglGuiObject::Draw(void)
 
 void mglGuiObject::AddChild(mglGuiObject *Child)
 {
-	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child");
+	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child)");
 	LOG_TRACE("Added child");
 
 	if (m_bHasChildren)
@@ -332,7 +351,7 @@ void mglGuiObject::applyIGRCount(int _cnt)
  * in case of touch modification (sliders etc)
  * @return
  */
-mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
+mglValue mglGuiObject::getIncrement() // This is for touch (slider?) usage
 {
 
 }
@@ -357,7 +376,48 @@ mglValue mglGuiObject::getValue()
 
 }
 
+void mglGuiObject::InitEditable(mglGuiObject* edited)
+{
 
+}
+
+
+mglValue mglGuiObject::getUpperLimit()
+{
+
+}
+
+mglValue mglGuiObject::getLowerLimit()
+{
+
+}
+
+
+float mglGuiObject::getMinDragX()
+{
+
+}
+
+float mglGuiObject::getMaxDragX()
+{
+
+}
+
+float mglGuiObject::getMinDragY()
+{
+
+}
+
+float mglGuiObject::getMaxDragY()
+{
+
+}
+
+/**
+ * This function derives the optionmask via the enumeration names out of a string.
+ * The user can specify the optionmask via their names in the XML instead of using a difficult understandable number.
+ * @param _str
+ */
 unsigned long mglGuiObject::getOptionMaskFromString(std::string _str)
 {
 	INIT_LOG("mglGuiObject", "getOptionMaskFromString(std::string _str)");
@@ -378,6 +438,10 @@ unsigned long mglGuiObject::getOptionMaskFromString(std::string _str)
 			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_Enterable));
 		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_PositionRelative)])))
 			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_PositionRelative));
+		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_DraggableX)])))
+			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_DraggableX));
+		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_DraggableY)])))
+			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_DraggableY));
 	}
 	LOG_TRACE("retval = " << retVal);
 	return retVal;

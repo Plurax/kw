@@ -7,6 +7,7 @@
 
 #include "mglDebug/mglDebug.h"
 #include "mglValues/mglValFixedPoint.h"
+#include <string>
 
 const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
 
@@ -14,16 +15,55 @@ const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
 mglValFixedPoint::mglValFixedPoint()
 {
 	m_isEmpty = true;
-	m_Precision = eValFixedPointPrec::prec11N6;
+	m_Precision = enumValFixedPointPrec::prec11N6;
 }
 
-mglValFixedPoint::mglValFixedPoint(eValFixedPointPrec prec)
+/**
+ * This constructor can be used to initialize ValFixedPoint by using a string from an XML
+ * The String should note the precision - otherwise the default prec11N6 is taken as in empty constructor.
+ * To avoid confusion, the dot is ignored!
+ * @param _string
+ */
+mglValFixedPoint::mglValFixedPoint(mglValString _string)
+{
+	INIT_LOG("mglValFixedPoint", "mglValFixedPoint(mglValString _string)");
+	char* tmpBuffer = new char[50]; // should be enough
+	const char* c_str = _string.str()->c_str();
+	strncpy(tmpBuffer, c_str, 49);
+	LOG_TRACE("Got raw string " << tmpBuffer);
+
+	bool bGotPoint = false;
+	char* ptr = strchr(tmpBuffer, '.');
+
+	if (ptr != NULL)
+	{
+		while ((isdigit(*(ptr+1))) && (ptr != '\0'))
+		{
+			*ptr = *(ptr+1);
+			ptr++;
+		}
+		*ptr = '\0'; // terminate number string
+		ptr++;
+	}
+	LOG_TRACE("mod string " << tmpBuffer);
+	sscanf(tmpBuffer, "%dl", &m_lValue);
+
+	if (strlen(ptr) > 0)
+		m_Precision = getPrecisionFromString(ptr);
+	else
+		m_Precision = enumValFixedPointPrec::prec11N6;
+	m_isEmpty = false;
+
+	mglValString str = asString();
+}
+
+mglValFixedPoint::mglValFixedPoint(enumValFixedPointPrec prec)
 {
 	m_isEmpty = true;
 	m_Precision = prec;
 }
 
-mglValFixedPoint::mglValFixedPoint(long in, eValFixedPointPrec prec)
+mglValFixedPoint::mglValFixedPoint(long in, enumValFixedPointPrec prec)
 {
 	m_lValue = in;
 	m_Precision = prec;
@@ -173,7 +213,7 @@ mglValFixedPoint mglValFixedPoint::operator / (const mglValFixedPoint& right)
 /**
  *	This will convert between different precision settings. There is no rounding made!
  */
-mglValFixedPoint mglValFixedPoint::getWithNewPrecision(eValFixedPointPrec prec)
+mglValFixedPoint mglValFixedPoint::getWithNewPrecision(enumValFixedPointPrec prec)
 {
 	if (this->m_isEmpty)
 	{
@@ -233,3 +273,29 @@ mglValType mglValFixedPoint::getType()
 {
 	return m_valType;
 }
+
+
+
+enumValFixedPointPrec mglValFixedPoint::getPrecisionFromString(char* _str)
+{
+	INIT_LOG("mglValFixedPoint", "getPrecisionFromString(char* _str)");
+
+	enumValFixedPointPrec retval;
+
+	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec15N2)]))
+		retval = enumValFixedPointPrec::prec15N2;
+	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec13N4)]))
+		retval =  enumValFixedPointPrec::prec13N4;
+	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec11N6)]))
+		retval =  enumValFixedPointPrec::prec11N6;
+	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec9N8)]))
+		retval =  enumValFixedPointPrec::prec9N8;
+	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec7N10)]))
+		retval =  enumValFixedPointPrec::prec7N10;
+	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec5N12)]))
+		retval =  enumValFixedPointPrec::prec5N12;
+
+	LOG_TRACE("retval = " << static_cast<unsigned long>(retval));
+	return retval;
+}
+

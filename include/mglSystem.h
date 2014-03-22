@@ -10,7 +10,7 @@
 #include "mglDebug/mglLogger.h"
 #include "mglGui/mglGuiObject.h"
 #include "mglGui/mglInputMessage.h"
-
+#include "mglGui/mglDraggingContext.h"
 #include "mglGui/mglFontProvider.h"
 #include "mglGui/mglGuiLibManager.h"
 #include "mglDataLayer/mglDataSourceManager.h"
@@ -103,10 +103,10 @@ private:
 
 	bool m_ButtonDown; // is mouse or IGR button down?
 
+	// This is for managing state changes when flipping between touch and IGR input
 	bool m_lastActionCausedByTouch;
 
-	int m_ScreenXRes;
-	int m_ScreenYRes;
+	mglDraggingContext* m_DraggingContext;
 
 	mglGuiObject* m_CurrentMainFrame;
 	mglGuiObject* m_CurrentMenu;
@@ -116,7 +116,7 @@ private:
 	mglTimer m_ContextMenuTimer;
 	mglGuiObject* m_ContextAnimation;
 
-	mglGuiObject* m_NonIGREditable;
+	mglGuiObject* m_ValueEditor;
 };
 
 

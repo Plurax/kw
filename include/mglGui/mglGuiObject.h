@@ -26,16 +26,17 @@
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
-static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLE" };
+static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLEX", "DRAGGABLEY" };
 enum class enumObjectFlagsBitNums {
 	Obj_Selectable = 0, /** Object can be selected - this will cause input processing (touch) and focus selection (IGR) for this object if occurs */
 	Obj_Editable, /** The object is editable, that means it contains a modifiable value. When selected an edit object is spawned (touch)
 					or this object will receive further inputs (IGR). */
 	Obj_Enterable, /** This object can be used as grouping layer for IGR inputs. Selecting will cause stepping down the selection list to its children. */
 	Obj_PositionRelative, /** Should be clear */
-	Obj_Draggable
+	Obj_DraggableX,
+	Obj_DraggableY
 };
-enum class enumObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4, Obj_PositionRelative = 8, Obj_Draggable = 16};
+enum class enumObjectFlags { Obj_Selectable = 1, Obj_Editable = 2, Obj_Enterable = 4, Obj_PositionRelative = 8, Obj_DraggableX = 16, Obj_DraggableY = 32};
 
 
 
@@ -86,9 +87,18 @@ public:
 
 	// Interface for editables - if not used call the parent function (and nothing happens)
 	virtual void applyIGRCount(int _cnt);
-	virtual mglValue* getIncrement(); // This is for touch (slider?) usage
+	virtual mglValue getIncrement(); // This is for touch (slider?) usage
+	virtual mglValue getUpperLimit();
+	virtual mglValue getLowerLimit();
 	virtual void setValue(mglValue* _val);
 	virtual mglValue getValue();
+	virtual void InitEditable(mglGuiObject* edited);
+
+	// Those functions are for draggable objects to avoid move out of their limits
+	virtual float getMinDragX();
+	virtual float getMaxDragX();
+	virtual float getMinDragY();
+	virtual float getMaxDragY();
 
 	float GetX();
 	float GetY();

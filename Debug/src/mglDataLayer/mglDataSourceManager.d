@@ -26,9 +26,10 @@ src/mglDataLayer/mglDataSourceManager.d: \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglDraggingContext.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibHandle.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
@@ -97,11 +98,13 @@ src/mglDataLayer/mglDataSourceManager.d: \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglDraggingContext.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
+
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglFontProvider.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibManager.h:
-
-/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiLibHandle.h:
 
