@@ -32,6 +32,7 @@ public:
 	  mglValString(string& _str);
 	  mglValString(string* _str);
 	  mglValString(const string _str);
+	  mglValString(mglValString*_str);
 
 	  mglValString(const mglValString& right); // Copy constructor
 	  ~mglValString();
@@ -39,11 +40,13 @@ public:
 	  int size();
 	  bool empty();
 
+	  mglValString& erase(size_t pos, size_t len);
+
 	  enumValType getType();
 
 	  mglValString operator + (const mglValString& _right);
 	  bool operator == (const mglValString& _right);
-	  mglValString& operator = (mglValString& _str);
+	  mglValString& operator = (const mglValString& _str);
 	  bool operator < (const mglValString& _right) const;
 
 	  const string* str() const;

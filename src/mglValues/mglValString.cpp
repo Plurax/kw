@@ -51,6 +51,13 @@ mglValString::mglValString(const string _str)
 }
 
 
+mglValString::mglValString(mglValString*_str)
+{
+	m_string = new string(*_str->str());
+	m_isEmpty = false;
+}
+
+
 mglValString::mglValString(const mglValString& right) // Copy constructor
 {
 	m_string = new string(*right.m_string);
@@ -75,6 +82,12 @@ bool mglValString::empty()
 }
 
 
+mglValString& mglValString::erase (size_t pos, size_t len)
+{
+	m_string->erase(pos, len);
+}
+
+
 mglValString mglValString::operator + (const mglValString& _right)
 {
 	return mglValString(*this->m_string + *_right.m_string);
@@ -86,9 +99,9 @@ bool mglValString::operator == (const mglValString& _right)
 }
 
 
-mglValString& mglValString::operator = (mglValString& _str)
+mglValString& mglValString::operator = (const mglValString& _str)
 {
-	// First check if the local helds already a string - this must be deleted to avoid mem leak cause by overwriting the value!
+	// First check if the local helds already a string - this must be deleted to avoid mem leak caused by overwriting the value!
 	if (this->m_string != NULL)
 	{
 		delete this->m_string;

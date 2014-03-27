@@ -218,10 +218,13 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 							m_vSelectionContexts.back()->m_Editing = Target;
 							m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
 
-							mglValCoord spawnCoord;
-							spawnCoord = Message->getCoord();
-							spawnCoord.setY(spawnCoord.m_fY + 100); // hack to avoid clipping
-							m_ValueEditor->SetPosition(spawnCoord);
+							if (0 == (m_ValueEditor->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_FixedEditor)))
+							{
+								mglValCoord spawnCoord;
+								spawnCoord = Message->getCoord();
+								spawnCoord.setY(spawnCoord.m_fY + 100); // hack to avoid clipping
+								m_ValueEditor->SetPosition(spawnCoord);
+							}
 							m_ValueEditor->InitEditable(Target);
 							LOG_TRACE("Opened editor");
 						}

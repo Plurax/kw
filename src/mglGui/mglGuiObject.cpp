@@ -220,6 +220,8 @@ void mglGuiObject::AddChild(mglGuiObject *Child)
 	else
 		m_bHasChildren = true;
 
+	Child->setParentWindow(this);
+
 	m_Children.push_back(Child);
 }
 
