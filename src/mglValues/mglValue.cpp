@@ -15,6 +15,11 @@ mglValue::mglValue()
 
 }
 
+mglValue::~mglValue()
+{
+
+}
+
 enumValType mglValue::getType()
 {
 	return enumValType::mglValUndefined;

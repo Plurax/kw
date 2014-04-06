@@ -17,6 +17,7 @@ class mglValColor : public mglValue
 public:
   static const enumValType m_valType = enumValType::mglValColor;
 	mglValColor();
+	~mglValColor();
 	mglValColor(float red, float green, float blue, float alpha);
 	mglValColor(const char* hex);
 

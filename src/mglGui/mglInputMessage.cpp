@@ -97,14 +97,14 @@ bool mglInputMessage::getContextTimeEnd()
 	return m_ContextAnimationCompleted;
 }
 
-void mglInputMessage::setEditorObject(mglGuiObject* _edited)
+void mglInputMessage::setEditedObject(mglGuiObject* _edited)
 {
-	m_EditorObject = _edited;
+	m_EditedObject = _edited;
 }
 
-mglGuiObject* mglInputMessage::getEditorObject()
+mglGuiObject* mglInputMessage::getEditedObject()
 {
-	return m_EditorObject;
+	return m_EditedObject;
 }
 
 

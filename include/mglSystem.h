@@ -64,6 +64,8 @@ public:
 	mglGuiObject* getMainFrameByID(unsigned int ID);
 	mglGuiObject* getMenuByID(unsigned int ID);
 
+	mglGuiObject* getValueEditor();
+
 	mglMessage* processInputMessage(mglInputMessage* Message);
 
 	void readConfiguration(mglValString& configFile);

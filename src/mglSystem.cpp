@@ -73,7 +73,7 @@ void mglSystem::init(GLXContext context, void (*ptr)(void))
 }
 
 /**
- * Destructor - deletes all mainframes.
+ * Destructor - deletes all object lists.
  */
 mglSystem::~mglSystem()
 {
@@ -309,16 +309,15 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			 * Attention - now we check if an editor is opened - to realize modifications on the target object we call the edited
 			 * value functor with the information editor object. The functor then can implement the modification of the values.
 			 */
-			if (m_vSelectionContexts.back()->m_Editing != NULL)
+			if ((m_ValueEditor != NULL) && (m_vSelectionContexts.back()->m_Editing != NULL))
 			{
-				Message->setTarget(m_vSelectionContexts.back()->m_Editing);
-				Message->setEditorObject(m_DraggingContext->m_DraggingObject);
+				Message->setTarget(m_ValueEditor);
+				Message->setEditedObject(m_vSelectionContexts.back()->m_Editing);
 
 				/**
-				 * This will send the movement message of the editor to the target object - we assume that only the target object should know
-				 * how the movement is mapped onto the value manipulation of the target object.
+				 * This will send the movement message of the editor to the editor object
 				 */
-				m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
+				m_ValueEditor->ProcessMessage(Message);
 			}
 		}
 	}
@@ -806,6 +805,22 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 	mglGuiObject* prevWindow = NULL;
 
 	XMLCh* TAG_mglWindowItem = XMLString::transcode("mglWindowItem");
+	XMLCh* TAG_name = XMLString::transcode("name");
+	XMLCh* TAG_libname = XMLString::transcode("libname");
+	XMLCh* TAG_classname = XMLString::transcode("classname");
+	XMLCh* TAG_handlerLib = XMLString::transcode("handlerLib");
+	XMLCh* TAG_handlerClass = XMLString::transcode("handlerClass");
+	XMLCh* TAG_config = XMLString::transcode("config");
+	XMLCh* TAG_children = XMLString::transcode("children");
+
+	mglValString* name = NULL;
+	mglValString* libname = NULL;
+	mglValString* classname = NULL;
+	mglValString* handlerlibname = NULL;
+	mglValString* handlerclassname = NULL;
+
+	DOMElement* DE_configuration;
+	DOMElement* DE_children;
 
 	// For all nodes, children of "GUI" in the XML tree.
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -824,45 +839,86 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				 * The programmer can even replace the frame object implementation by using
 				 * his own library at this point!
 				 */
+				DOMNodeList*      configchildren = currentElement->getChildNodes();
+				const  XMLSize_t configchildrenCount = configchildren->getLength();
 
-				DOMElement* DE_name = currentElement->getFirstElementChild();
-				DOMElement* DE_libname = DE_name->getNextElementSibling();
-				DOMElement* DE_classname = DE_libname->getNextElementSibling();
+				// For all nodes, children of "root" in the XML tree.
 
-				DOMElement* DE_func_libname = DE_classname->getNextElementSibling();
-				DOMElement* DE_func_classname = DE_func_libname->getNextElementSibling();
+				for( XMLSize_t xx = 0; xx < configchildrenCount; ++xx )
+				{
+					DOMNode* configSubNode = configchildren->item(xx);
+					if( configSubNode->getNodeType() &&  // true is not NULL
+							configSubNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+					{
+						// Found node which is an Element. Re-cast node as element
+						DOMElement* configCurrentElement
+									= dynamic_cast< xercesc::DOMElement* >( configSubNode );
 
-				DOMElement* DE_configuration = DE_func_classname->getNextElementSibling();
-				DOMElement* DE_children = DE_configuration->getNextElementSibling();
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_name))
+						{
+							name = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
+						}
+
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_libname))
+						{
+							libname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
+						}
+
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_classname))
+						{
+							classname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
+						}
+
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_handlerLib))
+						{
+							handlerlibname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
+						}
+
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_handlerClass))
+						{
+							handlerclassname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
+						}
+
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_config))
+						{
+							DE_configuration = configCurrentElement;
+						}
+
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_children))
+						{
+							DE_children= configCurrentElement;
+						}
+					}
+				}
 
 				/*
 				 * Name is mandatory
 				 */
-				LOG_TRACE("Got GUI Element named: " << XMLString::transcode(DE_name->getTextContent()));
+				LOG_TRACE("Got GUI Element named: " << name->str()->c_str());
+				LOG_TRACE("Got GUI Element libname: " << libname->str()->c_str());
+				LOG_TRACE("Got GUI Element classname: " << classname->str()->c_str());
 
 				// Create the configured element via the factory
-
-				mglValString* name = new mglValString(XMLString::transcode(DE_name->getTextContent()));
-				mglValString* libname = new mglValString(XMLString::transcode(DE_libname->getTextContent()));
-				mglValString* classname = new mglValString(XMLString::transcode(DE_classname->getTextContent()));
-
 				thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
 													classname,
 													DE_configuration);
 
-				libname = new mglValString(XMLString::transcode(DE_func_libname->getTextContent()));
-				classname = new mglValString(XMLString::transcode(DE_func_classname->getTextContent()));
-
-				if ((libname->str()->size() == 0) || (classname->str()->size() == 0))
+				/* If one of both strings is NULL connect the functor to NULL, otherwise its possible to create functors within the
+				 * 				constructor of the guiobject without using XML configuration
+				 */
+				if ((handlerlibname != NULL) && (handlerclassname != NULL))
 				{
-					thisWindow->Connect(NULL);
-					LOG_TRACE("Connected NULL");
-				}
-				else
-				{
-					// After we created the object we can attach the handler if it exists
-					mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(libname, classname);
-					thisWindow->Connect(funct);
+					if ((handlerlibname->str()->compare("NULL") == 0) || (handlerclassname->str()->compare("NULL") == 0))
+					{
+						thisWindow->Connect(NULL);
+						LOG_TRACE("Connected NULL");
+					}
+					else
+					{
+						// After we created the object we can attach the handler if it exists
+						mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(handlerlibname, handlerclassname);
+						thisWindow->Connect(funct);
+					}
 				}
 
 				// A created gui object is also registered by its name
@@ -888,10 +944,44 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 					createGUIfromXML(DE_children, thisWindow, NULL, listToAdd);
 				}
 				prevWindow = thisWindow;
+
+				// Clear temp strings
+				if (name != NULL)
+				{
+					delete name;
+					name = NULL;
+				}
+				if (libname != NULL)
+				{
+					delete libname;
+					libname = NULL;
+				}
+				if (classname != NULL)
+				{
+					delete classname;
+					classname = NULL;
+				}
+				if (handlerlibname != NULL)
+				{
+					delete handlerlibname;
+					handlerlibname = NULL;
+				}
+				if (handlerclassname != NULL)
+				{
+					delete handlerclassname;
+					handlerclassname = NULL;
+				}
 			}
 		}
 	}
 	XMLString::release(&TAG_mglWindowItem);
+	XMLString::release(&TAG_name);
+	XMLString::release(&TAG_libname);
+	XMLString::release(&TAG_classname);
+	XMLString::release(&TAG_handlerLib);
+	XMLString::release(&TAG_handlerClass);
+	XMLString::release(&TAG_config);
+	XMLString::release(&TAG_children);
 }
 
 /**
@@ -990,3 +1080,9 @@ void mglSystem::destroy()
 	mglLogger::Inst().destroy();
 }
 
+
+
+mglGuiObject* mglSystem::getValueEditor()
+{
+	return m_ValueEditor;
+}

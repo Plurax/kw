@@ -33,6 +33,7 @@ public:
 	static const long precNScalings[7];
 
 	mglValFixedPoint();
+	~mglValFixedPoint();
 	mglValFixedPoint(mglValString _string);
 	mglValFixedPoint(enumValFixedPointPrec prec);
 	mglValFixedPoint(long in, enumValFixedPointPrec prec);

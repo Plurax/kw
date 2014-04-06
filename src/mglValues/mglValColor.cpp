@@ -20,6 +20,10 @@ mglValColor::mglValColor()
 	fAlpha = 0.0;
 }
 
+mglValColor::~mglValColor()
+{
+}
+
 mglValColor::mglValColor(float red, float green, float blue, float alpha)
 {
 	fRed = red;

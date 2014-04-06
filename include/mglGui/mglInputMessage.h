@@ -58,8 +58,8 @@ public:
 	void setContextTimeEnd(bool flag);
 	bool getContextTimeEnd();
 
-	void setEditorObject(mglGuiObject* _edited);
-	mglGuiObject* getEditorObject();
+	void setEditedObject(mglGuiObject* _edited);
+	mglGuiObject* getEditedObject();
 
 	float getDragDeltaX();
 	void setDragDeltaX(float _deltax);
@@ -74,7 +74,7 @@ private:
 	mglGuiObject* m_target;
 	timespec m_DiffTime;
 	bool m_ContextAnimationCompleted;
-	mglGuiObject* m_EditorObject;
+	mglGuiObject* m_EditedObject;
 
 	float m_fDragDeltaX;
 	float m_fDragDeltaY;

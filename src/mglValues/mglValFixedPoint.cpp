@@ -19,6 +19,11 @@ mglValFixedPoint::mglValFixedPoint()
 	m_Precision = enumValFixedPointPrec::prec11N6;
 }
 
+
+mglValFixedPoint::~mglValFixedPoint()
+{
+}
+
 /**
  * This constructor can be used to initialize ValFixedPoint by using a string from an XML
  * The String should note the precision - otherwise the default prec11N6 is taken as in empty constructor.

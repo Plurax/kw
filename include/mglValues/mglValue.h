@@ -17,6 +17,7 @@ class mglValue
 public:
 	mglValue();
 	virtual enumValType getType();
+	virtual ~mglValue();
 	//virtual mglValString serialize();
 };
 
