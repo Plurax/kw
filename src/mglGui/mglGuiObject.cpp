@@ -187,6 +187,12 @@ float mglGuiObject::GetWidth()
 	return m_fWidth;
 }
 
+
+void mglGuiObject::SetWidth(float fWidth)
+{
+	m_fWidth = fWidth;
+}
+
 void mglGuiObject::Draw(void)
 {
 	mglValCoord calcPos = calcPosition();

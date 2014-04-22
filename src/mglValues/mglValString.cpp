@@ -70,7 +70,7 @@ mglValString::~mglValString()
 	delete m_string;
 }
 
-int mglValString::size()
+size_t mglValString::size()
 {
 	return m_string->size();
 }
@@ -95,7 +95,7 @@ mglValString mglValString::operator + (const mglValString& _right)
 
 bool mglValString::operator == (const mglValString& _right)
 {
-	return this->m_string == _right.m_string;
+	return (this->m_string->compare(*_right.m_string) == 0);
 }
 
 

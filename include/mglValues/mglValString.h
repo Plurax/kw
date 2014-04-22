@@ -37,7 +37,7 @@ public:
 	  mglValString(const mglValString& right); // Copy constructor
 	  ~mglValString();
 
-	  int size();
+	  size_t size();
 	  bool empty();
 
 	  mglValString& erase(size_t pos, size_t len);

@@ -87,7 +87,7 @@ public:
 	virtual void Draw();
 
 	float GetWidth();
-	void SetWidth(float uiWidth);
+	void SetWidth(float fWidth);
 
 	virtual mglGuiObject* getChildAtPosition(mglValCoord pt);
 	void setParentWindow(mglGuiObject* parent);

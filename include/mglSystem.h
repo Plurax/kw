@@ -44,7 +44,7 @@ using namespace xercesc;
 class mglSystem
 {
 public:
-	void init(GLXContext context, void (*_flushGL)());
+	void init(void (*_flushGL)());
 	~mglSystem();
 
 	static mglSystem& Inst()

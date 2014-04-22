@@ -27,7 +27,7 @@ mglSystem::mglSystem()
  * @param context - opengl context
  * @param ptr - flushGL function pointer which is called by Draw after rendering.
  */
-void mglSystem::init(GLXContext context, void (*ptr)(void))
+void mglSystem::init(void (*ptr)(void))
 {
 	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
 	// Insert default factory into the list
