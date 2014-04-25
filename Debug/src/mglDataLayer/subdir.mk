@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/mglDataLayer/mglDataContainer.cpp \
 ../src/mglDataLayer/mglDataLibHandle.cpp \
 ../src/mglDataLayer/mglDataSource.cpp \
 ../src/mglDataLayer/mglDataSourceFactory.cpp \
@@ -11,6 +12,7 @@ CPP_SRCS += \
 ../src/mglDataLayer/mglShm.cpp 
 
 OBJS += \
+./src/mglDataLayer/mglDataContainer.o \
 ./src/mglDataLayer/mglDataLibHandle.o \
 ./src/mglDataLayer/mglDataSource.o \
 ./src/mglDataLayer/mglDataSourceFactory.o \
@@ -18,6 +20,7 @@ OBJS += \
 ./src/mglDataLayer/mglShm.o 
 
 CPP_DEPS += \
+./src/mglDataLayer/mglDataContainer.d \
 ./src/mglDataLayer/mglDataLibHandle.d \
 ./src/mglDataLayer/mglDataSource.d \
 ./src/mglDataLayer/mglDataSourceFactory.d \

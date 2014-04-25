@@ -65,6 +65,7 @@ public:
 	mglGuiObject* getMenuByID(unsigned int ID);
 
 	mglGuiObject* getValueEditor();
+	mglGuiObject* getEditedObject();
 
 	mglMessage* processInputMessage(mglInputMessage* Message);
 

@@ -74,6 +74,10 @@ mglShm::mglShm(DOMElement* configuration)
 	LOG_TRACE("Init SHM with key " << m_key << " and size " << m_size);
 }
 
+/**
+ * This will init the shared memory segment according to the loaded parameters.
+ * This is executed after reading the data XML tree.
+ */
 void mglShm::init()
 {
 	INIT_LOG("mglShm", "init");
@@ -111,7 +115,9 @@ void mglShm::init()
 	}
 }
 
-
+/**
+ * Detaches the shared memory segment and closes it.
+ */
 void mglShm::deInit()
 {
 	INIT_LOG("mglShm", "deInit");
@@ -121,7 +127,10 @@ void mglShm::deInit()
 	semctl(m_semid, IPC_RMID, 0);
 }
 
-
+/**
+ * Returns the segment pointer.
+ * @return
+ */
 char* mglShm::getPtr()
 {
 	return m_segptr;

@@ -456,7 +456,12 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		{
 			// Editables are detected via the flag, but the functor has to implement the IGR count management
 			Message->setTarget(m_vSelectionContexts.back()->m_Editing);
-			return m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
+			mglMessage* retMsg =  m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
+
+			if (m_ValueEditor != NULL)
+			{
+				m_ValueEditor->setValue(m_vSelectionContexts.back()->m_Editing->getValue());
+			}
 		}
 	}
 
@@ -1085,4 +1090,9 @@ void mglSystem::destroy()
 mglGuiObject* mglSystem::getValueEditor()
 {
 	return m_ValueEditor;
+}
+
+mglGuiObject* mglSystem::getEditedObject()
+{
+	return m_vSelectionContexts.back()->m_Editing;
 }
