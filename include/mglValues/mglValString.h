@@ -37,10 +37,10 @@ public:
 	  mglValString(const mglValString& right); // Copy constructor
 	  ~mglValString();
 
-	  size_t size();
+	  int size();
 	  bool empty();
 
-	  mglValString& erase(size_t pos, size_t len);
+	  mglValString& erase(int pos, int len);
 
 	  enumValType getType();
 

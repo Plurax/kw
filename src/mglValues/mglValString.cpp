@@ -70,7 +70,7 @@ mglValString::~mglValString()
 	delete m_string;
 }
 
-size_t mglValString::size()
+int mglValString::size()
 {
 	return m_string->size();
 }
@@ -82,7 +82,7 @@ bool mglValString::empty()
 }
 
 
-mglValString& mglValString::erase (size_t pos, size_t len)
+mglValString& mglValString::erase (int pos, int len)
 {
 	m_string->erase(pos, len);
 }

@@ -95,7 +95,7 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 
 mglGuiObject::~mglGuiObject()
 {
-	for (size_t i = 0; i < m_Children.size(); ++i)
+	for (int i = 0; i < m_Children.size(); ++i)
 		delete m_Children.at(i);
 }
 
@@ -209,7 +209,7 @@ void mglGuiObject::Draw(void)
 	glEnd ();
 
 	// assure painting of all children
-	for (size_t i = 0; i < m_Children.size(); ++i)
+	for (int i = 0; i < m_Children.size(); ++i)
 		m_Children.at(i)->Draw();
 }
 
