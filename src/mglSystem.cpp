@@ -152,8 +152,6 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			else
 				spawnCoord = Message->getCoord();
 
-			LOG_TRACE("Created context animation object at X " << spawnCoord.m_fX << " Y " << spawnCoord.m_fY);
-
 			m_ContextAnimation->SetPosition(spawnCoord);
 		}
 	}
@@ -743,17 +741,17 @@ void mglSystem::readConfiguration(mglValString& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_lMainFrames);
+					createGUIfromXML(currentNode, NULL, NULL, m_lMainFrames, 0);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_lMenus);
+					createGUIfromXML(currentNode, NULL, NULL, m_lMenus, 1);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Editors))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_lEditors);
+					createGUIfromXML(currentNode, NULL, NULL, m_lEditors, 2);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
@@ -797,9 +795,9 @@ void mglSystem::readConfiguration(mglValString& configFile)
  * @param GUIELement - GUI Tag (root element for gui definition)
  * @param parent - parent element for recursive usage
  * @param prev - previous element for recursive usage
- * @param listToAdd - pointer to the list where root objects will be added (menus or frames)
+ * @param listToAdd - pointer to the list where root objects will be added
  */
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd)
+void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd, int _listtype)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
 
@@ -847,7 +845,6 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				DOMNodeList*      configchildren = currentElement->getChildNodes();
 				const  XMLSize_t configchildrenCount = configchildren->getLength();
 
-				// For all nodes, children of "root" in the XML tree.
 
 				for( XMLSize_t xx = 0; xx < configchildrenCount; ++xx )
 				{
@@ -894,7 +891,27 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 							DE_children= configCurrentElement;
 						}
 					}
+
 				}
+
+
+				// Check for attributes
+				if (_listtype == 0) // mainframes
+				{
+
+				}
+				if (_listtype == 1) // menus
+				{
+
+				}
+				if (_listtype == 2) // editors
+				{
+					XMLCh* ATTR_valtype = XMLString::transcode("valtype");
+					const XMLCh* windowitem_attr = currentElement->getAttribute(ATTR_valtype);
+					mglValString* str_valtype = new mglValString(XMLString::transcode(windowitem_attr));
+					LOG_TRACE("Attribute: valtype is " << str_valtype->str()->c_str());
+				}
+
 
 				/*
 				 * Name is mandatory
@@ -946,7 +963,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				// Now ascend down and create the children
 				if (DE_children->getChildNodes()->getLength() > 0)
 				{
-					createGUIfromXML(DE_children, thisWindow, NULL, listToAdd);
+					createGUIfromXML(DE_children, thisWindow, NULL, listToAdd, _listtype);
 				}
 				prevWindow = thisWindow;
 
@@ -978,6 +995,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				}
 			}
 		}
+
 	}
 	XMLString::release(&TAG_mglWindowItem);
 	XMLString::release(&TAG_name);

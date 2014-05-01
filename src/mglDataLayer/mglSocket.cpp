@@ -17,6 +17,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <errno.h>
 
 using namespace std;
 
@@ -92,14 +93,23 @@ void mglSocket::init()
              sizeof(m_Serv_addr)) < 0)
              LOG_TRACE("ERROR connecting");
 */
-    if (connect(m_SocketFd, (struct sockaddr *) &m_Serv_addr,
+	if (connect(m_SocketFd, (struct sockaddr *) &m_Serv_addr,
              sizeof(m_Serv_addr)) < 0)
         LOG_TRACE("ERROR connecting");
 
     LOG_TRACE("Socket with Host " << m_Host->str()->c_str() << " and Port " << m_Port << " created...");
+
 }
 
-
+/**
+ * Wrapper for the write function.
+ * Simple applications should not use this function as the class
+ * provides sendRequest for CLI like behaviour.
+ *
+ * @param buff
+ * @param len
+ * @return
+ */
 int mglSocket::write(char *buff, int len)
 {
 	INIT_LOG("mglSocket", "write(char* buff, size_t len");
@@ -107,6 +117,15 @@ int mglSocket::write(char *buff, int len)
 
 }
 
+/**
+ * Wrapper for the read function.
+ * Simple applications should not use this function as the class
+ * provides sendRequest for CLI like behaviour.
+ *
+ * @param buff
+ * @param maxlen
+ * @return
+ */
 int mglSocket::read(char *buff, size_t maxlen)
 {
 	return ::read(m_SocketFd, buff, maxlen);
@@ -118,28 +137,44 @@ void mglSocket::deInit()
 	close(m_SocketFd);
 }
 
-
-int mglSocket::handleRequest()
+/**
+ * This function sends a specific request as a ValString to the server
+ * and returns the complete response as a ValString.
+ * @param request
+ * @return
+ */
+mglValString mglSocket::sendRequest(mglValString* request)
 {
-	INIT_LOG("mglSocket", "int handleRequest()");
+	INIT_LOG("mglSocket", "mglValString sendRequest(mglValString* request)");
 
-	char buffer[256];
-	int newsockfd, n;
-	socklen_t clilen;
-	listen(m_SocketFd,5);
-	clilen = sizeof(m_Cli_addr);
-	newsockfd = accept(m_SocketFd,
-				(struct sockaddr *) &m_Cli_addr,
-				&clilen);
-	if (newsockfd < 0)
-		 LOG_TRACE("ERROR on accept");
-	bzero(buffer,256);
-	n = ::read(newsockfd,buffer,255);
-	if (n < 0)
-		LOG_TRACE("ERROR reading from socket");
-	printf("Here is the message: %s\n",buffer);
-	n = ::write(newsockfd,"I got your message",18);
-	if (n < 0)
-		LOG_TRACE("ERROR writing to socket");
-	close(newsockfd);
+	LOG_TRACE("Sending request: " << request->str()->c_str());
+	char* reception_buffer = new char[1024];
+	unsigned int complete_size = 0;
+	ssize_t rec = 1;
+
+	// send the request
+	::write(m_SocketFd, request->str()->c_str(), strlen(request->str()->c_str()));
+
+	bzero((char *) reception_buffer, sizeof(reception_buffer));
+
+	// Read into the reception buffer
+	while (rec != 0)
+	{
+		LOG_TRACE("Entering while");
+		// every run we read exactly 1 char - this is not fast - but works for the first try
+		rec = ::read(m_SocketFd, reception_buffer, 1023);
+		if (rec == -1)
+		{
+			perror("Error on read from Socket: ");
+			THROW_TECHNICAL_EXCEPTION(1234, "Error on read from Socket: ");
+		}
+		if (rec > 0)
+		{
+			complete_size += rec;
+			if (reception_buffer[complete_size - 1] == '\0')
+				break;
+		}
+	}
+
+	return mglValString(reception_buffer);
 }

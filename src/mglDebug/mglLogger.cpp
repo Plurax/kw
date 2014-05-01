@@ -95,7 +95,7 @@ void mglLogger::configure(DOMNode* loggerconfig)
 									*nextPtr = '\0';
 
 								string newClass = string(prevPtr);
-								m_Channels[iChannelCount]->addClassFilter(newClass, 0xfFff);
+								m_Channels[iChannelCount]->addClassFilter(newClass, 0xffff);
 								if (nextPtr)
 								{
 									nextPtr++;
@@ -147,7 +147,11 @@ void mglLogger::log(unsigned short level, static_log_info* info, stringstream& l
 	{
 		if (m_Channels[i]) // channel is defined?
 		{
-			if (m_Channels[i]->getMask() & level) // log level is in the mask?
+			if (level == LOG_MASK_EXCEPTION) // Always log exception messages
+			{
+				m_Channels[i]->log(line);
+			}
+			else if(m_Channels[i]->getMask() & level) // log level is in the mask?
 			{
 				if (m_Channels[i]->getLibraryFilter(info->psz_libname) & level)
 					if (m_Channels[i]->getClassFilter(info->psz_classname) & level)

@@ -41,7 +41,7 @@ public:
 	int write(char *buff, int len);
 	int read(char *buff, size_t);
 
-	int handleRequest();
+	mglValString sendRequest(mglValString* request);
 private:
 	int m_Status;
 	int m_SocketFd;

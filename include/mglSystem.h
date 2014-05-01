@@ -95,7 +95,7 @@ private:
 	mglSystem();
 	xercesc::XercesDOMParser *m_ConfigFileParser;
     XMLCh* m_TAG_root;
-    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd);
+    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd, int _listtype);
     void createDataLayer(DOMNode* currentElement);
 
     XMLCh* m_TAG_ApplicationSettings;

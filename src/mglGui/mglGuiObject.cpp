@@ -215,8 +215,8 @@ void mglGuiObject::Draw(void)
 
 void mglGuiObject::AddChild(mglGuiObject *Child)
 {
-	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child)");
-	LOG_TRACE("Added child");
+//	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child)");
+//	LOG_TRACE("Added child");
 
 	if (m_bHasChildren)
 	{
@@ -435,7 +435,7 @@ unsigned long mglGuiObject::getOptionMaskFromString(std::string _str)
 	std::stringstream ss(_str);
 	std::string item;
 	while (std::getline(ss, item, ',')) {
-		LOG_TRACE("line: " << item);
+//		LOG_TRACE("line: " << item);
 		if (item.empty())
 			continue;
 		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_Selectable)])))
@@ -451,7 +451,7 @@ unsigned long mglGuiObject::getOptionMaskFromString(std::string _str)
 		if (0 == item.compare(string(enumObjectFlagNames[static_cast<unsigned long>(enumObjectFlagsBitNums::Obj_DraggableY)])))
 			retVal |= (1 << static_cast<int>(enumObjectFlagsBitNums::Obj_DraggableY));
 	}
-	LOG_TRACE("retval = " << retVal);
+//	LOG_TRACE("retval = " << retVal);
 	return retVal;
 }
 
