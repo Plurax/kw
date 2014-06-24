@@ -65,39 +65,13 @@ mglSocket::mglSocket(DOMElement* configuration)
 	LOG_TRACE("Init Socket for Port " << m_Port << " on Host " << m_Host->str()->c_str());
 }
 
-
+/**
+ * This fits to the interface but it does nothing because
+ * the connection is opened for each request.
+ */
 void mglSocket::init()
 {
 	INIT_LOG("mglSocket", "void init()");
-
-    socklen_t clilen;
-    char buffer[256];
-    int n;
-
-    m_SocketFd = socket(AF_INET, SOCK_STREAM, 0);
-    if (m_SocketFd < 0)
-       LOG_TRACE("ERROR opening socket");
-    bzero((char *) &m_Serv_addr, sizeof(m_Serv_addr));
-
-    m_Server = gethostbyname(m_Host->str()->c_str());
-
-    m_Serv_addr.sin_family = AF_INET;
-    bcopy((char *)m_Server->h_addr,
-             (char *)&m_Serv_addr.sin_addr.s_addr,
-             m_Server->h_length);
-
-    m_Serv_addr.sin_port = htons(m_Port);
-
-    /*
-    if (bind(m_SocketFd, (struct sockaddr *) &m_Serv_addr,
-             sizeof(m_Serv_addr)) < 0)
-             LOG_TRACE("ERROR connecting");
-*/
-	if (connect(m_SocketFd, (struct sockaddr *) &m_Serv_addr,
-             sizeof(m_Serv_addr)) < 0)
-        LOG_TRACE("ERROR connecting");
-
-    LOG_TRACE("Socket with Host " << m_Host->str()->c_str() << " and Port " << m_Port << " created...");
 
 }
 
@@ -135,6 +109,7 @@ int mglSocket::read(char *buff, size_t maxlen)
 void mglSocket::deInit()
 {
 	close(m_SocketFd);
+	m_SocketFd = -1;
 }
 
 /**
@@ -148,6 +123,31 @@ mglValString mglSocket::sendRequest(mglValString* request)
 	INIT_LOG("mglSocket", "mglValString sendRequest(mglValString* request)");
 
 	LOG_TRACE("Sending request: " << request->str()->c_str());
+
+    m_SocketFd = socket(AF_INET, SOCK_STREAM, 0);
+    if (m_SocketFd < 0)
+       LOG_TRACE("ERROR opening socket");
+    bzero((char *) &m_Serv_addr, sizeof(m_Serv_addr));
+
+    m_Server = gethostbyname(m_Host->str()->c_str());
+
+    m_Serv_addr.sin_family = AF_INET;
+    bcopy((char *)m_Server->h_addr,
+             (char *)&m_Serv_addr.sin_addr.s_addr,
+             m_Server->h_length);
+
+    m_Serv_addr.sin_port = htons(m_Port);
+
+    /*
+    if (bind(m_SocketFd, (struct sockaddr *) &m_Serv_addr,
+             sizeof(m_Serv_addr)) < 0)
+             LOG_TRACE("ERROR connecting");
+*/
+	if (connect(m_SocketFd, (struct sockaddr *) &m_Serv_addr,
+             sizeof(m_Serv_addr)) < 0)
+        LOG_TRACE("ERROR connecting");
+
+    LOG_TRACE("Socket with Host " << m_Host->str()->c_str() << " and Port " << m_Port << " created...");
 	char* reception_buffer = new char[1024];
 	unsigned int complete_size = 0;
 	ssize_t rec = 1;
@@ -162,7 +162,7 @@ mglValString mglSocket::sendRequest(mglValString* request)
 	{
 		LOG_TRACE("Entering while");
 		// every run we read exactly 1 char - this is not fast - but works for the first try
-		rec = ::read(m_SocketFd, reception_buffer, 1023);
+		rec = ::read(m_SocketFd, &reception_buffer[complete_size], 1023 - complete_size);
 		if (rec == -1)
 		{
 			perror("Error on read from Socket: ");
@@ -171,10 +171,9 @@ mglValString mglSocket::sendRequest(mglValString* request)
 		if (rec > 0)
 		{
 			complete_size += rec;
-			if (reception_buffer[complete_size - 1] == '\0')
-				break;
 		}
 	}
+	deInit();
 
 	return mglValString(reception_buffer);
 }
