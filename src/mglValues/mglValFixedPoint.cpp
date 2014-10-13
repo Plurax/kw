@@ -51,8 +51,9 @@ mglValFixedPoint::mglValFixedPoint(mglValString _string)
 		*ptr = '\0'; // terminate number string
 		ptr++;
 	}
+
 	LOG_TRACE("mod string " << tmpBuffer);
-	sscanf(tmpBuffer, "%dl", &m_lValue);
+	sscanf(tmpBuffer, "%ld", &m_lValue);
 
 	if (strlen(ptr) > 0)
 		m_Precision = getPrecisionFromString(ptr);
@@ -92,6 +93,7 @@ mglValString mglValFixedPoint::asString()
 }
 
 
+
 bool mglValFixedPoint::operator >= (const mglValFixedPoint right)
 {
 	if (this->m_Precision == right.m_Precision)
@@ -116,6 +118,17 @@ bool mglValFixedPoint::operator < (const mglValFixedPoint right)
 	return m_lValue < right.m_lValue;
 }
 
+mglValFixedPoint& mglValFixedPoint::operator = (mglValFixedPoint const& right)
+{
+	if (this != &right)
+	{
+		this->m_isEmpty = right.m_isEmpty;
+		this->m_lValue = right.m_lValue;
+		this->m_Precision = right.m_Precision;
+	}
+	return *this;
+}
+
 mglValFixedPoint mglValFixedPoint::operator + (const mglValFixedPoint& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
@@ -132,7 +145,7 @@ mglValFixedPoint mglValFixedPoint::operator + (const mglValFixedPoint& right)
 	return mglValFixedPoint(this->m_lValue + right.m_lValue, this->m_Precision);
 }
 
-mglValFixedPoint mglValFixedPoint::operator += (const mglValFixedPoint& right)
+mglValFixedPoint& mglValFixedPoint::operator += (mglValFixedPoint const& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
@@ -165,7 +178,7 @@ mglValFixedPoint mglValFixedPoint::operator - (const mglValFixedPoint& right)
 	return mglValFixedPoint(this->m_lValue - right.m_lValue, this->m_Precision);
 }
 
-mglValFixedPoint mglValFixedPoint::operator -= (const mglValFixedPoint& right)
+mglValFixedPoint& mglValFixedPoint::operator -= (mglValFixedPoint const& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{

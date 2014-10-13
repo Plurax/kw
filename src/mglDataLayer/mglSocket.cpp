@@ -149,11 +149,12 @@ mglValString mglSocket::sendRequest(mglValString* request)
 
     LOG_TRACE("Socket with Host " << m_Host->str()->c_str() << " and Port " << m_Port << " created...");
 	char* reception_buffer = new char[1024];
-	unsigned int complete_size = 0;
+	int complete_size = 0;
 	ssize_t rec = 1;
 
 	// send the request
 	::write(m_SocketFd, request->str()->c_str(), strlen(request->str()->c_str()));
+	::write(m_SocketFd, "\n", 1);
 
 	bzero((char *) reception_buffer, sizeof(reception_buffer));
 
@@ -172,7 +173,10 @@ mglValString mglSocket::sendRequest(mglValString* request)
 		{
 			complete_size += rec;
 		}
+		LOG_TRACE("rec=" << rec);
 	}
+	reception_buffer[complete_size] = '\0';
+	LOG_TRACE(reception_buffer);
 	deInit();
 
 	return mglValString(reception_buffer);
