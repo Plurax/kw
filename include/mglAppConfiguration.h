@@ -34,8 +34,9 @@ public:
 
 	unsigned short getYRes();
 	unsigned short getXRes();
-	unsigned int getContextAnimationDelayStart();
-	unsigned int getContextAnimationDelayEnd();
+	unsigned long getContextAnimationDelayStart();
+	unsigned long getContextAnimationDelayEnd();
+	bool getFullScreen();
 
 	mglValString* getContextAnimationClass();
 	mglValString* getContextAnimationLib();
@@ -47,8 +48,9 @@ private:
 	 * This is a milli second value which sets the time difference for opening a context menu.
 	 * The context menu can be opened by holding the touchdown or the IGR press longer than this time span.
 	 */
-	unsigned int m_contextDelayStart;
-	unsigned int m_contextDelayEnd;
+	unsigned long m_contextDelayStart;
+	unsigned long m_contextDelayEnd;
+	bool m_FullScreen = false;
 
 	mglValString* m_ContextAnimationClass;
 	mglValString* m_ContextAnimationLib;

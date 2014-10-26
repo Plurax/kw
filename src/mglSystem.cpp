@@ -120,7 +120,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		timespec tmpTs = m_ContextMenuTimer.getDiffTime();
 		m_ContextMenuTimer.clear();
 		Message->setDiffTime(tmpTs);
-		if (tmpTs.tv_sec >= m_Configuration.getContextAnimationDelayEnd())
+		if ((unsigned long)tmpTs.tv_nsec + ((unsigned long)tmpTs.tv_sec * (unsigned long)1000000000) >= m_Configuration.getContextAnimationDelayEnd())
 			Message->setContextTimeEnd(true);
 		else
 			Message->setContextTimeEnd(false);
@@ -220,7 +220,16 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 							{
 								mglValCoord spawnCoord;
 								spawnCoord = Message->getCoord();
-								spawnCoord.setY(spawnCoord.m_fY + 100); // hack to avoid clipping
+								// Correct the position if the editor would be clipped
+								if (spawnCoord.m_fX + m_ValueEditor->GetWidth() > m_Configuration.getXRes())
+								{
+									spawnCoord.setX(m_Configuration.getXRes() - m_ValueEditor->GetWidth() - 1);
+								}
+								if (spawnCoord.m_fY < (m_ValueEditor->GetHeight() + 1))
+								{
+									spawnCoord.setY(1 + m_ValueEditor->GetHeight());
+								}
+
 								m_ValueEditor->SetPosition(spawnCoord);
 							}
 							m_ValueEditor->InitEditable(Target);

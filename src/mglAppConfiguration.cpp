@@ -23,8 +23,9 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 	XMLCh* TAG_contextanimationlib = XMLString::transcode("ContextAnimationLib");
 	XMLCh* TAG_ContextDelayStart = XMLString::transcode("ContextDelayStart");
 	XMLCh* TAG_ContextDelayEnd = XMLString::transcode("ContextDelayEnd");
+	XMLCh* TAG_FullScreen = XMLString::transcode("FullScreen");
 
-	unsigned int uisReadVal = 0;
+	unsigned long int uisReadVal = 0;
 	char* valTagText;
 
 	m_contextDelayStart = 10;
@@ -57,7 +58,7 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 						if ( XMLString::equals(child_Element->getTagName(), TAG_xres))
 						{
 							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%u", &uisReadVal);
+							sscanf(valTagText, "%lu", &uisReadVal);
 							m_xres = (unsigned short)uisReadVal;
 							XMLString::release(&valTagText);
 						}
@@ -65,7 +66,7 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 						if ( XMLString::equals(child_Element->getTagName(), TAG_yres))
 						{
 							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%u", &uisReadVal);
+							sscanf(valTagText, "%lu", &uisReadVal);
 							m_yres = (unsigned short)uisReadVal;
 							XMLString::release(&valTagText);
 						}
@@ -85,16 +86,28 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayStart))
 						{
 							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%u", &uisReadVal);
-							m_contextDelayStart = (unsigned short)uisReadVal;
+							sscanf(valTagText, "%lu", &uisReadVal);
+							m_contextDelayStart = uisReadVal;
+							LOG_DEBUG("DelayStart: " << m_contextDelayStart);
 							XMLString::release(&valTagText);
 						}
 
 						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayEnd))
 						{
 							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%u", &uisReadVal);
-							m_contextDelayEnd = (unsigned short)uisReadVal;
+							sscanf(valTagText, "%lu", &uisReadVal);
+							m_contextDelayEnd = uisReadVal;
+							XMLString::release(&valTagText);
+						}
+
+						if ( XMLString::equals(child_Element->getTagName(), TAG_FullScreen))
+						{
+							valTagText = XMLString::transcode(child_Element->getTextContent());
+							sscanf(valTagText, "%lu", &uisReadVal);
+							if (uisReadVal > 0)
+								m_FullScreen = true;
+							else
+								m_FullScreen = false;
 							XMLString::release(&valTagText);
 						}
 					}
@@ -102,6 +115,18 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 			}
 		}
 	}
+
+	XMLString::release(&TAG_GL);
+	XMLString::release(&TAG_yres);
+	XMLString::release(&TAG_xres);
+
+	XMLString::release(&TAG_contextanimationclass);
+	XMLString::release(&TAG_contextanimationlib);
+	XMLString::release(&TAG_ContextDelayStart);
+	XMLString::release(&TAG_ContextDelayEnd);
+	XMLString::release(&TAG_FullScreen);
+
+
 	LOG_TRACE("yres: " << m_yres << " xres: " << m_xres);
 }
 
@@ -116,6 +141,11 @@ unsigned short mglAppConfiguration::getXRes()
 }
 
 
+bool mglAppConfiguration::getFullScreen()
+{
+	return m_FullScreen;
+}
+
 mglValString* mglAppConfiguration::getContextAnimationClass()
 {
 	return m_ContextAnimationClass;
@@ -126,12 +156,12 @@ mglValString* mglAppConfiguration::getContextAnimationLib()
 	return m_ContextAnimationLib;
 }
 
-unsigned int mglAppConfiguration::getContextAnimationDelayStart()
+unsigned long mglAppConfiguration::getContextAnimationDelayStart()
 {
 	return m_contextDelayStart;
 }
 
-unsigned int mglAppConfiguration::getContextAnimationDelayEnd()
+unsigned long mglAppConfiguration::getContextAnimationDelayEnd()
 {
 	return m_contextDelayEnd;
 }
