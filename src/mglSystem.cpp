@@ -196,6 +196,12 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			Target = getTargetWindow(Message->getCoord());
 			if (Target != NULL)
 			{
+				// clear an active focus
+				if ((m_vSelectionContexts.back()->m_Focus != NULL) && (m_vSelectionContexts.back()->m_Focus != Target))
+				{
+					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
+				}
+
 				// If the target is editable we can open a corresponding editable dialog.
 				if (Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable))
 				{
