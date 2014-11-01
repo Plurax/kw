@@ -61,8 +61,8 @@ public:
 	void openMenu(mglGuiObject *Menu, mglValCoord _coord);
 
 	void destroy();
-	mglGuiObject* getMainFrameByID(unsigned int ID);
-	mglGuiObject* getMenuByID(unsigned int ID);
+	mglGuiObject* getMainFrame(mglValString name);
+	mglGuiObject* getMenu(mglValString name);
 
 	mglGuiObject* getValueEditor();
 	mglGuiObject* getEditedObject();
@@ -73,9 +73,9 @@ public:
 	void (*flushGL)();
 	mglGuiObject* getTargetWindow(mglValCoord pt);
 
-	mglGuiObjectList m_lMainFrames;
-	mglGuiObjectList m_lMenus;
-	mglGuiObjectList m_lEditors;
+	mglGuiObjectMap m_mMainFrames;
+	mglGuiObjectMap m_mMenus;
+	mglGuiObjectMap m_mEditors;
 
 	mglGuiObjectMap m_mGuiObjects;
 
@@ -95,7 +95,7 @@ private:
 	mglSystem();
 	xercesc::XercesDOMParser *m_ConfigFileParser;
     XMLCh* m_TAG_root;
-    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd, int _listtype);
+    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectMap& listToAdd, int _listtype);
     void createDataLayer(DOMNode* currentElement);
 
     XMLCh* m_TAG_ApplicationSettings;

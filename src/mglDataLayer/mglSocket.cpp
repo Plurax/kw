@@ -62,7 +62,7 @@ mglSocket::mglSocket(DOMElement* configuration)
 
 	m_SocketFd = -1; // initial fail state
 
-	LOG_TRACE("Init Socket for Port " << m_Port << " on Host " << m_Host->str()->c_str());
+	LOG_TRACE("Init Socket for Port " << m_Port << " on Host " << *m_Host);
 }
 
 /**
@@ -122,7 +122,7 @@ mglValString mglSocket::sendRequest(mglValString* request)
 {
 	INIT_LOG("mglSocket", "mglValString sendRequest(mglValString* request)");
 
-	LOG_TRACE("Sending request: " << request->str()->c_str());
+	LOG_TRACE("Sending request: " << *request);
 
     m_SocketFd = socket(AF_INET, SOCK_STREAM, 0);
     if (m_SocketFd < 0)
@@ -147,7 +147,7 @@ mglValString mglSocket::sendRequest(mglValString* request)
              sizeof(m_Serv_addr)) < 0)
         LOG_TRACE("ERROR connecting");
 
-    LOG_TRACE("Socket with Host " << m_Host->str()->c_str() << " and Port " << m_Port << " created...");
+    LOG_TRACE("Socket with Host " << *m_Host << " and Port " << m_Port << " created...");
 	char* reception_buffer = new char[1024];
 	int complete_size = 0;
 	ssize_t rec = 1;

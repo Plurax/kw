@@ -15,19 +15,23 @@
 class mglValColor : public mglValue
 {
 public:
-  static const enumValType m_valType = enumValType::mglValColor;
 	mglValColor();
 	~mglValColor();
 	mglValColor(float red, float green, float blue, float alpha);
 	mglValColor(const char* hex);
 
+	friend std::ostream& operator<< (std::ostream& stream, const mglValColor& _valcolor);
+
 	mglValString asString();
-	enumValType getType();
+	mglValString getType();
 
 	float fRed;
 	float fGreen;
 	float fBlue;
 	float fAlpha;
+
+private:
+	static const mglValString m_valType;
 };
 
 #endif /* MGLCOLOR_H_ */

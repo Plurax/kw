@@ -9,8 +9,11 @@
 #include <iostream>
 #include "mglDebug/mglLogger.h"
 #include "mglValues/mglValColor.h"
+#include "mglValues/mglValString.h"
 
 using namespace std;
+
+
 
 mglValColor::mglValColor()
 {
@@ -69,12 +72,20 @@ mglValColor::mglValColor(const char* hex)
 mglValString mglValColor::asString()
 {
 	std::stringstream str;
-	str << "Color: { " << fRed << ", " << fGreen << ", " << fBlue << ", " << fAlpha << "}";
+	str << "mglValColor: { " << fRed << ", " << fGreen << ", " << fBlue << ", " << fAlpha << "}";
 	return mglValString(str.str());
 }
 
 
-enumValType mglValColor::getType()
+std::ostream& operator<< (std::ostream& stream, const mglValColor& _valcolor)
 {
-	return m_valType;
+	stream << "mglValColor: { R " << _valcolor.fRed << ", G " << _valcolor.fGreen << ", B " << _valcolor.fBlue << ", A " << _valcolor.fAlpha << " }";
+	return stream;
 }
+
+
+mglValString mglValColor::getType()
+{
+	return mglValString("mglValColor");
+}
+

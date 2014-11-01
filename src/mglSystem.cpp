@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <stdexcept>
 #include "mglReleaseInfo.h"
+#include <cxxabi.h>
 
 #include "mglSystem.h"
 #include "mglValues/mglValCoord.h"
@@ -77,18 +78,30 @@ void mglSystem::init(void (*ptr)(void))
  */
 mglSystem::~mglSystem()
 {
-	uint uiIndex;
-	for (uiIndex = 0; uiIndex < m_lMainFrames.size(); uiIndex++)
-		delete m_lMainFrames.at(uiIndex); // delete the root frame objects
-	m_lMainFrames.clear(); // clear all registered root frames
+	std::map<mglValString, mglGuiObject*>::iterator it;
+	it = m_mMainFrames.begin();
+	while (it != m_mMainFrames.begin())
+	{
+		delete it->second;
+		m_mMainFrames.erase(it);
+		it--;
+	}
 
-	for (uiIndex = 0; uiIndex < m_lMenus.size(); uiIndex++)
-		delete m_lMenus.at(uiIndex); // delete the root frame objects
-	m_lMenus.clear();
+	it = m_mMenus.begin();
+	while (it != m_mMenus.begin())
+	{
+		delete it->second;
+		m_mMenus.erase(it);
+		it--;
+	}
 
-	for (uiIndex = 0; uiIndex < m_lEditors.size(); uiIndex++)
-		delete m_lEditors.at(uiIndex); // delete the root frame objects
-	m_lEditors.clear();
+	it = m_mEditors.begin();
+	while (it != m_mEditors.begin())
+	{
+		delete it->second;
+		m_mEditors.erase(it);
+		it--;
+	}
 }
 
 
@@ -209,10 +222,32 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					{
 						if (m_ValueEditor == NULL)
 						{
-							// First we need to decide which editor has to be opened
-							enumValType valType = Target->getValue()->getType();
+							/* First we need to decide which editor has to be opened
+							 *
+							 * Therefore we retrieve the value of the object and construct a name string of the class via RTTI
+							 * This information is used to open the default editor, which is configured in the XML.
+							 *
+							 * To allow usage of different editors, each mglGuiObject can set its own editor class/lib via its
+							 * configuration.
+							 */
+							mglValString valType = Target->getEditorName();
+							if (valType.empty() || valType.size() == 0)
+							{
+								int status;
+								const std::type_info &ti = typeid(*(Target->getValue()));
+								char* realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
+								valType = mglValString(realname);
+								free (realname);
 
-							m_ValueEditor = m_lEditors.at(static_cast<unsigned long>(valType) - 1); // 0 is undefined - so decrement it
+							}
+
+							// Use the standard editor
+							mglGuiObjectMap::iterator findIt = m_mEditors.find(valType);
+							if (findIt == m_mEditors.end())
+							{
+								THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving editor. " << valType.str()->c_str() << " does not exist!");
+							}
+							m_ValueEditor = findIt->second;
 
 							/**
 							 * If the user decides to use IGR instead of touch - we preload the editable to allow this.
@@ -581,20 +616,28 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 	return 0;
 }
 
-mglGuiObject* mglSystem::getMainFrameByID(unsigned int ID)
+mglGuiObject* mglSystem::getMainFrame(mglValString name)
 {
-	if (ID < m_lMainFrames.size())
-		return m_lMainFrames.at(ID);
-	else
-		return 0;
+	mglGuiObjectMap::iterator it = m_mMainFrames.find(name);
+	if (it == m_mMainFrames.end())
+	{
+		INIT_LOG("mglSystem", "getMainFrame");
+		THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving main frame. " << name.str()->c_str() << " Does not exist!");
+	}
+	mglGuiObject* retval = it->second;
+	return retval;
 }
 
-mglGuiObject* mglSystem::getMenuByID(unsigned int ID)
+mglGuiObject* mglSystem::getMenu(mglValString name)
 {
-	if (ID < m_lMenus.size())
-		return m_lMenus.at(ID);
-	else
-		return 0;
+	mglGuiObjectMap::iterator it = m_mMenus.find(name);
+	if (it == m_mMenus.end())
+	{
+		INIT_LOG("mglSystem", "getMenu");
+		THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving menu. " << name.str()->c_str() << " Does not exist!");
+	}
+	mglGuiObject* retval = it->second;
+	return retval;
 }
 
 /**
@@ -756,17 +799,17 @@ void mglSystem::readConfiguration(mglValString& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_lMainFrames, 0);
+					createGUIfromXML(currentNode, NULL, NULL, m_mMainFrames, 0);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_lMenus, 1);
+					createGUIfromXML(currentNode, NULL, NULL, m_mMenus, 1);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Editors))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_lEditors, 2);
+					createGUIfromXML(currentNode, NULL, NULL, m_mEditors, 2);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
@@ -812,7 +855,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
  * @param prev - previous element for recursive usage
  * @param listToAdd - pointer to the list where root objects will be added
  */
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectList& listToAdd, int _listtype)
+void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectMap& listToAdd, int _listtype)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
 
@@ -921,19 +964,19 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				}
 				if (_listtype == 2) // editors
 				{
-					XMLCh* ATTR_valtype = XMLString::transcode("valtype");
+/*					XMLCh* ATTR_valtype = XMLString::transcode("valtype");
 					const XMLCh* windowitem_attr = currentElement->getAttribute(ATTR_valtype);
 					mglValString* str_valtype = new mglValString(XMLString::transcode(windowitem_attr));
 					LOG_TRACE("Attribute: valtype is " << str_valtype->str()->c_str());
-				}
+*/				}
 
 
 				/*
 				 * Name is mandatory
 				 */
-				LOG_TRACE("Got GUI Element named: " << name->str()->c_str());
-				LOG_TRACE("Got GUI Element libname: " << libname->str()->c_str());
-				LOG_TRACE("Got GUI Element classname: " << classname->str()->c_str());
+				LOG_TRACE("Got GUI Element named: " << *name);
+				LOG_TRACE("Got GUI Element libname: " << *libname);
+				LOG_TRACE("Got GUI Element classname: " << *classname);
 
 				// Create the configured element via the factory
 				thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
@@ -963,7 +1006,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 
 				// We are at parent level - so this is a main frame
 				if (parent == NULL)
-					listToAdd.push_back(thisWindow);
+					listToAdd.insert(std::pair<mglValString,mglGuiObject*>(mglValString(*name),thisWindow));
 				else
 				{
 					thisWindow->setParentWindow(parent);

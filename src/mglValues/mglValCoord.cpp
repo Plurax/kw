@@ -5,7 +5,7 @@
  *      Author: cromas
  */
 #include "../include/mglValues/mglValCoord.h"
-
+#include "../include/mglValues/mglValString.h"
 
 
 mglValCoord::mglValCoord(int x, int y, int z)
@@ -32,6 +32,12 @@ mglValCoord::mglValCoord()
 mglValCoord::~mglValCoord()
 {
 
+}
+
+std::ostream& operator<< (std::ostream& stream, const mglValCoord& _valcoord)
+{
+	stream << "mglValColor: { X " << _valcoord.m_fX << ", Y " << _valcoord.m_fY << ", Z " << _valcoord.m_fZ << " }";
+	return stream;
 }
 
 
@@ -63,11 +69,6 @@ void mglValCoord::setY(int y)
 void mglValCoord::setZ(int z)
 {
 	m_fZ = (float)z;
-}
-
-enumValType mglValCoord::getType()
-{
-	return m_valType;
 }
 
 

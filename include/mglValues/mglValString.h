@@ -9,10 +9,9 @@
 #define MGLVALSTRING_H_
 
 #include <string>
-#include <iostream>
 #include "mglValue.h"
 
-
+class mglValString;
 
 using namespace std;
 
@@ -24,8 +23,6 @@ using namespace std;
 class mglValString : public mglValue
 {
 public:
-	  static const enumValType m_valType = enumValType::mglValString;
-
 	  mglValString();
 	  mglValString(char* _cstr);
 	  mglValString(const char* _cstr);
@@ -34,15 +31,16 @@ public:
 	  mglValString(const string _str);
 	  mglValString(mglValString*_str);
 
+	  friend std::ostream& operator<< (std::ostream& stream, const mglValString& _valstring);
+
 	  mglValString(const mglValString& right); // Copy constructor
 	  ~mglValString();
 
 	  int size();
 	  bool empty();
 
-	  mglValString& erase(int pos, int len);
-
-	  enumValType getType();
+	  void erase(int pos, int len);
+	  mglValString getType();
 
 	  mglValString operator + (const mglValString& _right);
 	  bool operator == (const mglValString& _right);

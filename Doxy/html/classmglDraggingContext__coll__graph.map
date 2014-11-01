@@ -1,0 +1,8 @@
+<map id="mglDraggingContext" name="mglDraggingContext">
+<area shape="rect" id="node2" href="$classmglGuiObject.html" title="mglGuiObject" alt="" coords="195,195,296,221"/>
+<area shape="rect" id="node3" href="$classmglValCoord.html" title="mglValCoord" alt="" coords="5,83,101,109"/>
+<area shape="rect" id="node4" href="$classmglValue.html" title="mglValue" alt="" coords="137,5,212,32"/>
+<area shape="rect" id="node5" href="$classmglValString.html" title="mglValString" alt="" coords="127,83,223,109"/>
+<area shape="rect" id="node7" href="$classmglValColor.html" title="mglValColor" alt="" coords="248,83,341,109"/>
+<area shape="rect" id="node6" href="$classmglGuiActionFunctor.html" title="mglGuiActionFunctor" alt="" coords="380,83,524,109"/>
+</map>

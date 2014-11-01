@@ -38,7 +38,6 @@ mglValFixedPoint::mglValFixedPoint(mglValString _string)
 	strncpy(tmpBuffer, c_str, 49);
 	LOG_TRACE("Got raw string " << tmpBuffer);
 
-	bool bGotPoint = false;
 	char* ptr = strchr(tmpBuffer, '.');
 
 	if (ptr != NULL)
@@ -77,7 +76,7 @@ mglValFixedPoint::mglValFixedPoint(long in, enumValFixedPointPrec prec)
 	m_isEmpty = false;
 }
 
-mglValString mglValFixedPoint::asString()
+mglValString mglValFixedPoint::asString() const
 {
 	int i;
 	char tmp[21] = "";
@@ -289,11 +288,18 @@ mglValFixedPoint mglValFixedPoint::getWithNewPrecision(enumValFixedPointPrec pre
 }
 
 
-enumValType mglValFixedPoint::getType()
+mglValString mglValFixedPoint::getType()
 {
-	return m_valType;
+	return mglValString("mglValFixedPoint");
 }
 
+
+std::ostream& operator<< (std::ostream& stream, const mglValFixedPoint& _valfixedpoint)
+{
+	const mglValString str = mglValString(_valfixedpoint.asString());
+	stream << str;
+	return stream;
+}
 
 
 enumValFixedPointPrec mglValFixedPoint::getPrecisionFromString(char* _str)

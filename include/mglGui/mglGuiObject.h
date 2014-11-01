@@ -102,6 +102,7 @@ public:
 	virtual void setValue(mglValue* _val);
 	virtual mglValue* getValue();
 	virtual void InitEditable(mglGuiObject* edited);
+	mglValString getEditorName(); // This will return of the editor which is desired to be used for this objects value
 
 	// Those functions are for draggable objects to avoid move out of their limits
 	virtual float getMinDragX();
@@ -168,6 +169,7 @@ protected:
 	bool m_bHasChildren;
 
 	mglValString m_name;
+	mglValString m_EditorName;
 	mglValColor m_BackGroundColor;
 };
 

@@ -28,7 +28,6 @@ enum class enumValFixedPointPrec {
 class mglValFixedPoint : public mglValue
 {
 public:
-	static const enumValType m_valType = enumValType::mglValFixedPoint;
 	static const short precN[7];
 	static const long precNScalings[7];
 
@@ -37,9 +36,11 @@ public:
 	mglValFixedPoint(mglValString _string);
 	mglValFixedPoint(enumValFixedPointPrec prec);
 	mglValFixedPoint(long in, enumValFixedPointPrec prec);
-	mglValString asString();
+	mglValString asString() const;
 
-	enumValType getType();
+	mglValString getType();
+
+	friend std::ostream& operator<< (std::ostream& stream, const mglValFixedPoint& _valfixedpoint);
 
 	bool operator >= (const mglValFixedPoint right);
 	bool operator > (const mglValFixedPoint right);

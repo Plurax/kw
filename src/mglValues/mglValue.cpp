@@ -10,6 +10,7 @@
 
 #include "mglValues/mglValue.h"
 
+
 mglValue::mglValue()
 {
 
@@ -20,7 +21,4 @@ mglValue::~mglValue()
 
 }
 
-enumValType mglValue::getType()
-{
-	return enumValType::mglValUndefined;
-}
+

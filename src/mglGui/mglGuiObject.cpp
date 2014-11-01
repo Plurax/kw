@@ -29,6 +29,8 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 
 	m_ulOptionMask = 0;
 
+	m_EditorName = mglValString();
+
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
 	{
 		DOMNode* currentNode = children->item(xx);
@@ -95,7 +97,7 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 
 mglGuiObject::~mglGuiObject()
 {
-	for (int i = 0; i < m_Children.size(); ++i)
+	for (unsigned int i = 0; i < m_Children.size(); ++i)
 		delete m_Children.at(i);
 }
 
@@ -209,7 +211,7 @@ void mglGuiObject::Draw(void)
 	glEnd ();
 
 	// assure painting of all children
-	for (int i = 0; i < m_Children.size(); ++i)
+	for (unsigned int i = 0; i < m_Children.size(); ++i)
 		m_Children.at(i)->Draw();
 }
 
@@ -361,7 +363,7 @@ void mglGuiObject::applyIGRCount(int _cnt)
  */
 mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
 {
-
+	return NULL; // this is the base class
 }
 
 /**
@@ -381,7 +383,7 @@ void mglGuiObject::setValue(mglValue* _val)
  */
 mglValue* mglGuiObject::getValue()
 {
-
+	return NULL;
 }
 
 void mglGuiObject::InitEditable(mglGuiObject* edited)
@@ -389,36 +391,44 @@ void mglGuiObject::InitEditable(mglGuiObject* edited)
 
 }
 
+/*@
+ * This will return NULL to get the system use the editor named by the valtype of the
+ * hold value of the object.
+ */
+mglValString mglGuiObject::getEditorName()
+{
+	return m_EditorName;
+}
 
 mglValue* mglGuiObject::getUpperLimit()
 {
-
+	return NULL;
 }
 
 mglValue* mglGuiObject::getLowerLimit()
 {
-
+	return NULL;
 }
 
 
 float mglGuiObject::getMinDragX()
 {
-
+	return 0.0;
 }
 
 float mglGuiObject::getMaxDragX()
 {
-
+	return 0.0;
 }
 
 float mglGuiObject::getMinDragY()
 {
-
+	return 0.0;
 }
 
 float mglGuiObject::getMaxDragY()
 {
-
+	return 0.0;
 }
 
 /**

@@ -88,7 +88,7 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 			if ( XMLString::equals(currentElement->getTagName(), TAG_FontFile))
 			{
 				file_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
-				LOG_TRACE("Got Font from file: " << (*file_str).str());
+				LOG_TRACE("Got Font from file: " << (*file_str));
 			}
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_FontSize))
@@ -119,8 +119,6 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 // this will add a font to the list
 void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _file)
 {
-	bool err = false;
-
 	if (_name == NULL)
 	{
 		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");

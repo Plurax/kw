@@ -9,9 +9,11 @@
 
 #include "mglValues/mglValString.h"
 
+
+
 mglValString::mglValString()
 {
-	m_string = NULL;
+	m_string = new string("");
 	m_isEmpty = true;
 }
 
@@ -67,12 +69,26 @@ mglValString::mglValString(const mglValString& right) // Copy constructor
 
 mglValString::~mglValString()
 {
-	delete m_string;
+	if (m_string != NULL)
+		delete m_string;
 }
+
+
+std::ostream& operator<< (std::ostream& stream, const mglValString& _valstring)
+{
+		  stream << (*_valstring.str());
+		  return stream;
+}
+
 
 int mglValString::size()
 {
-	return m_string->size();
+	if (m_string != NULL)
+		return m_string->size();
+	else
+	{
+		return 0;
+	}
 }
 
 
@@ -82,20 +98,25 @@ bool mglValString::empty()
 }
 
 
-mglValString& mglValString::erase (int pos, int len)
+void mglValString::erase (int pos, int len)
 {
-	m_string->erase(pos, len);
+	if (m_string != NULL)
+		m_string->erase(pos, len);
 }
 
 
 mglValString mglValString::operator + (const mglValString& _right)
 {
-	return mglValString(*this->m_string + *_right.m_string);
+	if (this->m_string != NULL)
+		return mglValString(*this->m_string + *_right.m_string);
 }
 
 bool mglValString::operator == (const mglValString& _right)
 {
-	return (this->m_string->compare(*_right.m_string) == 0);
+	if (m_string != NULL)
+		return (this->m_string->compare(*_right.m_string) == 0);
+	else
+		return false;
 }
 
 
@@ -128,7 +149,7 @@ const string* mglValString::str() const
 	return m_string;
 }
 
-enumValType mglValString::getType()
+mglValString mglValString::getType()
 {
-	return m_valType;
+	return mglValString("mglValString");
 }

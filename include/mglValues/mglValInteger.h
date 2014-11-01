@@ -12,13 +12,14 @@
 
 class mglValInteger: public mglValue {
 public:
-	static const enumValType m_valType = enumValType::mglValInteger;
 
 	mglValInteger();
 	mglValInteger(int val);
 	virtual ~mglValInteger();
 
 	int getValue();
+
+	friend std::ostream& operator<< (std::ostream& stream, const mglValInteger& _valinteger);
 
 	bool operator >= (const mglValInteger right);
 	bool operator > (const mglValInteger right);
@@ -31,8 +32,6 @@ public:
 	mglValInteger& operator -= (mglValInteger const& right);
 	mglValInteger operator * (const mglValInteger& right);
 	mglValInteger operator / (const mglValInteger& right);
-
-	enumValType getType();
 
 protected:
 	bool m_isEmpty;

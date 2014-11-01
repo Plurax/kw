@@ -9,18 +9,20 @@
 #define MGLCOORD_H_
 
 #include "mglValue.h"
+#include <iostream>
+
+class mglValString;
 
 class mglValCoord : public mglValue
 {
 public:
-  static const enumValType m_valType = enumValType::mglValCoord;
 	mglValCoord(int x, int y, int z);
 	mglValCoord(float x, float y, int z);
 
 	mglValCoord();
 	~mglValCoord();
 
-	enumValType getType();
+	friend std::ostream& operator<< (std::ostream& stream, const mglValCoord& _valcoord);
 
 	void setX(float x);
 	void setY(float y);
@@ -38,6 +40,7 @@ public:
 
 protected:
 	bool m_isEmpty;
+
 };
 
 

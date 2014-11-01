@@ -35,9 +35,10 @@ int mglValInteger::getValue()
 	return m_Value;
 }
 
-enumValType mglValInteger::getType()
+std::ostream& operator<< (std::ostream& stream, const mglValInteger& _valinteger)
 {
-	return m_valType;
+	stream << _valinteger.m_Value;
+	return stream;
 }
 
 

@@ -46,7 +46,7 @@ mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValStr
 		if (retObject)
 			return retObject;
 		else
-			THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of mglGuiObject " << classname);
+			THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of mglGuiObject " << *classname);
 	}
 	else
 	{
@@ -56,7 +56,7 @@ mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValStr
 		{
 			std::cerr << "GUILibManager: Cannot open library: " << dlerror() << '\n';
 			INIT_LOG("mglGuiLibManager", "createGUIObject(string* libname, string* classname, DOMElement* configuration)");
-			THROW_TECHNICAL_EXCEPTION(666, "Could not load library " << libname);
+			THROW_TECHNICAL_EXCEPTION(666, "Could not load library " << *libname);
 		}
 
 
@@ -74,7 +74,7 @@ mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValStr
 		if (retObject)
 			return retObject;
 		else
-			THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of mglGuiObject " << classname->str());
+			THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of mglGuiObject " << *classname);
 	}
 }
 
