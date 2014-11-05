@@ -222,13 +222,13 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					{
 						if (m_ValueEditor == NULL)
 						{
-							/* First we need to decide which editor has to be opened
+							/** First we need to decide which editor has to be opened
 							 *
 							 * Therefore we retrieve the value of the object and construct a name string of the class via RTTI
 							 * This information is used to open the default editor, which is configured in the XML.
 							 *
-							 * To allow usage of different editors, each mglGuiObject can set its own editor class/lib via its
-							 * configuration.
+							 * To allow usage of different editors, each mglGuiObject can set its own editor name via its
+							 * configuration. This editor is also defined in the xml configuration.
 							 */
 							mglValString valType = Target->getEditorName();
 							if (valType.empty() || valType.size() == 0)
@@ -255,7 +255,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 							 * Attention - we dont use the focus here - and we will not return to it!
 							 */
 							m_vSelectionContexts.back()->m_Editing = Target;
-							m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
+//							m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
 
 							if (0 == (m_ValueEditor->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_FixedEditor)))
 							{
@@ -871,6 +871,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 	XMLCh* TAG_classname = XMLString::transcode("classname");
 	XMLCh* TAG_handlerLib = XMLString::transcode("handlerLib");
 	XMLCh* TAG_handlerClass = XMLString::transcode("handlerClass");
+	XMLCh* TAG_editor = XMLString::transcode("editorName");
 	XMLCh* TAG_config = XMLString::transcode("config");
 	XMLCh* TAG_children = XMLString::transcode("children");
 
@@ -879,6 +880,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 	mglValString* classname = NULL;
 	mglValString* handlerlibname = NULL;
 	mglValString* handlerclassname = NULL;
+	mglValString* editorname = NULL;
 
 	DOMElement* DE_configuration;
 	DOMElement* DE_children;
@@ -939,6 +941,11 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 							handlerclassname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
 						}
 
+						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_editor))
+						{
+							editorname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
+						}
+
 						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_config))
 						{
 							DE_configuration = configCurrentElement;
@@ -982,6 +989,14 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
 													classname,
 													DE_configuration);
+
+				// The custom editor setting is optional - we check if this tag was set and set the editor afterwards
+				if (editorname != NULL)
+				{
+					thisWindow->setEditor(editorname);
+					delete editorname;
+					editorname = NULL;
+				}
 
 				/* If one of both strings is NULL connect the functor to NULL, otherwise its possible to create functors within the
 				 * 				constructor of the guiobject without using XML configuration
@@ -1063,6 +1078,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 	XMLString::release(&TAG_handlerClass);
 	XMLString::release(&TAG_config);
 	XMLString::release(&TAG_children);
+	XMLString::release(&TAG_editor);
 }
 
 /**

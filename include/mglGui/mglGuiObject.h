@@ -93,6 +93,7 @@ public:
 	void setParentWindow(mglGuiObject* parent);
 	void setNextWindow(mglGuiObject* parent);
 	void setPrevWindow(mglGuiObject* parent);
+	void setEditor(mglValString* _editor);
 
 	// Interface for editables - if not used call the parent function (and nothing happens)
 	virtual void applyIGRCount(int _cnt);

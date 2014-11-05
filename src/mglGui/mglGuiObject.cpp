@@ -254,6 +254,12 @@ void mglGuiObject::setParentWindow(mglGuiObject* parent)
 	m_pParent = parent;
 }
 
+void mglGuiObject::setEditor(mglValString* _editor)
+{
+	m_EditorName = new mglValString(*_editor);
+}
+
+
 mglGuiObject* mglGuiObject::parent()
 {
 	return m_pParent;
