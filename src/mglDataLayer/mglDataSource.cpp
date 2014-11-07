@@ -15,7 +15,6 @@ mglDataSource::mglDataSource()
 mglDataSource::mglDataSource(mglValString _name, unsigned int _type)
 {
 	m_name = _name;
-	m_type = _type;
 }
 
 mglValString mglDataSource::getName()
@@ -23,7 +22,3 @@ mglValString mglDataSource::getName()
 	return m_name;
 }
 
-unsigned int mglDataSource::getType()
-{
-	return m_type;
-}

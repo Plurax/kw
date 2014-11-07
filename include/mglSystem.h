@@ -73,6 +73,8 @@ public:
 	void (*flushGL)();
 	mglGuiObject* getTargetWindow(mglValCoord pt);
 
+	mglGuiObject* getGuiObject(mglValString _str);
+
 	mglGuiObjectMap m_mMainFrames;
 	mglGuiObjectMap m_mMenus;
 	mglGuiObjectMap m_mEditors;

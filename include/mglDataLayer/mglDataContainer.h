@@ -10,6 +10,7 @@
 
 
 #include "mglDataSource.h"
+#include "mglValues/mglValString.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
@@ -35,8 +36,10 @@ public:
 	void init();
 	void deInit();
 
+	void addValue(mglValString _key, mglValue* _val);
+	void delValue(mglValString _str);
 private:
-	map<mglValString, mglValString> m_MapValString;
+	map<mglValString, mglValue*> m_MapValues;
 };
 
 #endif /* MGLDATACONTAINER_H_ */

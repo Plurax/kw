@@ -10,6 +10,7 @@
 #include "mglDataLayer/mglDataSourceFactory.h"
 #include "mglDataLayer/mglShm.h"
 #include "mglDataLayer/mglSocket.h"
+#include "mglDataLayer/mglDataContainer.h"
 
 mglDataSourceFactory::~mglDataSourceFactory()
 {
@@ -21,6 +22,8 @@ mglDataSource* mglDataSourceFactory::createDataSource(mglValString* classname, D
 		return new mglShm(configuration);
 	if (classname->str()->compare("mglSocket") == 0)
 		return new mglSocket(configuration);
+	if (classname->str()->compare("mglDataContainer") == 0)
+		return new mglDataContainer(configuration);
 
 	return NULL;
 }

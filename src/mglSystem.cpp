@@ -551,6 +551,17 @@ void mglSystem::Draw(void)
 
 }
 
+
+mglGuiObject* mglSystem::getGuiObject(mglValString _str)
+{
+	std::map<mglValString, mglGuiObject*>::iterator findIt = m_mGuiObjects.find(_str);
+	if (findIt == m_mGuiObjects.end())
+		return NULL;
+	else
+		return findIt->second;
+}
+
+
 /**
  * Determine the gui object which is at the given coordinates.
  * This function regards mainframes and menus. Only visible marked objects are regarded.
@@ -1170,6 +1181,9 @@ mglDataSource* mglSystem::getDataSource(mglValString _name)
 
 void mglSystem::destroy()
 {
+	INIT_LOG("mglSystem", "destroy");
+
+	LOG_TRACE("Clearing data sources...");
 	map<mglValString, mglDataSource*>::iterator itDS;
 	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
 		itDS->second->deInit();

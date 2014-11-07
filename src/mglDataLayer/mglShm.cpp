@@ -9,7 +9,6 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <sys/sem.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -34,7 +33,6 @@ mglShm::mglShm(DOMElement* configuration)
 	const  XMLSize_t nodeCount = children->getLength();
 
 	XMLCh* TAG_key = XMLString::transcode("key");
-	XMLCh* TAG_semkey = XMLString::transcode("semkey");
 	XMLCh* TAG_size = XMLString::transcode("size");
 
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -51,13 +49,13 @@ mglShm::mglShm(DOMElement* configuration)
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
 				m_key = (key_t)atoi(xstr.c_str());
 			}
-
+/*
 			if ( XMLString::equals(currentElement->getTagName(), TAG_semkey))
 			{
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
 				m_semkey = (key_t)atoi(xstr.c_str());
 			}
-
+*/
 			if ( XMLString::equals(currentElement->getTagName(), TAG_size))
 			{
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
@@ -68,7 +66,6 @@ mglShm::mglShm(DOMElement* configuration)
 	}
 
 	XMLString::release(&TAG_key);
-	XMLString::release(&TAG_semkey);
 	XMLString::release(&TAG_size);
 
 	LOG_TRACE("Init SHM with key " << m_key << " and size " << m_size);
@@ -105,14 +102,6 @@ void mglShm::init()
 		LOG_ERROR("shmat");
 		exit(1);
 	}
-
-	// Create semaphore
-	m_semid = semget( m_semkey, 1, 0666 | IPC_CREAT | IPC_EXCL );
-	if ( m_semid == -1 )
-	{
-		LOG_TRACE("semget() failed\n");
-		m_segptr = NULL;
-	}
 }
 
 /**
@@ -122,9 +111,8 @@ void mglShm::deInit()
 {
 	INIT_LOG("mglShm", "deInit");
 
-	shmdt(m_segptr);
-	shmctl(m_shmid, IPC_RMID, 0);
-	semctl(m_semid, IPC_RMID, 0);
+	LOG_DEBUG("Detaching SHM key " << m_key << " Detach retcode: " << shmdt(m_segptr));
+//	LOG_DEBUG("Delete SHM" << shmctl(m_shmid, IPC_RMID, 0));
 }
 
 /**

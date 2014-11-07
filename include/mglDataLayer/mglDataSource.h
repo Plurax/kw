@@ -26,7 +26,6 @@ public:
 	virtual void deInit() = 0;
 	mglDataSource(mglValString _name, unsigned int _type);
 	mglValString getName();
-	unsigned int getType();
 
 protected:
 	unsigned int m_type;
