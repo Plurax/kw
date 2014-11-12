@@ -38,6 +38,7 @@ public:
 
 	void addValue(mglValString _key, mglValue* _val);
 	void delValue(mglValString _str);
+	mglValue* getValue(mglValString key);
 private:
 	map<mglValString, mglValue*> m_MapValues;
 };

@@ -38,3 +38,10 @@ void mglDataContainer::delValue(mglValString _str)
 	delete valIt->second;
 	m_MapValues.erase(valIt);
 }
+
+
+mglValue* mglDataContainer::getValue(mglValString key)
+{
+	std::map<mglValString, mglValue*>::iterator valIt = m_MapValues.find(key);
+	return valIt->second;
+}
