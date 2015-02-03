@@ -1,3 +1,10 @@
+/*
+ * mglFontProvider.h
+ *
+ *  Created on: 21.03.2014
+ *      Author: cromas
+ */
+
 
 #ifndef H_MGL_FONTPROVIDER
 #define H_MGL_FONTPROVIDER
@@ -38,7 +45,7 @@ public:
 
     void loadFonts(DOMNode* currentElement);
 
-	void AddFont(int _size, mglValString* _name, mglValString* _file);
+    void AddFont(int _size, mglValString* _name, string* _AdvanceString, mglValString* _file);
 	FTFont* GetFontByID(unsigned short index);
 	FTFont* GetFontByName(mglValString& _string);
 

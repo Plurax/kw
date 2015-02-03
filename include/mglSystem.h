@@ -1,3 +1,9 @@
+/*
+ * mglBase.h
+ *
+ *  Created on: 12.10.2013
+ *      Author: cromas
+ */
 
 
 #ifndef H_MGL_SYSTEM

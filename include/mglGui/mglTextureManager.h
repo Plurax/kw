@@ -1,3 +1,10 @@
+/*
+ * mglTextureManager.h
+ *
+ *  Created on: 21.03.2014
+ *      Author: cromas
+ */
+
 //**********************************************
 //Singleton Texture Manager class
 //Written by Ben English
