@@ -6,7 +6,6 @@
  */
 
 
-#include "mglDataLayer/mglSocket.h"
 #include "mglDebug/mglDebug.h"
 
 #include <stdio.h>
@@ -18,10 +17,11 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
+#include <mglDataLayer/mglSocketClient.h>
 
 using namespace std;
 
-mglSocket::mglSocket(DOMElement* configuration)
+mglSocketClient::mglSocketClient(DOMElement* configuration)
 {
 	INIT_LOG("mglSocket", "mglSocket");
 
@@ -69,7 +69,7 @@ mglSocket::mglSocket(DOMElement* configuration)
  * This fits to the interface but it does nothing because
  * the connection is opened for each request.
  */
-void mglSocket::init()
+void mglSocketClient::init()
 {
 	INIT_LOG("mglSocket", "void init()");
 
@@ -84,7 +84,7 @@ void mglSocket::init()
  * @param len
  * @return
  */
-int mglSocket::write(char *buff, int len)
+int mglSocketClient::write(char *buff, int len)
 {
 	INIT_LOG("mglSocket", "write(char* buff, size_t len");
 	return ::write(m_SocketFd, buff, strlen(buff));
@@ -100,13 +100,13 @@ int mglSocket::write(char *buff, int len)
  * @param maxlen
  * @return
  */
-int mglSocket::read(char *buff, size_t maxlen)
+int mglSocketClient::read(char *buff, size_t maxlen)
 {
 	return ::read(m_SocketFd, buff, maxlen);
 }
 
 
-void mglSocket::deInit()
+void mglSocketClient::deInit()
 {
 	close(m_SocketFd);
 	m_SocketFd = -1;
@@ -118,7 +118,7 @@ void mglSocket::deInit()
  * @param request
  * @return
  */
-mglValString mglSocket::sendRequest(mglValString* request)
+mglValString mglSocketClient::sendRequest(mglValString* request)
 {
 	INIT_LOG("mglSocket", "mglValString sendRequest(mglValString* request)");
 

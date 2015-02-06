@@ -30,10 +30,10 @@
 using namespace std;
 using namespace xercesc;
 
-class mglSocket : public mglDataSource
+class mglSocketClient : public mglDataSource
 {
 public:
-	mglSocket(DOMElement* configuration);
+	mglSocketClient(DOMElement* configuration);
 
 	void init();
 	void deInit();

@@ -24,8 +24,10 @@ mglSystem::mglSystem()
 
 /**
  * Main initialization routine.
+ * Regard that XercesC needs a set locale to create a correct char transcoder engine. This
+ * should be done in the main executable to allow multiple encodings. Xerces will then create
+ * the correct transcoder engine and will support e.g. custom chars for unicode points of the XML correctly.
  *
- * @param context - opengl context
  * @param ptr - flushGL function pointer which is called by Draw after rendering.
  */
 void mglSystem::init(void (*ptr)(void))
@@ -46,6 +48,7 @@ void mglSystem::init(void (*ptr)(void))
 	/* Prepare XML Parser */
    try
    {
+	   // Please regard that Locale needs to be set! Otherwise automatic transcoder engine of Xercesc will not work!
 	   XMLPlatformUtils::Initialize();  // Initialize Xerces infrastructure
    }
    catch( XMLException& e )
@@ -102,6 +105,8 @@ mglSystem::~mglSystem()
 		m_mEditors.erase(it);
 		it--;
 	}
+
+	   XMLPlatformUtils::Terminate(); // Deinit XERCES
 }
 
 
@@ -1175,6 +1180,17 @@ mglDataSource* mglSystem::getDataSource(mglValString _name)
 		return NULL;
 	else
 		return itDS->second;
+}
+
+
+/**
+ * This function will process all events. This is used to allow separate event handlings,
+ * for example for socket command reception etc. GUI Input events are also handled here.
+ *
+ */
+void mglSystem::processEvents()
+{
+
 }
 
 

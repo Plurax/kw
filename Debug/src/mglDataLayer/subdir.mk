@@ -10,7 +10,7 @@ CPP_SRCS += \
 ../src/mglDataLayer/mglDataSourceFactory.cpp \
 ../src/mglDataLayer/mglDataSourceManager.cpp \
 ../src/mglDataLayer/mglShm.cpp \
-../src/mglDataLayer/mglSocket.cpp 
+../src/mglDataLayer/mglSocketClient.cpp 
 
 OBJS += \
 ./src/mglDataLayer/mglDataContainer.o \
@@ -19,7 +19,7 @@ OBJS += \
 ./src/mglDataLayer/mglDataSourceFactory.o \
 ./src/mglDataLayer/mglDataSourceManager.o \
 ./src/mglDataLayer/mglShm.o \
-./src/mglDataLayer/mglSocket.o 
+./src/mglDataLayer/mglSocketClient.o 
 
 CPP_DEPS += \
 ./src/mglDataLayer/mglDataContainer.d \
@@ -28,7 +28,7 @@ CPP_DEPS += \
 ./src/mglDataLayer/mglDataSourceFactory.d \
 ./src/mglDataLayer/mglDataSourceManager.d \
 ./src/mglDataLayer/mglShm.d \
-./src/mglDataLayer/mglSocket.d 
+./src/mglDataLayer/mglSocketClient.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

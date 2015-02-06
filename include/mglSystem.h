@@ -97,6 +97,9 @@ public:
 	mglAppConfiguration m_Configuration;
 
 	mglLibraryInfo* m_libInfo;
+
+	void processEvents();
+
 private:
 	int m_pixelformat;
 
