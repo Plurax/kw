@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../src/mglAppConfiguration.cpp \
 ../src/mglFontProvider.cpp \
+../src/mglGuiActionFactory.cpp \
 ../src/mglLibHandle.cpp \
 ../src/mglLibraryInfo.cpp \
 ../src/mglMessage.cpp \
@@ -17,6 +18,7 @@ CPP_SRCS += \
 OBJS += \
 ./src/mglAppConfiguration.o \
 ./src/mglFontProvider.o \
+./src/mglGuiActionFactory.o \
 ./src/mglLibHandle.o \
 ./src/mglLibraryInfo.o \
 ./src/mglMessage.o \
@@ -28,6 +30,7 @@ OBJS += \
 CPP_DEPS += \
 ./src/mglAppConfiguration.d \
 ./src/mglFontProvider.d \
+./src/mglGuiActionFactory.d \
 ./src/mglLibHandle.d \
 ./src/mglLibraryInfo.d \
 ./src/mglMessage.d \

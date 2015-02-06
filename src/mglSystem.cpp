@@ -33,9 +33,14 @@ mglSystem::mglSystem()
 void mglSystem::init(void (*ptr)(void))
 {
 	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
-	// Insert default factory into the list
-	mglGuiLibManager& objManager = mglGuiLibManager::Inst();
-	objManager.init();
+
+	if (ptr != NULL)
+	{
+		// Insert default factory into the list
+		mglGuiLibManager& objManager = mglGuiLibManager::Inst();
+		objManager.init();
+		flushGL = ptr;
+	}
 	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
 	dsManager.init();
 	m_ContextAnimation = NULL;
@@ -44,7 +49,6 @@ void mglSystem::init(void (*ptr)(void))
 
 	m_DraggingContext = NULL;
 
-	flushGL = ptr;
 	/* Prepare XML Parser */
    try
    {
@@ -63,17 +67,20 @@ void mglSystem::init(void (*ptr)(void))
    // Can't call transcode till after Xerces Initialize()
    m_ConfigFileParser = new XercesDOMParser;
 
-   m_FontProvider = new mglFontProvider();
-   m_TextureManager = new mglTextureManager();
+	if (ptr != NULL)
+	{
+		m_FontProvider = new mglFontProvider();
+		m_TextureManager = new mglTextureManager();
+		m_vSelectionContexts.push_back(new mglSelectionContext());
+	}
 
-   mglValString configfile("Configuration.xml");
+	mglValString configfile("Configuration.xml");
 	readConfiguration(configfile);
 
 	m_CurrentMainFrame = NULL;
 	m_CurrentMenu = NULL;
 
 	m_lastActionCausedByTouch = false;
-	m_vSelectionContexts.push_back(new mglSelectionContext());
 }
 
 /**
@@ -1027,7 +1034,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 					else
 					{
 						// After we created the object we can attach the handler if it exists
-						mglGuiActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(handlerlibname, handlerclassname);
+						mglActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(handlerlibname, handlerclassname);
 						thisWindow->Connect(funct);
 					}
 				}
@@ -1190,9 +1197,26 @@ mglDataSource* mglSystem::getDataSource(mglValString _name)
  */
 void mglSystem::processEvents()
 {
-
+	while (!m_MessageQueue.empty())
+	{
+		mglMessage* processing = m_MessageQueue.front();
+		if (processing->getMessageType() == eMessageType::mtInput)
+			processInputMessage(static_cast<mglInputMessage*>(processing));
+		delete processing;
+		m_MessageQueue.pop();
+	}
 }
 
+
+/**
+ * Add a message onto the Queue. This can be every Message we like to process...
+ *
+ * @param mess The message to add.
+ */
+void mglSystem::addMessage(mglMessage* mess)
+{
+	m_MessageQueue.push(mess);
+}
 
 
 void mglSystem::destroy()

@@ -6,7 +6,7 @@ src/mglGui/mglGuiActionLibHandle.d: \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValue.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglActionFunctor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h
@@ -23,7 +23,7 @@ src/mglGui/mglGuiActionLibHandle.d: \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglActionFunctor.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 

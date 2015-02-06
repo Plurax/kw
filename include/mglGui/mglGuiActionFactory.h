@@ -8,7 +8,7 @@
 #ifndef MGLGUIACTIONFUNCTORFACTORY_H_
 #define MGLGUIACTIONFUNCTORFACTORY_H_
 
-#include "mglGui/mglGuiActionFunctor.h"
+#include <mglActionFunctor.h>
 #include "mglLibraryInfo.h"
 #include "mglValues/mglValString.h"
 #include <memory>
@@ -21,7 +21,7 @@ class mglGuiActionFactory
 public:
 	virtual ~mglGuiActionFactory();
 	virtual mglLibraryInfo* getLibInfo();
-	virtual mglGuiActionFunctor* createGuiAction(mglValString* classname);
+	virtual mglActionFunctor* createGuiAction(mglValString* classname);
 };
 
 

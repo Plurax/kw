@@ -22,7 +22,8 @@ src/mglDataLayer/mglDataSourceManager.d: \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglActionFunctor.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglInputMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
@@ -41,7 +42,6 @@ src/mglDataLayer/mglDataSourceManager.d: \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTextureManager.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTexture.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h
@@ -90,7 +90,9 @@ src/mglDataLayer/mglDataSourceManager.d: \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglActionFunctor.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h:
 
@@ -127,8 +129,6 @@ src/mglDataLayer/mglDataSourceManager.d: \
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTexture.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h:
-
-/home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h:
 

@@ -29,7 +29,7 @@
 
 #include "mglMessage.h"
 #include "mglValues/mglValColor.h"
-#include "mglGui/mglGuiActionFunctor.h"
+#include "mglActionFunctor.h"
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
@@ -127,10 +127,10 @@ public:
 	float GetHeight();
 	void SetHeight(float uiHeight);
 
-	virtual void Connect(mglGuiActionFunctor* func);
+	virtual void Connect(mglActionFunctor* func);
 	mglMessage* ProcessMessage(mglMessage* message);
 
-	mglGuiActionFunctor* getGuiAction();
+	mglActionFunctor* getGuiAction();
 
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
@@ -158,7 +158,7 @@ protected:
 	uint uiElementState; // State of element, inactive, focussed, selected
 	unsigned long m_ulOptionMask;
 
-	mglGuiActionFunctor* m_GuiAction;
+	mglActionFunctor* m_GuiAction;
 
 	mglValCoord m_Position;
 

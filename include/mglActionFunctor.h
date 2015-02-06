@@ -5,18 +5,18 @@
  *      Author: cromas
  */
 
-#ifndef MGLGUIACTIONFUNCTOR_H_
-#define MGLGUIACTIONFUNCTOR_H_
+#ifndef MGLACTIONFUNCTOR_H_
+#define MGLACTIONFUNCTOR_H_
 
 #include "mglMessage.h"
 
-class mglGuiActionFunctor
+class mglActionFunctor
 {
 public:
-	mglGuiActionFunctor();
+	mglActionFunctor();
 
 	virtual mglMessage* operator () (mglMessage* message);
 };
 
 
-#endif /* MGLGUIACTIONFUNCTOR_H_ */
+#endif /* MGLACTIONFUNCTOR_H_ */

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <queue>
 
 #include "mglTimer.h"
 #include "mglDebug/mglLogger.h"
@@ -99,6 +100,7 @@ public:
 	mglLibraryInfo* m_libInfo;
 
 	void processEvents();
+	void addMessage(mglMessage* mess);
 
 private:
 	int m_pixelformat;
@@ -131,6 +133,8 @@ private:
 	mglGuiObject* m_ContextAnimation;
 
 	mglGuiObject* m_ValueEditor;
+
+	std::queue<mglMessage*> m_MessageQueue;
 };
 
 

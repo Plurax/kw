@@ -78,7 +78,7 @@ mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValStr
 	}
 }
 
-mglGuiActionFunctor* mglGuiLibManager::createGuiAction(mglValString* libname, mglValString* classname)
+mglActionFunctor* mglGuiLibManager::createGuiAction(mglValString* libname, mglValString* classname)
 {
 	INIT_LOG("mglGuiLibManager", "createGuiAction(string* libname, string* classname)");
 	// Found the requested library in the map?

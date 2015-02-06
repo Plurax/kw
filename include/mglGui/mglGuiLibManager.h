@@ -57,7 +57,7 @@ public:
 	void init();
 
 	mglGuiObject* createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration);
-	mglGuiActionFunctor* createGuiAction(mglValString* libname, mglValString* classname);
+	mglActionFunctor* createGuiAction(mglValString* libname, mglValString* classname);
 
 private:
 	map<mglValString, mglGuiLibHandle*> m_loadedGuiLibraries;

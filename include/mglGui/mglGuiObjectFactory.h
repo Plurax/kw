@@ -9,7 +9,7 @@
 #define MGLGUIOBJECTFACTORY_H_
 
 #include "mglGui/mglGuiObjectFactory.h"
-#include "mglGui/mglGuiActionFunctor.h"
+#include "mglActionFunctor.h"
 #include "mglValues/mglValString.h"
 #include <memory>
 

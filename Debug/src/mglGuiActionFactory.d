@@ -1,6 +1,6 @@
-src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
+src/mglGuiActionFactory.d: ../src/mglGuiActionFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglActionFunctor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibraryInfo.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
@@ -11,6 +11,7 @@ src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogChannel.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogDevice.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h \
+ /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValString.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValCoord.h \
@@ -39,14 +40,13 @@ src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglDebug.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglTechnicalException.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglLibHandle.h
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFactory.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiActionFunctor.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglActionFunctor.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
@@ -67,6 +67,8 @@ src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
 /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogDevice.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObject.h:
+
+/home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglValues/mglValColor.h:
 
@@ -123,8 +125,6 @@ src/mglGui/mglGuiActionFactory.d: ../src/mglGui/mglGuiActionFactory.cpp \
 /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglTechnicalException.h:
-
-/home/cromas/git/mgl/workspace/MGL/include/mglMessage.h:
 
 /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h:
 
