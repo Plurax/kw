@@ -1129,7 +1129,7 @@ void mglSystem::setMessageHandlers(DOMNode* _currentElement)
 	DOMNodeList*      children = currentElement->getChildNodes();
 	const  XMLSize_t nodeCount = children->getLength();
 
-	XMLCh* TAG_Font = XMLString::transcode("Handler");
+	XMLCh* TAG_Handler = XMLString::transcode("Handler");
 
 	// For all nodes, children of "GUI" in the XML tree.
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -1142,7 +1142,7 @@ void mglSystem::setMessageHandlers(DOMNode* _currentElement)
 			// Found node which is an Element. Re-cast node as element
 			DOMElement* currentElement
 						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_Font))
+			if ( XMLString::equals(currentElement->getTagName(), TAG_Handler))
 			{
 				loadMessageHandler(currentElement);
 			}
@@ -1191,7 +1191,6 @@ void mglSystem::loadMessageHandler(DOMNode* _currentElement)
 			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerLib))
 			{
 				file_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
-				LOG_TRACE("Got Font from file: " << (*file_str));
 			}
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerClass))
