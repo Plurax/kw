@@ -69,7 +69,6 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 	XMLCh* TAG_FontFile = XMLString::transcode("file");
 	XMLCh* TAG_FontSize = XMLString::transcode("size");
 	XMLCh* TAG_FontName = XMLString::transcode("name");
-	XMLCh* TAG_AdvanceString= XMLString::transcode("AdvanceString"); // This is a possibility to preload custom characters into the fontmap
 
 	int fontsize = 0;
 	mglValString* file_str = NULL;
@@ -105,16 +104,10 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 				name_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
 			}
 
-			if ( XMLString::equals(currentElement->getTagName(), TAG_AdvanceString))
-			{
-				advance_str = new string(XMLString::transcode(currentElement->getTextContent()));
-				LOG_DEBUG("Advancing font with ");
-			}
-
 		}
 	}
 
-	AddFont(fontsize, name_str, advance_str, file_str);
+	AddFont(fontsize, name_str, file_str);
 
 	delete name_str;
 	delete file_str;
@@ -123,12 +116,10 @@ void mglFontProvider::loadFont(DOMNode* _currentElement)
 	XMLString::release(&TAG_FontFile);
 	XMLString::release(&TAG_FontName);
 	XMLString::release(&TAG_FontSize);
-	XMLString::release(&TAG_AdvanceString);
-
 }
 
 // this will add a font to the list
-void mglFontProvider::AddFont(int _size, mglValString* _name, string* _AdvanceString, mglValString* _file)
+void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _file)
 {
 	INIT_LOG("mglFontProvider", "AddFont(int _size, mglValString* _name, string* _AdvanceString, mglValString* _file)");
 

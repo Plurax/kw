@@ -102,7 +102,7 @@ mglGuiObject::~mglGuiObject()
 }
 
 
-void mglGuiObject::Connect(mglActionFunctor* func)
+void mglGuiObject::Connect(mglMessageHandler* func)
 {
 	m_GuiAction = func;
 }
@@ -112,7 +112,7 @@ mglMessage* mglGuiObject::ProcessMessage(mglMessage* message)
 	return (*m_GuiAction)(message);
 }
 
-mglActionFunctor* mglGuiObject::getGuiAction()
+mglMessageHandler* mglGuiObject::getGuiAction()
 {
 	return m_GuiAction;
 }

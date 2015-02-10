@@ -6,17 +6,17 @@
  */
 
 #include "mglDebug/mglLogger.h"
-#include "mglActionFunctor.h"
+#include "mglMessageHandler.h"
 #include "mglMessage.h"
 
 
 
-mglActionFunctor::mglActionFunctor()
+mglMessageHandler::mglMessageHandler()
 {
 }
 
 
-mglMessage* mglActionFunctor::operator () (mglMessage* message)
+mglMessage* mglMessageHandler::operator () (mglMessage* message)
 {
 	INIT_LOG("mglGuiActionFunctor", "operator() (mglMessage* message)");
 	LOG_TRACE("Testfunction called!");

@@ -16,7 +16,7 @@
 
 #include <GL/glx.h>    /* this includes the necessary X headers */
 #include <GL/gl.h>
-
+#include <mglMessageHandler.h>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -29,7 +29,6 @@
 
 #include "mglMessage.h"
 #include "mglValues/mglValColor.h"
-#include "mglActionFunctor.h"
 #include "mglValues/mglValCoord.h"
 
 // Those are bit definitions for special features of several objects:
@@ -127,10 +126,10 @@ public:
 	float GetHeight();
 	void SetHeight(float uiHeight);
 
-	virtual void Connect(mglActionFunctor* func);
+	virtual void Connect(mglMessageHandler* func);
 	mglMessage* ProcessMessage(mglMessage* message);
 
-	mglActionFunctor* getGuiAction();
+	mglMessageHandler* getGuiAction();
 
 	virtual void AddChild(mglGuiObject *Child);
 	void RemoveChild(uint ChildID);
@@ -158,7 +157,7 @@ protected:
 	uint uiElementState; // State of element, inactive, focussed, selected
 	unsigned long m_ulOptionMask;
 
-	mglActionFunctor* m_GuiAction;
+	mglMessageHandler* m_GuiAction;
 
 	mglValCoord m_Position;
 

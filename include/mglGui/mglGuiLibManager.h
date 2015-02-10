@@ -22,13 +22,12 @@
 #include <errno.h>
 #include <stdexcept>
 #include <dlfcn.h>
+#include <mglMessageHandlerFactory.h>
+#include <mglMessageHandlerLibHandle.h>
 
 #include "mglGui/mglGuiObject.h"
 #include "mglGui/mglGuiLibHandle.h"
 #include "mglGui/mglGuiObjectFactory.h"
-#include "mglGui/mglGuiActionFactory.h"
-#include "mglGui/mglGuiActionLibHandle.h"
-
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -57,12 +56,12 @@ public:
 	void init();
 
 	mglGuiObject* createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration);
-	mglActionFunctor* createGuiAction(mglValString* libname, mglValString* classname);
+	mglMessageHandler* createMessageHandler(mglValString* libname, mglValString* classname);
 
 private:
 	map<mglValString, mglGuiLibHandle*> m_loadedGuiLibraries;
 
-	map<mglValString, mglGuiActionLibHandle*> m_loadedActionLibraries;
+	map<mglValString, mglMessageHandlerLibHandle*> m_loadedActionLibraries;
 };
 
 

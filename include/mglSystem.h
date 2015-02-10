@@ -102,6 +102,9 @@ public:
 	void processEvents();
 	void addMessage(mglMessage* mess);
 
+	void setMessageHandlers(DOMNode* _currentElement);
+	void loadMessageHandler(DOMNode* _currentElement);
+
 private:
 	int m_pixelformat;
 

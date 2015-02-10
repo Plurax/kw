@@ -8,8 +8,8 @@
 #ifndef MGLGUIOBJECTFACTORY_H_
 #define MGLGUIOBJECTFACTORY_H_
 
+#include <mglMessageHandler.h>
 #include "mglGui/mglGuiObjectFactory.h"
-#include "mglActionFunctor.h"
 #include "mglValues/mglValString.h"
 #include <memory>
 

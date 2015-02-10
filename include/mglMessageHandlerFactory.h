@@ -8,7 +8,7 @@
 #ifndef MGLGUIACTIONFUNCTORFACTORY_H_
 #define MGLGUIACTIONFUNCTORFACTORY_H_
 
-#include <mglActionFunctor.h>
+#include <mglMessageHandler.h>
 #include "mglLibraryInfo.h"
 #include "mglValues/mglValString.h"
 #include <memory>
@@ -16,17 +16,17 @@
 using namespace std;
 
 
-class mglGuiActionFactory
+class mglMessageHandlerFactory
 {
 public:
-	virtual ~mglGuiActionFactory();
+	virtual ~mglMessageHandlerFactory();
 	virtual mglLibraryInfo* getLibInfo();
-	virtual mglActionFunctor* createGuiAction(mglValString* classname);
+	virtual mglMessageHandler* createMessageHandler(mglValString* classname);
 };
 
 
-typedef mglGuiActionFactory* (*GuiActFctCreateFunc)();
-typedef void (*GuiActDestroyFunc)(mglGuiActionFactory*);
+typedef mglMessageHandlerFactory* (*GuiActFctCreateFunc)();
+typedef void (*GuiActDestroyFunc)(mglMessageHandlerFactory*);
 
 
 #endif /* MGLGUIACTIONFUNCTORFACTORY_H_ */

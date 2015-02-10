@@ -11,15 +11,15 @@
 
 
 
+#include <mglMessageHandlerFactory.h>
 #include "mglLibHandle.h"
-#include "mglGui/mglGuiActionFactory.h"
 
-class mglGuiActionLibHandle : public mglLibHandle
+class mglMessageHandlerLibHandle : public mglLibHandle
 {
 public:
-	mglGuiActionLibHandle(void* handle, mglLibraryInfo* libinfo, mglGuiActionFactory* factory);
+	mglMessageHandlerLibHandle(void* handle, mglLibraryInfo* libinfo, mglMessageHandlerFactory* factory);
 
-	mglGuiActionFactory* m_factory;
+	mglMessageHandlerFactory* m_factory;
 };
 
 

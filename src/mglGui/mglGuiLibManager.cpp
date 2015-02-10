@@ -19,17 +19,17 @@ mglGuiLibManager::~mglGuiLibManager()
 void mglGuiLibManager::init()
 {
 	mglGuiObjectFactory* defaultObjFactory = new mglGuiObjectFactory();
-	mglGuiActionFactory* defaultActFactory = new mglGuiActionFactory();
+	mglMessageHandlerFactory* defaultActFactory = new mglMessageHandlerFactory();
 
 	mglGuiLibHandle* defaultGuiLibHandle = new mglGuiLibHandle(NULL,
 			mglSystem::Inst().m_libInfo, defaultObjFactory);
 
-	mglGuiActionLibHandle* defaultGuiActionLibHandle = new mglGuiActionLibHandle(NULL,
+	mglMessageHandlerLibHandle* defaultGuiActionLibHandle = new mglMessageHandlerLibHandle(NULL,
 			mglSystem::Inst().m_libInfo, defaultActFactory);
 
 
 	m_loadedGuiLibraries.insert(std::pair<mglValString,mglGuiLibHandle*>(mglValString("mgl"),defaultGuiLibHandle));
-	m_loadedActionLibraries.insert(std::pair<mglValString,mglGuiActionLibHandle*>(mglValString("mgl"),defaultGuiActionLibHandle));
+	m_loadedActionLibraries.insert(std::pair<mglValString,mglMessageHandlerLibHandle*>(mglValString("mgl"),defaultGuiActionLibHandle));
 }
 
 mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration)
@@ -78,15 +78,15 @@ mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValStr
 	}
 }
 
-mglActionFunctor* mglGuiLibManager::createGuiAction(mglValString* libname, mglValString* classname)
+mglMessageHandler* mglGuiLibManager::createMessageHandler(mglValString* libname, mglValString* classname)
 {
 	INIT_LOG("mglGuiLibManager", "createGuiAction(string* libname, string* classname)");
 	// Found the requested library in the map?
-	std::map<mglValString,mglGuiActionLibHandle*>::iterator libIterator = m_loadedActionLibraries.find(*libname);
+	std::map<mglValString,mglMessageHandlerLibHandle*>::iterator libIterator = m_loadedActionLibraries.find(*libname);
 
 	if (libIterator != m_loadedActionLibraries.end())
 	{
-		return libIterator->second->m_factory->createGuiAction(classname);
+		return libIterator->second->m_factory->createMessageHandler(classname);
 	}
 	else
 	{
@@ -99,17 +99,17 @@ mglActionFunctor* mglGuiLibManager::createGuiAction(mglValString* libname, mglVa
 		}
 
 		GuiActFctCreateFunc getfactoryfct = (GuiActFctCreateFunc) dlsym(handle, "getGuiActFactory");
-		mglGuiActionFactory* factory = getfactoryfct();
+		mglMessageHandlerFactory* factory = getfactoryfct();
 		if (factory == NULL)
 			THROW_TECHNICAL_EXCEPTION(666, dlerror());
 
-		mglGuiActionLibHandle* GuiActionLibHandle = new mglGuiActionLibHandle(handle, factory->getLibInfo(), factory);
+		mglMessageHandlerLibHandle* GuiActionLibHandle = new mglMessageHandlerLibHandle(handle, factory->getLibInfo(), factory);
 
 		INIT_LOG("mglGuiLibManager", "createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration)");
 		LOG_DEBUG("Loaded GuiAction library: " << GuiActionLibHandle->getInfo()->asString());
 
-		m_loadedActionLibraries.insert(std::pair<mglValString,mglGuiActionLibHandle*>(*libname,GuiActionLibHandle));
-		return factory->createGuiAction(classname);
+		m_loadedActionLibraries.insert(std::pair<mglValString,mglMessageHandlerLibHandle*>(*libname,GuiActionLibHandle));
+		return factory->createMessageHandler(classname);
 	}
 
     return NULL;

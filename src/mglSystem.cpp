@@ -774,6 +774,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
    XMLCh* TAG_Logging = XMLString::transcode("Logging");
    XMLCh* TAG_Fonts= XMLString::transcode("Fonts");
    XMLCh* TAG_Textures = XMLString::transcode("Textures");
+   XMLCh* TAG_MessageHandlers = XMLString::transcode("MessageHandlers");
 
    try
    {
@@ -840,6 +841,11 @@ void mglSystem::readConfiguration(mglValString& configFile)
 					m_FontProvider->loadFonts(currentNode);
 				}
 
+				if ( XMLString::equals(currentElement->getTagName(), TAG_MessageHandlers))
+				{
+					setMessageHandlers(currentNode);
+				}
+
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Textures))
 				{
 					m_TextureManager->initTextures(currentNode);
@@ -861,14 +867,17 @@ void mglSystem::readConfiguration(mglValString& configFile)
       XMLString::release(&TAG_AppConfiguration);
       XMLString::release(&TAG_Logging);
       XMLString::release(&TAG_Textures);
+      XMLString::release(&TAG_MessageHandlers);
    }
 
    XMLString::release(&TAG_GUI);
    XMLString::release(&TAG_DataLayer);
    XMLString::release(&TAG_Menus);
+   XMLString::release(&TAG_Editors);
    XMLString::release(&TAG_AppConfiguration);
    XMLString::release(&TAG_Logging);
    XMLString::release(&TAG_Textures);
+   XMLString::release(&TAG_MessageHandlers);
 }
 
 /**
@@ -1034,7 +1043,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 					else
 					{
 						// After we created the object we can attach the handler if it exists
-						mglActionFunctor* funct = mglGuiLibManager::Inst().createGuiAction(handlerlibname, handlerclassname);
+						mglMessageHandler* funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
 						thisWindow->Connect(funct);
 					}
 				}
@@ -1103,6 +1112,108 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 	XMLString::release(&TAG_children);
 	XMLString::release(&TAG_editor);
 }
+
+/**
+ * This will configure the message handlers to be assigned on the different message IDs.
+ * This is completely flexible to provider own handlers. The only handler which is intern
+ * is the GUI Message for inputs.
+ *
+ * @param _currentElement
+ */
+void mglSystem::setMessageHandlers(DOMNode* _currentElement)
+{
+	INIT_LOG("mglSystem", "setMessageHandlers(DOMNode* _currentElement)");
+
+	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
+
+	DOMNodeList*      children = currentElement->getChildNodes();
+	const  XMLSize_t nodeCount = children->getLength();
+
+	XMLCh* TAG_Font = XMLString::transcode("Handler");
+
+	// For all nodes, children of "GUI" in the XML tree.
+	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	{
+		DOMNode* currentNode = children->item(xx);
+		if( currentNode->getNodeType() &&  // true is not NULL
+				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		{
+
+			// Found node which is an Element. Re-cast node as element
+			DOMElement* currentElement
+						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+			if ( XMLString::equals(currentElement->getTagName(), TAG_Font))
+			{
+				loadMessageHandler(currentElement);
+			}
+		}
+	}
+
+	XMLString::release(&TAG_Font);
+
+}
+
+
+/**
+ * Load Messagehandlers and assign them to the configured message ids.
+ * @param _currentElement
+ */
+void mglSystem::loadMessageHandler(DOMNode* _currentElement)
+{
+	INIT_LOG("mglSystem", "loadMessageHandler(DOMNode* _currentElement)");
+
+	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
+
+	DOMNodeList*      children = currentElement->getChildNodes();
+	const  XMLSize_t nodeCount = children->getLength();
+
+	XMLCh* TAG_handlerLib = XMLString::transcode("handlerLib");
+	XMLCh* TAG_handlerClass = XMLString::transcode("handlerClass");
+	XMLCh* TAG_MessageId = XMLString::transcode("MessageId");
+
+	int messageId = 0;
+	mglValString* file_str = NULL;
+	mglValString* name_str = NULL;
+	string* size_str = NULL;
+	string* advance_str = NULL;
+
+	// For all nodes, children of "GUI" in the XML tree.
+	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	{
+		DOMNode* currentNode = children->item(xx);
+		if( currentNode->getNodeType() &&  // true is not NULL
+				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		{
+
+			// Found node which is an Element. Re-cast node as element
+			DOMElement* currentElement
+						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerLib))
+			{
+				file_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
+				LOG_TRACE("Got Font from file: " << (*file_str));
+			}
+
+			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerClass))
+			{
+				name_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
+			}
+
+			if ( XMLString::equals(currentElement->getTagName(), TAG_MessageId))
+			{
+				size_str = new string(XMLString::transcode(currentElement->getTextContent()));
+				messageId = atoi(size_str->c_str());;
+			}
+		}
+	}
+
+	XMLString::release(&TAG_handlerLib);
+	XMLString::release(&TAG_handlerClass);
+	XMLString::release(&TAG_MessageId);
+}
+
+
+
 
 /**
  * Creates the datalayer configured below the given element.

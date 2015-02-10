@@ -45,7 +45,7 @@ public:
 
     void loadFonts(DOMNode* currentElement);
 
-    void AddFont(int _size, mglValString* _name, string* _AdvanceString, mglValString* _file);
+    void AddFont(int _size, mglValString* _name, mglValString* _file);
 	FTFont* GetFontByID(unsigned short index);
 	FTFont* GetFontByName(mglValString& _string);
 

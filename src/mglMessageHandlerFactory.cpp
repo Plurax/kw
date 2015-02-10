@@ -5,27 +5,27 @@
  *      Author: cromas
  */
 
-#include "mglGui/mglGuiActionFactory.h"
+#include <mglMessageHandlerFactory.h>
 #include <stdio.h>
 #include "mglSystem.h"
 
 /*
  * For the first time the standard object factory can only return mglWindow!
  */
-mglActionFunctor* mglGuiActionFactory::createGuiAction(mglValString* classname)
+mglMessageHandler* mglMessageHandlerFactory::createMessageHandler(mglValString* classname)
 {
 	if (classname->str()->compare("mglGuiAction") == 0)
-		return new mglActionFunctor();
+		return new mglMessageHandler();
 
 	return NULL;
 }
 
 
-mglLibraryInfo* mglGuiActionFactory::getLibInfo()
+mglLibraryInfo* mglMessageHandlerFactory::getLibInfo()
 {
 	return mglSystem::Inst().m_libInfo;
 }
 
 
-mglGuiActionFactory::~mglGuiActionFactory()
+mglMessageHandlerFactory::~mglMessageHandlerFactory()
 {}

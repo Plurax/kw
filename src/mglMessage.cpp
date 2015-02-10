@@ -23,3 +23,14 @@ int mglMessage::getMessageType()
 {
 	return m_iMessageType;
 }
+
+
+void mglMessage::setMessageText(mglValString& message)
+{
+	m_MessageText = new mglValString(message);
+}
+
+void mglMessage::setMessageText(const char* message)
+{
+	m_MessageText = new mglValString(message);
+}
