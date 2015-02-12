@@ -141,13 +141,13 @@ void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _fil
 		THROW_TECHNICAL_EXCEPTION(3, "Error on loading Font (file)...\n");
 	}
 
-/*	struct stat buffer;
-	if  (stat (_file->str()->c_str(), &buffer) == 0);
+	struct stat buffer;
+	if  (!(stat (_file->str()->c_str(), &buffer) == 0))
 	{
 		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");
 		THROW_TECHNICAL_EXCEPTION(4, "Fontfile " << *_file <<  " does not exist!\n");
 	}
-*/
+
 	FTFont* font = new FTTextureFont(_file->str()->c_str());
 
 	font->FaceSize(_size); // Set the size initially - textures are loaded automatically by FTGL (SPEED!)
