@@ -8,7 +8,7 @@
 
 
 
-#include "mglSelectionContext.h"
+#include "mglGui/mglSelectionContext.h"
 
 mglSelectionContext::mglSelectionContext()
 {

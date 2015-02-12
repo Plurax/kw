@@ -5,31 +5,37 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/mglGui/mglDraggingContext.cpp \
+../src/mglGui/mglFontProvider.cpp \
 ../src/mglGui/mglGuiLibHandle.cpp \
 ../src/mglGui/mglGuiLibManager.cpp \
 ../src/mglGui/mglGuiObject.cpp \
 ../src/mglGui/mglGuiObjectFactory.cpp \
 ../src/mglGui/mglInputMessage.cpp \
+../src/mglGui/mglSelectionContext.cpp \
 ../src/mglGui/mglTexture.cpp \
 ../src/mglGui/mglTextureManager.cpp 
 
 OBJS += \
 ./src/mglGui/mglDraggingContext.o \
+./src/mglGui/mglFontProvider.o \
 ./src/mglGui/mglGuiLibHandle.o \
 ./src/mglGui/mglGuiLibManager.o \
 ./src/mglGui/mglGuiObject.o \
 ./src/mglGui/mglGuiObjectFactory.o \
 ./src/mglGui/mglInputMessage.o \
+./src/mglGui/mglSelectionContext.o \
 ./src/mglGui/mglTexture.o \
 ./src/mglGui/mglTextureManager.o 
 
 CPP_DEPS += \
 ./src/mglGui/mglDraggingContext.d \
+./src/mglGui/mglFontProvider.d \
 ./src/mglGui/mglGuiLibHandle.d \
 ./src/mglGui/mglGuiLibManager.d \
 ./src/mglGui/mglGuiObject.d \
 ./src/mglGui/mglGuiObjectFactory.d \
 ./src/mglGui/mglInputMessage.d \
+./src/mglGui/mglSelectionContext.d \
 ./src/mglGui/mglTexture.d \
 ./src/mglGui/mglTextureManager.d 
 

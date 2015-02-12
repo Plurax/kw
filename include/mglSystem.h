@@ -25,7 +25,7 @@
 #include "mglBase.h"
 #include "mglMessage.h"
 #include "mglAppConfiguration.h"
-#include "mglSelectionContext.h"
+#include "mglGui/mglSelectionContext.h"
 
 #include "mglValues/mglValString.h"
 
