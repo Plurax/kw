@@ -1149,7 +1149,7 @@ void mglSystem::setMessageHandlers(DOMNode* _currentElement)
 		}
 	}
 
-	XMLString::release(&TAG_Font);
+	XMLString::release(&TAG_Handler);
 
 }
 
