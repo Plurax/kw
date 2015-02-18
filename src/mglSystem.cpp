@@ -30,7 +30,7 @@ mglSystem::mglSystem()
  *
  * @param ptr - flushGL function pointer which is called by Draw after rendering.
  */
-void mglSystem::init(void (*ptr)(void))
+void mglSystem::init(void (*ptr)(void), mglValString& configfile)
 {
 	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
 
@@ -74,7 +74,6 @@ void mglSystem::init(void (*ptr)(void))
 		m_vSelectionContexts.push_back(new mglSelectionContext());
 	}
 
-	mglValString configfile("Configuration.xml");
 	readConfiguration(configfile);
 
 	m_CurrentMainFrame = NULL;

@@ -11,12 +11,13 @@
 mglMessage::mglMessage(int messagetype)
 {
 	m_iMessageType = messagetype;
+	m_MessageText = NULL;
 }
 
 
 mglMessage::~mglMessage()
 {
-
+	delete m_MessageText;
 }
 
 int mglMessage::getMessageType()
@@ -33,4 +34,9 @@ void mglMessage::setMessageText(mglValString& message)
 void mglMessage::setMessageText(const char* message)
 {
 	m_MessageText = new mglValString(message);
+}
+
+mglValString* mglMessage::getMessageText()
+{
+	return m_MessageText;
 }

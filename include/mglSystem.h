@@ -54,7 +54,7 @@ using namespace xercesc;
 class mglSystem
 {
 public:
-	void init(void (*_flushGL)());
+	void init(void (*_flushGL)(), mglValString& configfile);
 	~mglSystem();
 
 	static mglSystem& Inst()

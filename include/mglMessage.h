@@ -24,13 +24,15 @@ public:
 	~mglMessage();
 
 	int getMessageType();
-	mglValString* m_MessageText;
 
 	void setMessageText(mglValString& message);
 	void setMessageText(const char* message);
 
+	mglValString* getMessageText();
+
 protected:
 	int m_iMessageType;
+	mglValString* m_MessageText;
 
 };
 
