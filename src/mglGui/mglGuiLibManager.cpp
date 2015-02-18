@@ -29,7 +29,7 @@ void mglGuiLibManager::init()
 
 
 	m_loadedGuiLibraries.insert(std::pair<mglValString,mglGuiLibHandle*>(mglValString("mgl"),defaultGuiLibHandle));
-	m_loadedActionLibraries.insert(std::pair<mglValString,mglMessageHandlerLibHandle*>(mglValString("mgl"),defaultGuiActionLibHandle));
+	m_loadedMessageHandlerLibraries.insert(std::pair<mglValString,mglMessageHandlerLibHandle*>(mglValString("mgl"),defaultGuiActionLibHandle));
 }
 
 mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration)
@@ -82,9 +82,9 @@ mglMessageHandler* mglGuiLibManager::createMessageHandler(mglValString* libname,
 {
 	INIT_LOG("mglGuiLibManager", "createGuiAction(string* libname, string* classname)");
 	// Found the requested library in the map?
-	std::map<mglValString,mglMessageHandlerLibHandle*>::iterator libIterator = m_loadedActionLibraries.find(*libname);
+	std::map<mglValString,mglMessageHandlerLibHandle*>::iterator libIterator = m_loadedMessageHandlerLibraries.find(*libname);
 
-	if (libIterator != m_loadedActionLibraries.end())
+	if (libIterator != m_loadedMessageHandlerLibraries.end())
 	{
 		return libIterator->second->m_factory->createMessageHandler(classname);
 	}
@@ -108,7 +108,7 @@ mglMessageHandler* mglGuiLibManager::createMessageHandler(mglValString* libname,
 		INIT_LOG("mglGuiLibManager", "createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration)");
 		LOG_DEBUG("Loaded GuiAction library: " << GuiActionLibHandle->getInfo()->asString());
 
-		m_loadedActionLibraries.insert(std::pair<mglValString,mglMessageHandlerLibHandle*>(*libname,GuiActionLibHandle));
+		m_loadedMessageHandlerLibraries.insert(std::pair<mglValString,mglMessageHandlerLibHandle*>(*libname,GuiActionLibHandle));
 		return factory->createMessageHandler(classname);
 	}
 

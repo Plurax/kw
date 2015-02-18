@@ -61,7 +61,7 @@ public:
 private:
 	map<mglValString, mglGuiLibHandle*> m_loadedGuiLibraries;
 
-	map<mglValString, mglMessageHandlerLibHandle*> m_loadedActionLibraries;
+	map<mglValString, mglMessageHandlerLibHandle*> m_loadedMessageHandlerLibraries;
 };
 
 

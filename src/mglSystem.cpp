@@ -1115,8 +1115,8 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 
 /**
  * This will configure the message handlers to be assigned on the different message IDs.
- * This is completely flexible to provider own handlers. The only handler which is intern
- * is the GUI Message for inputs.
+ * This is completely flexible to provide own handlers. The only handler which is intern
+ * is the GUI Message for inputs with ID 0.
  *
  * @param _currentElement
  */
@@ -1171,11 +1171,10 @@ void mglSystem::loadMessageHandler(DOMNode* _currentElement)
 	XMLCh* TAG_handlerClass = XMLString::transcode("handlerClass");
 	XMLCh* TAG_MessageId = XMLString::transcode("MessageId");
 
-	int messageId = 0;
-	mglValString* file_str = NULL;
-	mglValString* name_str = NULL;
-	string* size_str = NULL;
-	string* advance_str = NULL;
+	int messageId = -1; // -1 is initial faulty - 0 is forbidden (internal gui messages)
+	mglValString* handlerlibname = NULL;
+	mglValString* handlerclassname = NULL;
+	string* msgID_str = NULL;
 
 	// For all nodes, children of "GUI" in the XML tree.
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -1190,21 +1189,35 @@ void mglSystem::loadMessageHandler(DOMNode* _currentElement)
 						= dynamic_cast< xercesc::DOMElement* >( currentNode );
 			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerLib))
 			{
-				file_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
+				handlerlibname = new mglValString(XMLString::transcode(currentElement->getTextContent()));
 			}
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerClass))
 			{
-				name_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
+				handlerclassname = new mglValString(XMLString::transcode(currentElement->getTextContent()));
 			}
 
 			if ( XMLString::equals(currentElement->getTagName(), TAG_MessageId))
 			{
-				size_str = new string(XMLString::transcode(currentElement->getTextContent()));
-				messageId = atoi(size_str->c_str());;
+				msgID_str = new string(XMLString::transcode(currentElement->getTextContent()));
+				messageId = atoi(msgID_str->c_str());;
 			}
 		}
 	}
+
+	/* Now create the message handler from the lib and attach it onto the ID
+	 */
+	if (handlerlibname != NULL && handlerclassname != NULL && msgID_str != NULL)
+	{
+		// After we created the object we can attach the handler if it exists
+		mglMessageHandler* funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
+		m_mMessageHandlers.insert(std::pair<int,mglMessageHandler*>(messageId,funct));
+	}
+
+	delete handlerlibname;
+	delete handlerclassname;
+	delete msgID_str;
+	msgID_str = NULL;
 
 	XMLString::release(&TAG_handlerLib);
 	XMLString::release(&TAG_handlerClass);
@@ -1311,7 +1324,21 @@ void mglSystem::processEvents()
 	{
 		mglMessage* processing = m_MessageQueue.front();
 		if (processing->getMessageType() == eMessageType::mtInput)
+		{
 			processInputMessage(static_cast<mglInputMessage*>(processing));
+		}
+		else
+		{
+			/* Search for associated Input type within the message handler map
+			 * and execute it. Otherwise we log an ERR and delete the message.
+			 */
+			mglMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
+			if (findIt != m_mMessageHandlers.end())
+			{
+				// This will execute the handler
+				(*findIt->second)(static_cast<mglInputMessage*>(processing));
+			}
+		}
 		delete processing;
 		m_MessageQueue.pop();
 	}

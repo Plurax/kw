@@ -46,6 +46,9 @@
 
 class mglGuiObject;
 
+typedef map<int, mglMessageHandler*> mglMessageHandlerMap;
+
+
 using namespace xercesc;
 
 class mglSystem
@@ -85,6 +88,8 @@ public:
 	mglGuiObjectMap m_mMainFrames;
 	mglGuiObjectMap m_mMenus;
 	mglGuiObjectMap m_mEditors;
+
+	mglMessageHandlerMap m_mMessageHandlers;
 
 	mglGuiObjectMap m_mGuiObjects;
 
