@@ -42,7 +42,7 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglTechnicalException.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglSelectionContext.h
 
 /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglGuiObjectFactory.h:
 
@@ -130,4 +130,4 @@ src/mglGui/mglGuiObjectFactory.d: ../src/mglGui/mglGuiObjectFactory.cpp \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglSelectionContext.h:

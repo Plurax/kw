@@ -44,7 +44,7 @@ src/mglDataLayer/mglDataSourceManager.d: \
  /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglTexture.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglDebug/mglLogger.h \
  /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h \
- /home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h
+ /home/cromas/git/mgl/workspace/MGL/include/mglGui/mglSelectionContext.h
 
 /home/cromas/git/mgl/workspace/MGL/include/mglReleaseInfo.h:
 
@@ -134,4 +134,4 @@ src/mglDataLayer/mglDataSourceManager.d: \
 
 /home/cromas/git/mgl/workspace/MGL/include/mglAppConfiguration.h:
 
-/home/cromas/git/mgl/workspace/MGL/include/mglSelectionContext.h:
+/home/cromas/git/mgl/workspace/MGL/include/mglGui/mglSelectionContext.h:
