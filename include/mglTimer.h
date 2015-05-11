@@ -8,7 +8,8 @@
 #ifndef MGLTIMER_H_
 #define MGLTIMER_H_
 
-#include <time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 
 class mglTimer
 {
@@ -19,11 +20,11 @@ public:
 
 	mglTimer();
 
-	timespec getDiffTime();
-	timespec getCurrentDiffTime();
+	boost::posix_time::time_duration getDiffTime();
+	boost::posix_time::time_duration getCurrentDiffTime();
 private:
-	timespec m_startTs;
-	timespec m_endTs;
+	boost::posix_time::ptime m_startTs;
+	boost::posix_time::ptime m_endTs;
 
 };
 

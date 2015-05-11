@@ -11,7 +11,7 @@
 #include "mglMessage.h"
 #include "mglValues/mglValCoord.h"
 #include "mglGuiObject.h"
-#include <time.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 // This is the type of input! Not special keys or smth else
 enum eInputType
@@ -52,8 +52,8 @@ public:
 	void setIGRCount(int _cnt);
 	int getIGRCount();
 
-	void setDiffTime(timespec _tspec);
-	timespec getDiffTime();
+	void setDiffTime(boost::posix_time::time_duration _tspec);
+	boost::posix_time::time_duration getDiffTime();
 
 	void setContextTimeEnd(bool flag);
 	bool getContextTimeEnd();
@@ -72,7 +72,7 @@ private:
 	unsigned long m_keySym;
 	int m_iIGRCount;
 	mglGuiObject* m_target;
-	timespec m_DiffTime;
+	boost::posix_time::time_duration m_DiffTime;
 	bool m_ContextAnimationCompleted;
 	mglGuiObject* m_EditedObject;
 

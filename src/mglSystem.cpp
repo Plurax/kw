@@ -10,12 +10,19 @@
 #include <errno.h>
 #include <stdexcept>
 #include "mglReleaseInfo.h"
+
+#include "boost\filesystem.hpp"
+
+#ifdef WIN32
+#include "Windows.h"
+#include <typeinfo>
+#else
 #include <cxxabi.h>
+#endif
 
 #include "mglSystem.h"
 #include "mglValues/mglValCoord.h"
 
-using namespace xercesc;
 using namespace std;
 
 mglSystem::mglSystem()
@@ -30,7 +37,7 @@ mglSystem::mglSystem()
  *
  * @param ptr - flushGL function pointer which is called by Draw after rendering.
  */
-void mglSystem::init(void (*ptr)(void), mglValString& configfile)
+void mglSystem::init(void(*ptr)(), mglValString& configfile)
 {
 	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
 
@@ -54,6 +61,18 @@ void mglSystem::init(void (*ptr)(void), mglValString& configfile)
    {
 	   // Please regard that Locale needs to be set! Otherwise automatic transcoder engine of Xercesc will not work!
 	   XMLPlatformUtils::Initialize();  // Initialize Xerces infrastructure
+
+	   static XMLCh* UTF8_ENCODING = NULL;
+	   XMLTransService::Codes failReason;
+	   XMLPlatformUtils::Initialize(); // first we must create the transservice
+	   UTF8_ENCODING = XMLString::transcode("UTF-8");
+	   UTF8_TRANSCODER =
+		   XMLPlatformUtils::fgTransService->makeNewTranscoderFor(UTF8_ENCODING,
+		   failReason,
+		   1024);
+	   if (!UTF8_TRANSCODER) {
+		   std::cout  << "ERROR: XML::Xerces: INIT: Could not create UTF-8 transcoder";
+	   }
    }
    catch( XMLException& e )
    {
@@ -112,7 +131,8 @@ mglSystem::~mglSystem()
 		it--;
 	}
 
-	   XMLPlatformUtils::Terminate(); // Deinit XERCES
+	delete m_FontProvider;
+   XMLPlatformUtils::Terminate(); // Deinit XERCES
 }
 
 
@@ -141,10 +161,10 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			(Message->getInputType() == eInputIGRRelease))
 	{
 		m_ContextMenuTimer.end();
-		timespec tmpTs = m_ContextMenuTimer.getDiffTime();
+		boost::posix_time::time_duration tmpTs = m_ContextMenuTimer.getDiffTime();
 		m_ContextMenuTimer.clear();
 		Message->setDiffTime(tmpTs);
-		if ((unsigned long)tmpTs.tv_nsec + ((unsigned long)tmpTs.tv_sec * (unsigned long)1000000000) >= m_Configuration.getContextAnimationDelayEnd())
+		if (tmpTs >= m_Configuration.getContextAnimationDelayEnd())
 			Message->setContextTimeEnd(true);
 		else
 			Message->setContextTimeEnd(false);
@@ -158,7 +178,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	 * This can be used to call the creation of a context menu.
 	 * As we only allow one menu at a time, this can only be used by mainframes.
 	 */
-	if ((m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime().tv_nsec >= m_Configuration.getContextAnimationDelayStart())) &&
+	if ((m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime() >= m_Configuration.getContextAnimationDelayStart())) &&
 			(m_ValueEditor == NULL) &&
 			(m_CurrentMenu == NULL))
 	{
@@ -246,9 +266,14 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 							{
 								int status;
 								const std::type_info &ti = typeid(*(Target->getValue()));
+#ifdef WIN32
+								const char* realname = ti.name();
+								valType = mglValString(realname);
+#else
 								char* realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
 								valType = mglValString(realname);
 								free (realname);
+#endif
 
 							}
 
@@ -746,7 +771,9 @@ void mglSystem::readConfiguration(mglValString& configFile)
    struct stat fileStatus;
 
    errno = 0;
-   if(stat(configFile.str()->c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
+   /**/
+//   if(stat(configFile.str()->c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
+   if (boost::filesystem::exists(configFile.str()->c_str()))
    {
        if( errno == ENOENT )      // errno declared by include file errno.h
           throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
@@ -777,10 +804,10 @@ void mglSystem::readConfiguration(mglValString& configFile)
 
    try
    {
-      m_ConfigFileParser->parse( configFile.str()->c_str() );
+	   m_ConfigFileParser->parse(configFile.str()->c_str());
 
       // no need to free this pointer - owned by the parent parser object
-      DOMDocument* xmlDoc = m_ConfigFileParser->getDocument();
+      xercesc::DOMDocument* xmlDoc = m_ConfigFileParser->getDocument();
 
       // Get the top-level element: NAme is "root". No attributes for "root"
 
@@ -856,8 +883,10 @@ void mglSystem::readConfiguration(mglValString& configFile)
    {
       char* message = xercesc::XMLString::transcode( e.getMessage() );
       ostringstream errBuf;
-      errBuf << "Error parsing file: " << message << flush;
-      XMLString::release( &message );
+
+	  mglValString tmp = mglValString(message);
+	  LOG_TRACE(tmp);
+	  XMLString::release(&message);
 
       XMLString::release(&TAG_GUI);
       XMLString::release(&TAG_DataLayer);
@@ -867,6 +896,14 @@ void mglSystem::readConfiguration(mglValString& configFile)
       XMLString::release(&TAG_Logging);
       XMLString::release(&TAG_Textures);
       XMLString::release(&TAG_MessageHandlers);
+
+   }
+   catch (exception& e)
+   {
+//	   char* message = xercesc::XMLString::transcode(e.);
+
+	   mglValString tmp = mglValString("Huh!");
+	   LOG_TRACE(tmp);
    }
 
    XMLString::release(&TAG_GUI);
@@ -1052,7 +1089,7 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 
 				// We are at parent level - so this is a main frame
 				if (parent == NULL)
-					listToAdd.insert(std::pair<mglValString,mglGuiObject*>(mglValString(*name),thisWindow));
+					listToAdd.insert(std::pair<mglValString, mglGuiObject*>(mglValString(*name), thisWindow));
 				else
 				{
 					thisWindow->setParentWindow(parent);

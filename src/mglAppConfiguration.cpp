@@ -28,8 +28,8 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 	unsigned long int uisReadVal = 0;
 	char* valTagText;
 
-	m_contextDelayStart = 10;
-	m_contextDelayEnd = 10;
+	m_contextDelayStart = boost::posix_time::duration_from_string(std::string("00:00:00.100"));;
+	m_contextDelayEnd = boost::posix_time::duration_from_string(std::string("00:00:00.100"));
 
 
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -86,8 +86,8 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayStart))
 						{
 							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%lu", &uisReadVal);
-							m_contextDelayStart = uisReadVal;
+							
+							m_contextDelayStart = boost::posix_time::duration_from_string(valTagText);;
 							LOG_DEBUG("DelayStart: " << m_contextDelayStart);
 							XMLString::release(&valTagText);
 						}
@@ -95,8 +95,8 @@ void mglAppConfiguration::init(DOMNode* appconfig)
 						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayEnd))
 						{
 							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%lu", &uisReadVal);
-							m_contextDelayEnd = uisReadVal;
+
+							m_contextDelayEnd = boost::posix_time::duration_from_string(valTagText);;
 							XMLString::release(&valTagText);
 						}
 
@@ -156,12 +156,12 @@ mglValString* mglAppConfiguration::getContextAnimationLib()
 	return m_ContextAnimationLib;
 }
 
-unsigned long mglAppConfiguration::getContextAnimationDelayStart()
+boost::posix_time::time_duration mglAppConfiguration::getContextAnimationDelayStart()
 {
 	return m_contextDelayStart;
 }
 
-unsigned long mglAppConfiguration::getContextAnimationDelayEnd()
+boost::posix_time::time_duration mglAppConfiguration::getContextAnimationDelayEnd()
 {
 	return m_contextDelayEnd;
 }

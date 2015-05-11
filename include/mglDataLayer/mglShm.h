@@ -23,6 +23,9 @@
 using namespace std;
 using namespace xercesc;
 
+#ifdef WIN32
+#else
+
 class mglShm : public mglDataSource
 {
 public:
@@ -36,9 +39,12 @@ public:
 	bool unlockSegment();
 	bool isLocked();
 private:
+#ifndef WIN32
 	  key_t m_key, m_semkey;
+#endif
 	  int   m_shmid, m_semid, m_size;
 	  char  *m_segptr;
 };
 
 #endif /* MGLSHM_H_ */
+#endif

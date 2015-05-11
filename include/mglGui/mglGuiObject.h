@@ -14,8 +14,15 @@
 #include <string>
 
 
+#ifdef WIN32
+#include <Windows.h>
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#else
 #include <GL/glx.h>    /* this includes the necessary X headers */
 #include <GL/gl.h>
+#endif
+
 #include <mglMessageHandler.h>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
@@ -132,7 +139,7 @@ public:
 	mglMessageHandler* getGuiAction();
 
 	virtual void AddChild(mglGuiObject *Child);
-	void RemoveChild(uint ChildID);
+	void RemoveChild(unsigned int ChildID);
 	void RemoveChild(mglValString ChildName);
 	mglGuiObjectList* getChildren();
 	virtual mglGuiObject* getChildByID(unsigned int ID);
@@ -154,7 +161,7 @@ public:
 	virtual bool isVisible() { return m_bVisible;};
 
 protected:
-	uint uiElementState; // State of element, inactive, focussed, selected
+	unsigned int uiElementState; // State of element, inactive, focussed, selected
 	unsigned long m_ulOptionMask;
 
 	mglMessageHandler* m_GuiAction;

@@ -25,6 +25,8 @@
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 using namespace xercesc;
 
 class mglAppConfiguration
@@ -34,8 +36,8 @@ public:
 
 	unsigned short getYRes();
 	unsigned short getXRes();
-	unsigned long getContextAnimationDelayStart();
-	unsigned long getContextAnimationDelayEnd();
+	boost::posix_time::time_duration getContextAnimationDelayStart();
+	boost::posix_time::time_duration getContextAnimationDelayEnd();
 	bool getFullScreen();
 
 	mglValString* getContextAnimationClass();
@@ -48,9 +50,15 @@ private:
 	 * This is a milli second value which sets the time difference for opening a context menu.
 	 * The context menu can be opened by holding the touchdown or the IGR press longer than this time span.
 	 */
-	unsigned long m_contextDelayStart;
-	unsigned long m_contextDelayEnd;
+	boost::posix_time::time_duration m_contextDelayStart;
+	boost::posix_time::time_duration m_contextDelayEnd;
 	bool m_FullScreen = false;
+	/**
+	* On windows this is a hack to allow a window which covers the complete screen, this allows composition mode with transparent background
+	* We create a window which has a y resolution which is one pixel greater than the desired resolution and set its position to 0,-1
+	* Therefore we can use all positions of the configuration as intendet, the 1 px row is not addressed by the code and off screen.
+	*/
+	bool m_OnePxAbove = false; 
 
 	mglValString* m_ContextAnimationClass;
 	mglValString* m_ContextAnimationLib;

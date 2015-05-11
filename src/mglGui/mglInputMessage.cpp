@@ -75,13 +75,13 @@ int mglInputMessage::getIGRCount()
 }
 
 
-void mglInputMessage::setDiffTime(timespec _tspec)
+void mglInputMessage::setDiffTime(boost::posix_time::time_duration _tspec)
 {
 	m_DiffTime = _tspec;
 }
 
 
-timespec mglInputMessage::getDiffTime()
+boost::posix_time::time_duration mglInputMessage::getDiffTime()
 {
 	return m_DiffTime;
 }

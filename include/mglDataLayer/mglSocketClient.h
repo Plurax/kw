@@ -12,8 +12,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/types.h>
+
+#ifdef WIN32
+#else
+
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
@@ -53,5 +57,5 @@ private:
    int m_Size;
 };
 
-
+#endif
 #endif /* MGLSOCKET_H_ */

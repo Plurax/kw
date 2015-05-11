@@ -7,8 +7,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
+
+
+#ifdef WIN32
+
+#else
+
 #include <sys/ipc.h>
 #include <sys/shm.h>
+
 #include <ctype.h>
 #include <string.h>
 
@@ -24,6 +31,8 @@
 #include "mglDataLayer/mglShm.h"
 #include "mglDebug/mglLogger.h"
 #include "mglValues/mglValString.h"
+
+
 
 mglShm::mglShm(DOMElement* configuration)
 {
@@ -139,3 +148,4 @@ bool mglShm::isLocked()
 	return false;
 }
 
+#endif

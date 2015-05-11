@@ -21,7 +21,12 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <stdexcept>
+
+#ifdef WIN32
+#else
 #include <dlfcn.h>
+#endif
+
 #include <mglMessageHandlerFactory.h>
 #include <mglMessageHandlerLibHandle.h>
 

@@ -8,12 +8,20 @@
 #ifndef MGLTEXTURE_H_
 #define MGLTEXTURE_H_
 
+#ifdef WIN32
+#include <Windows.h>
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#else
+#include <GL/glx.h>    /* this includes the necessary X headers */
+#include <GL/gl.h>
+#endif
+
+
 #include "mglValues/mglValString.h"
 #include "mglDebug/mglLogger.h"
 #include "FreeImage.h"
 
-#include <GL/glx.h>    /* this includes the necessary X headers */
-#include <GL/gl.h>
 
 
 /**

@@ -10,14 +10,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
+#include <errno.h>
+#include <mglDataLayer/mglSocketClient.h>
+
+#ifdef WIN32
+#else
+
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <errno.h>
-#include <mglDataLayer/mglSocketClient.h>
 
 using namespace std;
 
@@ -181,3 +185,4 @@ mglValString mglSocketClient::sendRequest(mglValString* request)
 
 	return mglValString(reception_buffer);
 }
+#endif

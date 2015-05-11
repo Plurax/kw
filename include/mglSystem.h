@@ -43,6 +43,7 @@
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/Transcoders/Win32/Win32TransService.hpp>
 
 class mglGuiObject;
 
@@ -54,13 +55,27 @@ using namespace xercesc;
 class mglSystem
 {
 public:
-	void init(void (*_flushGL)(), mglValString& configfile);
+	void init(void(*ptr)(), mglValString& configfile);
+
 	~mglSystem();
 
 	static mglSystem& Inst()
 	{
+		/* This is a windows hack to get the mglSystem instance of 
+		the main executable accessible within the DLLs
+		Linux OS should work out of the box because we load shared libs with global symbols
+		available. So the singleton will be unique even in shared object code access.
+		*/
+#ifdef _USRDLL
+		typedef mglSystem* (*GetSystemFn)();
+		HMODULE mod = GetModuleHandle(NULL);
+		GetSystemFn getSystem = (GetSystemFn)::GetProcAddress(mod, "GetSystem");
+		mglSystem* _instance = getSystem();
+		return *_instance;
+#else
 		static mglSystem _instance;
 		return _instance;
+#endif
 	}
 
 	void Draw(void);
@@ -110,6 +125,9 @@ public:
 	void setMessageHandlers(DOMNode* _currentElement);
 	void loadMessageHandler(DOMNode* _currentElement);
 
+
+	// On windows we force to use UTF8 - so we need to create a seperate Transcoder!
+	XMLTranscoder* UTF8_TRANSCODER = NULL;
 private:
 	int m_pixelformat;
 
@@ -121,8 +139,6 @@ private:
 
     XMLCh* m_TAG_ApplicationSettings;
 
-	Display *m_display;
-	Window m_window;
 	bool m_dbf;
 
 	bool m_ButtonDown; // is mouse or IGR button down?

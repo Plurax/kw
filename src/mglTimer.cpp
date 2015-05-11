@@ -14,51 +14,29 @@ mglTimer::mglTimer()
 
 void mglTimer::clear()
 {
-	m_startTs.tv_nsec = 0;
-	m_startTs.tv_sec = 0;
-
-	m_endTs.tv_nsec = 0;
-	m_endTs.tv_sec = 0;
+// Todo: Necessary?
 }
 
 void mglTimer::start()
 {
-	clock_gettime(CLOCK_REALTIME, &m_startTs);
+	m_startTs = boost::posix_time::microsec_clock::local_time();
 }
 
 
 void mglTimer::end()
 {
-	clock_gettime(CLOCK_REALTIME, &m_endTs);
+	m_endTs = boost::posix_time::microsec_clock::local_time();
 }
 
-timespec mglTimer::getDiffTime()
+boost::posix_time::time_duration mglTimer::getDiffTime()
 {
-	timespec temp;
-	if ((m_endTs.tv_nsec - m_startTs.tv_nsec)<0)
-	{
-		temp.tv_sec = m_endTs.tv_sec - m_startTs.tv_sec-1;
-		temp.tv_nsec = 1000000000 + m_endTs.tv_nsec - m_startTs.tv_nsec;
-	} else {
-		temp.tv_sec = m_endTs.tv_sec - m_startTs.tv_sec;
-		temp.tv_nsec = m_endTs.tv_nsec - m_startTs.tv_nsec;
-	}
-	return temp;
+	boost::posix_time::time_duration temp;
+	return m_endTs - m_startTs;
 }
 
 
-timespec mglTimer::getCurrentDiffTime()
+boost::posix_time::time_duration mglTimer::getCurrentDiffTime()
 {
-	timespec now;
-	clock_gettime(CLOCK_REALTIME, &now);
-	timespec temp;
-	if ((now.tv_nsec - m_startTs.tv_nsec)<0)
-	{
-		temp.tv_sec = now.tv_sec - m_startTs.tv_sec-1;
-		temp.tv_nsec = 1000000000 + now.tv_nsec - m_startTs.tv_nsec;
-	} else {
-		temp.tv_sec = now.tv_sec - m_startTs.tv_sec;
-		temp.tv_nsec = now.tv_nsec - m_startTs.tv_nsec;
-	}
-	return temp;
+	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+	return now - m_startTs;
 }

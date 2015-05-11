@@ -3,6 +3,9 @@
 #include "mglDebug/mglDebug.h"
 #include <sys/stat.h>
 
+#include "boost\filesystem.hpp"
+
+
 // constructor
 mglFontProvider::mglFontProvider(void)
 {
@@ -141,8 +144,7 @@ void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _fil
 		THROW_TECHNICAL_EXCEPTION(3, "Error on loading Font (file)...\n");
 	}
 
-	struct stat buffer;
-	if  (!(stat (_file->str()->c_str(), &buffer) == 0))
+	if (!boost::filesystem::exists(_file->str()->c_str()))
 	{
 		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");
 		THROW_TECHNICAL_EXCEPTION(4, "Fontfile " << *_file <<  " does not exist!\n");
@@ -151,6 +153,7 @@ void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _fil
 	FTFont* font = new FTTextureFont(_file->str()->c_str());
 
 	font->FaceSize(_size); // Set the size initially - textures are loaded automatically by FTGL (SPEED!)
+	font->CharMap(ft_encoding_unicode);
 	m_VecFonts.push_back(font);
 	m_MapFonts.insert(std::pair<mglValString, FTFont*>(*_name, font));
 }

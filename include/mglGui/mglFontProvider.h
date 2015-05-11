@@ -9,9 +9,15 @@
 #ifndef H_MGL_FONTPROVIDER
 #define H_MGL_FONTPROVIDER
 
-
+#ifdef WIN32
+#include "Windows.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#else
 #include <GL/glx.h>    /* this includes the necessary X headers */
 #include <GL/gl.h>
+#endif
+
 #include <stdio.h>
 #include <vector>
 #include <map>

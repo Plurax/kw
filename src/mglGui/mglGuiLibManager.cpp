@@ -13,7 +13,9 @@ using namespace std;
 
 mglGuiLibManager::~mglGuiLibManager()
 {
-
+/* TODO: Deinit loaded libraries
+* via dlclose and FreeLibrary
+*/
 }
 
 void mglGuiLibManager::init()
@@ -50,17 +52,30 @@ mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValStr
 	}
 	else
 	{
+#ifdef WIN32
+		WCHAR ConvString[200];
+		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
+		HINSTANCE handle = LoadLibrary(ConvString);
+#else
 		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY);
+#endif
 
 		if (!handle)
 		{
-			std::cerr << "GUILibManager: Cannot open library: " << dlerror() << '\n';
+			std::cerr << "GUILibManager: Cannot open library: ";
+#ifndef WIN32
+			std::cerr << dlerror();
+#endif
+			std::cerr << '\n';
 			INIT_LOG("mglGuiLibManager", "createGUIObject(string* libname, string* classname, DOMElement* configuration)");
 			THROW_TECHNICAL_EXCEPTION(666, "Could not load library " << *libname);
 		}
 
-
-		GuiFctCreateFunc getfactoryfct = (GuiFctCreateFunc) dlsym(handle, "getFactory");
+#ifdef WIN32
+		GuiFctCreateFunc getfactoryfct = (GuiFctCreateFunc)GetProcAddress(handle, "getFactory");
+#else
+		GuiFctCreateFunc getfactoryfct = (GuiFctCreateFunc)dlsym(handle, "getFactory");
+#endif
 		mglGuiObjectFactory* factory = getfactoryfct();
 
 		mglGuiLibHandle* GuiLibHandle = new mglGuiLibHandle(handle, factory->getLibInfo(), factory);
@@ -82,7 +97,7 @@ mglMessageHandler* mglGuiLibManager::createMessageHandler(mglValString* libname,
 {
 	INIT_LOG("mglGuiLibManager", "createGuiAction(string* libname, string* classname)");
 	// Found the requested library in the map?
-	std::map<mglValString,mglMessageHandlerLibHandle*>::iterator libIterator = m_loadedMessageHandlerLibraries.find(*libname);
+	std::map<mglValString, mglMessageHandlerLibHandle*>::iterator libIterator = m_loadedMessageHandlerLibraries.find(*libname);
 
 	if (libIterator != m_loadedMessageHandlerLibraries.end())
 	{
@@ -90,18 +105,38 @@ mglMessageHandler* mglGuiLibManager::createMessageHandler(mglValString* libname,
 	}
 	else
 	{
-		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY);
+#ifdef WIN32
+		WCHAR ConvString[200];
+		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
+		HINSTANCE handle = LoadLibrary(ConvString);
+#else
+		void* handle = dlopen(expanded_Libname.str()->c_str(), RTLD_LAZY);
+#endif
 
 		if (!handle)
 		{
-			std::cerr << "Cannot open library: " << dlerror() << '\n';
+			std::cerr << "GUILibManager: Cannot open library: ";
+#ifndef WIN32
+			std::cerr << dlerror();
+#endif
+			std::cerr << "\n";
+
 			// TODO: Throw exception
 		}
-
-		GuiActFctCreateFunc getfactoryfct = (GuiActFctCreateFunc) dlsym(handle, "getGuiActFactory");
+#ifdef WIN32
+		GuiActFctCreateFunc getfactoryfct = (GuiActFctCreateFunc) GetProcAddress(handle, "getGuiActFactory");
+#else
+		GuiActFctCreateFunc getfactoryfct = (GuiActFctCreateFunc)dlsym(handle, "getGuiActFactory");
+#endif
 		mglMessageHandlerFactory* factory = getfactoryfct();
 		if (factory == NULL)
+		{
+#ifdef WIN32
+			THROW_TECHNICAL_EXCEPTION(666, "Error on loading factory function.");
+#else
 			THROW_TECHNICAL_EXCEPTION(666, dlerror());
+#endif
+		}
 
 		mglMessageHandlerLibHandle* GuiActionLibHandle = new mglMessageHandlerLibHandle(handle, factory->getLibInfo(), factory);
 

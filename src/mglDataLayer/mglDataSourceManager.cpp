@@ -44,16 +44,31 @@ mglDataSource* mglDataSourceManager::createDataSource(mglValString* libname, mgl
 	}
 	else
 	{
-		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY);
+#ifdef WIN32
+		WCHAR ConvString[200];
+		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
+		HINSTANCE handle = LoadLibrary(ConvString);
+#else
+		void* handle = dlopen(expanded_Libname.str()->c_str(), RTLD_LAZY);
+#endif
 
 		if (!handle)
 		{
-			std::cerr << "DataSourceManager: Cannot open library: " << dlerror() << '\n';
+			std::cerr << "DataSourceManager: Cannot open library: ";
+#ifndef WIN32
+			std::cerr << dlerror();
+#endif
+			std::cerr << '\n';
 			// TODO: Throw exception
 		}
 
+#ifdef WIN32
+		DataSourceCreateFunc getfactoryfct = (DataSourceCreateFunc) GetProcAddress(handle, "getFactory");
+		LibInfoRetrieveFunc getLibInfofct = (LibInfoRetrieveFunc) GetProcAddress(handle, "getLibInfo");
+#else
 		DataSourceCreateFunc getfactoryfct = (DataSourceCreateFunc) dlsym(handle, "getFactory");
 		LibInfoRetrieveFunc getLibInfofct = (LibInfoRetrieveFunc) dlsym(handle, "getLibInfo");
+#endif
 		mglDataSourceFactory* factory = getfactoryfct();
 		mglLibraryInfo* thisInfo = getLibInfofct();
 		mglDataLibHandle* DataSourceLibHandle = new mglDataLibHandle(handle, thisInfo, factory);

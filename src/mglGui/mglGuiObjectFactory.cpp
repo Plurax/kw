@@ -26,3 +26,9 @@ mglLibraryInfo* mglGuiObjectFactory::getLibInfo()
 {
 	return mglSystem::Inst().m_libInfo;
 }
+
+
+void mglGuiObjectFactory::deleteGuiObject(mglGuiObject* _obj)
+{
+}
+

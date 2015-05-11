@@ -36,6 +36,7 @@ public:
 	virtual ~mglGuiObjectFactory() {};
 	virtual mglLibraryInfo* getLibInfo();
 	virtual mglGuiObject* createGuiObject(mglValString* classname, DOMElement* configuration);
+	virtual void deleteGuiObject(mglGuiObject* _obj);
 };
 
 

@@ -15,12 +15,17 @@
 
 #ifndef H_MGL_TEXTUREMANAGER
 #define H_MGL_TEXTUREMANAGER
+#ifdef WIN32
+#include <Windows.h>
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#else
+#include <GL/glx.h>    /* this includes the necessary X headers */
+#include <GL/gl.h>
+#endif
 
 #define TEXMANAGER  TextureManager::Inst()
 
-
-#include <GL/glx.h>    /* this includes the necessary X headers */
-#include <GL/gl.h>
 #include "FreeImage.h"
 #include <map>
 

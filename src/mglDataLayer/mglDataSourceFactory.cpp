@@ -18,10 +18,10 @@ mglDataSourceFactory::~mglDataSourceFactory()
 
 mglDataSource* mglDataSourceFactory::createDataSource(mglValString* classname, DOMElement* configuration)
 {
-	if (classname->str()->compare("mglShm") == 0)
-		return new mglShm(configuration);
-	if (classname->str()->compare("mglSocketClient") == 0)
-		return new mglSocketClient(configuration);
+//	if (classname->str()->compare("mglShm") == 0)
+//		return new mglShm(configuration);
+//	if (classname->str()->compare("mglSocketClient") == 0)
+//		return new mglSocketClient(configuration);
 	if (classname->str()->compare("mglDataContainer") == 0)
 		return new mglDataContainer(configuration);
 
