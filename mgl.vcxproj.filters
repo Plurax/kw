@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\mglAppConfiguration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglLibHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglLibraryInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglMessageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglMessageHandlerFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglMessageHandlerLibHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglXMLValueReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglDataContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglDataLibHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglDataSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglDataSourceFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglDataSourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglShm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldatalayer\mglSocketClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldebug\mglException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldebug\mglLogChannel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldebug\mglLogDeviceFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldebug\mglLogDeviceStdErr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldebug\mglLogDeviceStdOut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mgldebug\mglLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglDraggingContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglFontProvider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglGuiLibHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglGuiLibManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglGuiObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglGuiObjectFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglInputMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglSelectionContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglgui\mglTextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglvalues\mglValColor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglvalues\mglValCoord.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglvalues\mglValFixedPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglvalues\mglValInteger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglvalues\mglValString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mglvalues\mglValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mglObjectFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglAppConfiguration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglLibHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglLibraryInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglMessageHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglMessageHandlerFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglMessageHandlerLibHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglMessageHandlerLibManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglReleaseInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglXMLValueReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglDataContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglDataLibHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglDataSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglDataSourceFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglDataSourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglShm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldatalayer\mglSocketClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglDebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglLogChannel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglLogDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglLogDeviceFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglLogDeviceStdErr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglLogDeviceStdOut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mgldebug\mglTechnicalException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglDraggingContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglFontProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglGuiLibHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglGuiLibManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglGuiObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglGuiObjectFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglInputMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglSelectionContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglgui\mglTextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglvalues\mglValColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglvalues\mglValCoord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglvalues\mglValFixedPoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglvalues\mglValInteger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglvalues\mglValString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mglvalues\mglValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="doxy\html\annotated.html" />
+    <None Include="doxy\html\classes.html" />
+    <None Include="doxy\html\classmglAppConfiguration-members.html" />
+    <None Include="doxy\html\classmglAppConfiguration.html" />
+    <None Include="doxy\html\classmglDataContainer-members.html" />
+    <None Include="doxy\html\classmglDataContainer.html" />
+    <None Include="doxy\html\classmglDataLibHandle-members.html" />
+    <None Include="doxy\html\classmglDataLibHandle.html" />
+    <None Include="doxy\html\classmglDataSource-members.html" />
+    <None Include="doxy\html\classmglDataSource.html" />
+    <None Include="doxy\html\classmglDataSourceFactory-members.html" />
+    <None Include="doxy\html\classmglDataSourceFactory.html" />
+    <None Include="doxy\html\classmglDataSourceManager-members.html" />
+    <None Include="doxy\html\classmglDataSourceManager.html" />
+    <None Include="doxy\html\classmglDraggingContext-members.html" />
+    <None Include="doxy\html\classmglDraggingContext.html" />
+    <None Include="doxy\html\classmglEventList.html" />
+    <None Include="doxy\html\classmglFontProvider-members.html" />
+    <None Include="doxy\html\classmglFontProvider.html" />
+    <None Include="doxy\html\classmglGuiActionFactory-members.html" />
+    <None Include="doxy\html\classmglGuiActionFactory.html" />
+    <None Include="doxy\html\classmglGuiActionFunctor-members.html" />
+    <None Include="doxy\html\classmglGuiActionFunctor.html" />
+    <None Include="doxy\html\classmglGuiActionLibHandle-members.html" />
+    <None Include="doxy\html\classmglGuiActionLibHandle.html" />
+    <None Include="doxy\html\classmglGuiLibHandle-members.html" />
+    <None Include="doxy\html\classmglGuiLibHandle.html" />
+    <None Include="doxy\html\classmglGuiLibManager-members.html" />
+    <None Include="doxy\html\classmglGuiLibManager.html" />
+    <None Include="doxy\html\classmglGuiObject-members.html" />
+    <None Include="doxy\html\classmglGuiObject.html" />
+    <None Include="doxy\html\classmglGuiObjectFactory-members.html" />
+    <None Include="doxy\html\classmglGuiObjectFactory.html" />
+    <None Include="doxy\html\classmglInputMessage-members.html" />
+    <None Include="doxy\html\classmglInputMessage.html" />
+    <None Include="doxy\html\classmglLibHandle-members.html" />
+    <None Include="doxy\html\classmglLibHandle.html" />
+    <None Include="doxy\html\classmglLibraryInfo-members.html" />
+    <None Include="doxy\html\classmglLibraryInfo.html" />
+    <None Include="doxy\html\classmglLogChannel-members.html" />
+    <None Include="doxy\html\classmglLogChannel.html" />
+    <None Include="doxy\html\classmglLogDevice-members.html" />
+    <None Include="doxy\html\classmglLogDevice.html" />
+    <None Include="doxy\html\classmglLogDeviceFile-members.html" />
+    <None Include="doxy\html\classmglLogDeviceFile.html" />
+    <None Include="doxy\html\classmglLogDeviceStdErr-members.html" />
+    <None Include="doxy\html\classmglLogDeviceStdErr.html" />
+    <None Include="doxy\html\classmglLogDeviceStdOut-members.html" />
+    <None Include="doxy\html\classmglLogDeviceStdOut.html" />
+    <None Include="doxy\html\classmglLogger-members.html" />
+    <None Include="doxy\html\classmglLogger.html" />
+    <None Include="doxy\html\classmglMessage-members.html" />
+    <None Include="doxy\html\classmglMessage.html" />
+    <None Include="doxy\html\classmglMessageHandler-members.html" />
+    <None Include="doxy\html\classmglMessageHandler.html" />
+    <None Include="doxy\html\classmglSelectionContext-members.html" />
+    <None Include="doxy\html\classmglSelectionContext.html" />
+    <None Include="doxy\html\classmglShm-members.html" />
+    <None Include="doxy\html\classmglShm.html" />
+    <None Include="doxy\html\classmglSocket-members.html" />
+    <None Include="doxy\html\classmglSocket.html" />
+    <None Include="doxy\html\classmglSystem-members.html" />
+    <None Include="doxy\html\classmglSystem.html" />
+    <None Include="doxy\html\classmglTechnicalException-members.html" />
+    <None Include="doxy\html\classmglTechnicalException.html" />
+    <None Include="doxy\html\classmglTexture-members.html" />
+    <None Include="doxy\html\classmglTexture.html" />
+    <None Include="doxy\html\classmglTextureManager-members.html" />
+    <None Include="doxy\html\classmglTextureManager.html" />
+    <None Include="doxy\html\classmglTimer-members.html" />
+    <None Include="doxy\html\classmglTimer.html" />
+    <None Include="doxy\html\classmglValColor-members.html" />
+    <None Include="doxy\html\classmglValColor.html" />
+    <None Include="doxy\html\classmglValCoord-members.html" />
+    <None Include="doxy\html\classmglValCoord.html" />
+    <None Include="doxy\html\classmglValFixedPoint-members.html" />
+    <None Include="doxy\html\classmglValFixedPoint.html" />
+    <None Include="doxy\html\classmglValInteger-members.html" />
+    <None Include="doxy\html\classmglValInteger.html" />
+    <None Include="doxy\html\classmglValString-members.html" />
+    <None Include="doxy\html\classmglValString.html" />
+    <None Include="doxy\html\classmglValue-members.html" />
+    <None Include="doxy\html\classmglValue.html" />
+    <None Include="doxy\html\classmglXMLValueReader.html" />
+    <None Include="doxy\html\classstd-members.html" />
+    <None Include="doxy\html\classstd.html" />
+    <None Include="doxy\html\classTextureManager-members.html" />
+    <None Include="doxy\html\classTextureManager.html" />
+    <None Include="doxy\html\dir_003a7cf62a3774cf996c472911033e36.html" />
+    <None Include="doxy\html\dir_00df93488cfbec4ba98602352c2448f9.html" />
+    <None Include="doxy\html\dir_12f56a20b231cdbb35c540e4f6f1bcb0.html" />
+    <None Include="doxy\html\dir_284f10e07199db8d97edfa417a14e1cc.html" />
+    <None Include="doxy\html\dir_2f6540018aa757dff13ecbf51c648c89.html" />
+    <None Include="doxy\html\dir_388a9a259ce907d7295b8edc871b8566.html" />
+    <None Include="doxy\html\dir_38f8b467bb40a69588c5b689d214c7c1.html" />
+    <None Include="doxy\html\dir_61d933af3310bdc9a6da700c616cbff2.html" />
+    <None Include="doxy\html\dir_68267d1309a1af8e8297ef4c3efbcdba.html" />
+    <None Include="doxy\html\dir_d44c64559bbebec7f509842c48db8b23.html" />
+    <None Include="doxy\html\files.html" />
+    <None Include="doxy\html\functions.html" />
+    <None Include="doxy\html\functions_func.html" />
+    <None Include="doxy\html\graph_legend.html" />
+    <None Include="doxy\html\hierarchy.html" />
+    <None Include="doxy\html\index.html" />
+    <None Include="doxy\html\inherits.html" />
+    <None Include="doxy\html\mglAppConfiguration_8h_source.html" />
+    <None Include="doxy\html\mglBase_8h_source.html" />
+    <None Include="doxy\html\mglDataContainer_8h_source.html" />
+    <None Include="doxy\html\mglDataLibHandle_8h_source.html" />
+    <None Include="doxy\html\mglDataSourceFactory_8h_source.html" />
+    <None Include="doxy\html\mglDataSourceManager_8h_source.html" />
+    <None Include="doxy\html\mglDataSource_8h_source.html" />
+    <None Include="doxy\html\mglDebug_8h_source.html" />
+    <None Include="doxy\html\mglDraggingContext_8h_source.html" />
+    <None Include="doxy\html\mglEventList_8h_source.html" />
+    <None Include="doxy\html\mglFontProvider_8h_source.html" />
+    <None Include="doxy\html\mglGuiActionFactory_8h_source.html" />
+    <None Include="doxy\html\mglGuiActionFunctor_8h_source.html" />
+    <None Include="doxy\html\mglGuiActionLibHandle_8h_source.html" />
+    <None Include="doxy\html\mglGuiLibHandle_8h_source.html" />
+    <None Include="doxy\html\mglGuiLibManager_8h_source.html" />
+    <None Include="doxy\html\mglGuiObjectFactory_8h_source.html" />
+    <None Include="doxy\html\mglGuiObject_8h_source.html" />
+    <None Include="doxy\html\mglInputMessage_8h_source.html" />
+    <None Include="doxy\html\mglLibHandle_8h_source.html" />
+    <None Include="doxy\html\mglLibraryInfo_8h_source.html" />
+    <None Include="doxy\html\mglLogChannel_8h_source.html" />
+    <None Include="doxy\html\mglLogDeviceFile_8h_source.html" />
+    <None Include="doxy\html\mglLogDeviceStdErr_8h_source.html" />
+    <None Include="doxy\html\mglLogDeviceStdOut_8h_source.html" />
+    <None Include="doxy\html\mglLogDevice_8h_source.html" />
+    <None Include="doxy\html\mglLogger_8h_source.html" />
+    <None Include="doxy\html\mglMessageHandler_8h_source.html" />
+    <None Include="doxy\html\mglMessage_8h_source.html" />
+    <None Include="doxy\html\mglReleaseInfo_8h_source.html" />
+    <None Include="doxy\html\mglSelectionContext_8h_source.html" />
+    <None Include="doxy\html\mglShm_8h_source.html" />
+    <None Include="doxy\html\mglSocket_8h_source.html" />
+    <None Include="doxy\html\mglSystem_8h_source.html" />
+    <None Include="doxy\html\mglTechnicalException_8h_source.html" />
+    <None Include="doxy\html\mglTextureManager_8h_source.html" />
+    <None Include="doxy\html\mglTexture_8h_source.html" />
+    <None Include="doxy\html\mglTimer_8h_source.html" />
+    <None Include="doxy\html\mglValColor_8h_source.html" />
+    <None Include="doxy\html\mglValCoord_8h_source.html" />
+    <None Include="doxy\html\mglValFixedPoint_8h_source.html" />
+    <None Include="doxy\html\mglValInteger_8h_source.html" />
+    <None Include="doxy\html\mglValString_8h_source.html" />
+    <None Include="doxy\html\mglValue_8h_source.html" />
+    <None Include="doxy\html\mglXMLValueReader_8h_source.html" />
+    <None Include="doxy\html\struct____static__log__info-members.html" />
+    <None Include="doxy\html\struct____static__log__info.html" />
+    <None Include="doxy\html\search\all_0.html" />
+    <None Include="doxy\html\search\all_1.html" />
+    <None Include="doxy\html\search\all_2.html" />
+    <None Include="doxy\html\search\all_3.html" />
+    <None Include="doxy\html\search\all_4.html" />
+    <None Include="doxy\html\search\all_5.html" />
+    <None Include="doxy\html\search\all_5f.html" />
+    <None Include="doxy\html\search\all_6.html" />
+    <None Include="doxy\html\search\all_61.html" />
+    <None Include="doxy\html\search\all_62.html" />
+    <None Include="doxy\html\search\all_63.html" />
+    <None Include="doxy\html\search\all_64.html" />
+    <None Include="doxy\html\search\all_67.html" />
+    <None Include="doxy\html\search\all_69.html" />
+    <None Include="doxy\html\search\all_6c.html" />
+    <None Include="doxy\html\search\all_6d.html" />
+    <None Include="doxy\html\search\all_7.html" />
+    <None Include="doxy\html\search\all_70.html" />
+    <None Include="doxy\html\search\all_72.html" />
+    <None Include="doxy\html\search\all_73.html" />
+    <None Include="doxy\html\search\all_74.html" />
+    <None Include="doxy\html\search\all_75.html" />
+    <None Include="doxy\html\search\all_8.html" />
+    <None Include="doxy\html\search\all_9.html" />
+    <None Include="doxy\html\search\all_a.html" />
+    <None Include="doxy\html\search\all_b.html" />
+    <None Include="doxy\html\search\all_c.html" />
+    <None Include="doxy\html\search\all_d.html" />
+    <None Include="doxy\html\search\all_e.html" />
+    <None Include="doxy\html\search\classes_0.html" />
+    <None Include="doxy\html\search\classes_1.html" />
+    <None Include="doxy\html\search\classes_5f.html" />
+    <None Include="doxy\html\search\classes_6d.html" />
+    <None Include="doxy\html\search\classes_73.html" />
+    <None Include="doxy\html\search\classes_74.html" />
+    <None Include="doxy\html\search\functions_0.html" />
+    <None Include="doxy\html\search\functions_1.html" />
+    <None Include="doxy\html\search\functions_2.html" />
+    <None Include="doxy\html\search\functions_3.html" />
+    <None Include="doxy\html\search\functions_4.html" />
+    <None Include="doxy\html\search\functions_5.html" />
+    <None Include="doxy\html\search\functions_6.html" />
+    <None Include="doxy\html\search\functions_61.html" />
+    <None Include="doxy\html\search\functions_62.html" />
+    <None Include="doxy\html\search\functions_63.html" />
+    <None Include="doxy\html\search\functions_64.html" />
+    <None Include="doxy\html\search\functions_67.html" />
+    <None Include="doxy\html\search\functions_69.html" />
+    <None Include="doxy\html\search\functions_6c.html" />
+    <None Include="doxy\html\search\functions_6d.html" />
+    <None Include="doxy\html\search\functions_7.html" />
+    <None Include="doxy\html\search\functions_70.html" />
+    <None Include="doxy\html\search\functions_72.html" />
+    <None Include="doxy\html\search\functions_73.html" />
+    <None Include="doxy\html\search\functions_75.html" />
+    <None Include="doxy\html\search\functions_8.html" />
+    <None Include="doxy\html\search\functions_9.html" />
+    <None Include="doxy\html\search\functions_a.html" />
+    <None Include="doxy\html\search\functions_b.html" />
+    <None Include="doxy\html\search\functions_c.html" />
+    <None Include="doxy\html\search\functions_d.html" />
+    <None Include="doxy\html\search\nomatches.html" />
+  </ItemGroup>
+</Project>
