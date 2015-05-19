@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include "mglReleaseInfo.h"
 
-#include "boost\filesystem.hpp"
+#include "boost/filesystem.hpp"
 
 #ifdef WIN32
 #include "Windows.h"
@@ -63,8 +63,14 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
 	   XMLPlatformUtils::Initialize();  // Initialize Xerces infrastructure
 
 	   static XMLCh* UTF8_ENCODING = NULL;
+
+#ifdef WIN32
 	   XMLTransService::Codes failReason;
+#endif
+
 	   XMLPlatformUtils::Initialize(); // first we must create the transservice
+
+#ifdef WIN32
 	   UTF8_ENCODING = XMLString::transcode("UTF-8");
 	   UTF8_TRANSCODER =
 		   XMLPlatformUtils::fgTransService->makeNewTranscoderFor(UTF8_ENCODING,
@@ -73,6 +79,7 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
 	   if (!UTF8_TRANSCODER) {
 		   std::cout  << "ERROR: XML::Xerces: INIT: Could not create UTF-8 transcoder";
 	   }
+#endif
    }
    catch( XMLException& e )
    {

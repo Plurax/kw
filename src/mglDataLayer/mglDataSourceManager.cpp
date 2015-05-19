@@ -49,7 +49,7 @@ mglDataSource* mglDataSourceManager::createDataSource(mglValString* libname, mgl
 		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
 		HINSTANCE handle = LoadLibrary(ConvString);
 #else
-		void* handle = dlopen(expanded_Libname.str()->c_str(), RTLD_LAZY);
+		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY);
 #endif
 
 		if (!handle)
