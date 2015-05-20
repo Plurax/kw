@@ -20,6 +20,7 @@ $(TARGET): $(OBJECTS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
+	@mkdir -p lib
 	@mkdir -p $(BUILDDIR)/mglDebug
 	@mkdir -p $(BUILDDIR)/mglDataLayer
 	@mkdir -p $(BUILDDIR)/mglGui
