@@ -7,6 +7,12 @@
 *.o
 *.so
 *.obj
+
+# Emacs modified files #
+########################
+*~
+[#]*[#]
+.\#*
  
 # Packages #
 ############
@@ -20,6 +26,10 @@
 *.rar
 *.tar
 *.zip
+
+# Build directory on linux
+############################
+build/
  
 # Logs and databases #
 ######################

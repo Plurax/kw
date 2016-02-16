@@ -37,6 +37,8 @@ void mglGuiLibManager::init()
 mglGuiObject* mglGuiLibManager::createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration)
 {
 	INIT_LOG("mglGuiLibManager", "createGUIObject(string* libname, string* classname, DOMElement* configuration)");
+
+	std::cout << "Loading lib: " << *libname;
 	// Found the requested library in the map?
 	std::map<mglValString,mglGuiLibHandle*>::iterator libIterator = m_loadedGuiLibraries.find(*libname);
 
@@ -110,7 +112,7 @@ mglMessageHandler* mglGuiLibManager::createMessageHandler(mglValString* libname,
 		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
 		HINSTANCE handle = LoadLibrary(ConvString);
 #else
-		void* handle = dlopen(expanded_Libname.str()->c_str(), RTLD_LAZY);
+		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY);
 #endif
 
 		if (!handle)

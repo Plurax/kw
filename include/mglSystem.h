@@ -43,8 +43,9 @@
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#ifdef WIN32
 #include <xercesc/util/Transcoders/Win32/Win32TransService.hpp>
-
+#endif
 class mglGuiObject;
 
 typedef map<int, mglMessageHandler*> mglMessageHandlerMap;
@@ -127,7 +128,9 @@ public:
 
 
 	// On windows we force to use UTF8 - so we need to create a seperate Transcoder!
+#ifdef WIN32
 	XMLTranscoder* UTF8_TRANSCODER = NULL;
+#endif
 private:
 	int m_pixelformat;
 
