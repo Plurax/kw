@@ -780,7 +780,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
    errno = 0;
    /**/
 //   if(stat(configFile.str()->c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
-   if (boost::filesystem::exists(configFile.str()->c_str()))
+   if (!boost::filesystem::exists(configFile.str()->c_str()))
    {
        if( errno == ENOENT )      // errno declared by include file errno.h
           throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
