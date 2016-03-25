@@ -41,10 +41,15 @@
 // Those are bit definitions for special features of several objects:
 static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLEX", "DRAGGABLEY", "FIXEDEDITOR" };
 enum class enumObjectFlagsBitNums {
-	Obj_Selectable = 0, /** Object can be selected - this will cause input processing (touch) and focus selection (IGR) for this object if occurs */
-	Obj_Editable, /** The object is editable, that means it contains a modifiable value. When selected an edit object is spawned (touch)
-					or this object will receive further inputs (IGR). */
-	Obj_Enterable, /** This object can be used as grouping layer for IGR inputs. Selecting will cause stepping down the selection list to its children. */
+/** Object can be selected - this will cause input processing (touch) 
+	and focus selection (IGR) for this object if occurs */
+	Obj_Selectable = 0, 
+/** The object is editable, that means it contains a modifiable value. When selected an edit object is spawned (touch)
+	or this object will receive further inputs (IGR). */
+	Obj_Editable, 
+/** This object can be used as grouping layer for IGR inputs. 
+	Selecting will cause stepping down the selection list to its children. */
+	Obj_Enterable, 
 	Obj_PositionRelative, /** Should be clear */
 	Obj_DraggableX,
 	Obj_DraggableY,
