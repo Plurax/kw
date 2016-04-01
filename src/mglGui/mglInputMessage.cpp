@@ -52,13 +52,13 @@ int mglInputMessage::getButton()
 	return m_MouseButton;
 }
 
-void mglInputMessage::setTarget(mglGuiObject* _target)
+void mglInputMessage::setTarget(shared_ptr<mglGuiObject> _target)
 {
 	m_target = _target;
 }
 
 
-mglGuiObject* mglInputMessage::getTarget()
+shared_ptr<mglGuiObject> mglInputMessage::getTarget()
 {
 	return m_target;
 }
@@ -97,12 +97,12 @@ bool mglInputMessage::getContextTimeEnd()
 	return m_ContextAnimationCompleted;
 }
 
-void mglInputMessage::setEditedObject(mglGuiObject* _edited)
+void mglInputMessage::setEditedObject(shared_ptr<mglGuiObject> _edited)
 {
 	m_EditedObject = _edited;
 }
 
-mglGuiObject* mglInputMessage::getEditedObject()
+shared_ptr<mglGuiObject> mglInputMessage::getEditedObject()
 {
 	return m_EditedObject;
 }

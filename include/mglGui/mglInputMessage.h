@@ -46,8 +46,8 @@ public:
 
 	int getInputType();
 	int getButton();
-	void setTarget(mglGuiObject* _target);
-	mglGuiObject* getTarget();
+	void setTarget(shared_ptr<mglGuiObject> _target);
+	shared_ptr<mglGuiObject> getTarget();
 
 	void setIGRCount(int _cnt);
 	int getIGRCount();
@@ -58,8 +58,8 @@ public:
 	void setContextTimeEnd(bool flag);
 	bool getContextTimeEnd();
 
-	void setEditedObject(mglGuiObject* _edited);
-	mglGuiObject* getEditedObject();
+	void setEditedObject(shared_ptr<mglGuiObject> _edited);
+	shared_ptr<mglGuiObject> getEditedObject();
 
 	float getDragDeltaX();
 	void setDragDeltaX(float _deltax);
@@ -71,10 +71,10 @@ private:
 	unsigned int m_MouseButton;
 	unsigned long m_keySym;
 	int m_iIGRCount;
-	mglGuiObject* m_target;
+	shared_ptr<mglGuiObject> m_target;
 	boost::posix_time::time_duration m_DiffTime;
 	bool m_ContextAnimationCompleted;
-	mglGuiObject* m_EditedObject;
+	shared_ptr<mglGuiObject> m_EditedObject;
 
 	float m_fDragDeltaX;
 	float m_fDragDeltaY;

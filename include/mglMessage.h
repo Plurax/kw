@@ -21,7 +21,7 @@ class mglMessage
 {
 public:
 	mglMessage(int messagetype);
-	~mglMessage();
+	virtual ~mglMessage();
 
 	int getMessageType();
 

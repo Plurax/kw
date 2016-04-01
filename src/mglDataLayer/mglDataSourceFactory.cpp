@@ -16,14 +16,14 @@ mglDataSourceFactory::~mglDataSourceFactory()
 {
 }
 
-mglDataSource* mglDataSourceFactory::createDataSource(mglValString* classname, DOMElement* configuration)
+shared_ptr<mglDataSource> mglDataSourceFactory::createDataSource(shared_ptr<mglValString>& classname, DOMElement* configuration)
 {
 //	if (classname->str()->compare("mglShm") == 0)
 //		return new mglShm(configuration);
 //	if (classname->str()->compare("mglSocketClient") == 0)
 //		return new mglSocketClient(configuration);
 	if (classname->str()->compare("mglDataContainer") == 0)
-		return new mglDataContainer(configuration);
+		return shared_ptr<mglDataContainer>(new mglDataContainer(configuration));
 
 	return NULL;
 }

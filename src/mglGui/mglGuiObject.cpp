@@ -2,6 +2,7 @@
 
 #include "mglGui/mglGuiObject.h"
 #include "mglDebug/mglLogger.h"
+#include <memory>
 
 #include <stdio.h>
 #include <string>
@@ -86,7 +87,7 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 	XMLString::release(&TAG_backgroundcolor);
 	XMLString::release(&TAG_optionflags);
 
-	m_GuiAction = NULL; // on creation there is no function defined!
+	m_GuiAction = nullptr; // on creation there is no function defined!
 	m_Position = mglValCoord(x, y, 0);
 	m_fHeight = height;
 	m_fWidth = width;
@@ -97,22 +98,20 @@ mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
 
 mglGuiObject::~mglGuiObject()
 {
-	for (unsigned int i = 0; i < m_Children.size(); ++i)
-		delete m_Children.at(i);
 }
 
 
-void mglGuiObject::Connect(mglMessageHandler* func)
+void mglGuiObject::Connect(shared_ptr<mglMessageHandler> func)
 {
 	m_GuiAction = func;
 }
 
-mglMessage* mglGuiObject::ProcessMessage(mglMessage* message)
+shared_ptr<mglMessage> mglGuiObject::ProcessMessage(shared_ptr<mglMessage> message)
 {
 	return (*m_GuiAction)(message);
 }
 
-mglMessageHandler* mglGuiObject::getGuiAction()
+shared_ptr<mglMessageHandler> mglGuiObject::getGuiAction()
 {
 	return m_GuiAction;
 }
@@ -215,7 +214,7 @@ void mglGuiObject::Draw(void)
 		m_Children.at(i)->Draw();
 }
 
-void mglGuiObject::AddChild(mglGuiObject *Child)
+void mglGuiObject::AddChild(shared_ptr<mglGuiObject> Child)
 {
 //	INIT_LOG("mglGuiObject", "AddChild(mglWindow *Child)");
 //	LOG_TRACE("Added child");
@@ -228,9 +227,13 @@ void mglGuiObject::AddChild(mglGuiObject *Child)
 	else
 		m_bHasChildren = true;
 
-	Child->setParentWindow(this);
+	Child->setParentWindow(shared_from_this());
 
 	m_Children.push_back(Child);
+}
+
+void mglGuiObject::initChildren()
+{
 }
 
 mglGuiObjectList* mglGuiObject::getChildren()
@@ -249,28 +252,28 @@ unsigned short mglGuiObject::getState()
 	return m_usState;
 }
 
-void mglGuiObject::setParentWindow(mglGuiObject* parent)
+void mglGuiObject::setParentWindow(shared_ptr<mglGuiObject> parent)
 {
 	m_pParent = parent;
 }
 
 void mglGuiObject::setEditor(mglValString* _editor)
 {
-	m_EditorName = new mglValString(*_editor);
+	m_EditorName = mglValString(*_editor);
 }
 
 
-mglGuiObject* mglGuiObject::parent()
+shared_ptr<mglGuiObject> mglGuiObject::parent()
 {
 	return m_pParent;
 }
 
-mglGuiObject* mglGuiObject::prev()
+shared_ptr<mglGuiObject> mglGuiObject::prev()
 {
 	return m_pPrev;
 }
 
-mglGuiObject* mglGuiObject::next()
+shared_ptr<mglGuiObject> mglGuiObject::next()
 {
 	return m_pNext;
 }
@@ -286,7 +289,7 @@ void mglGuiObject::setOptionMask(unsigned long _mask)
 }
 
 
-void mglGuiObject::setNextWindow(mglGuiObject* parent)
+void mglGuiObject::setNextWindow(shared_ptr<mglGuiObject> parent)
 {
 	m_pNext = parent;
 }
@@ -301,18 +304,18 @@ void mglGuiObject::setName(mglValString name)
 	m_name = name;
 }
 
-void mglGuiObject::setPrevWindow(mglGuiObject* parent)
+void mglGuiObject::setPrevWindow(shared_ptr<mglGuiObject> parent)
 {
 	m_pPrev = parent;
 }
 
 
-mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
+shared_ptr<mglGuiObject> mglGuiObject::getChildAtPosition(mglValCoord pt)
 {
 	const mglGuiObjectList::const_iterator it_end = m_Children.end();
 	
 	if (!m_bHasChildren)
-		return this;
+		return shared_from_this();
 	mglValCoord coord;
 	mglGuiObjectList::const_iterator child;
 	for (child = m_Children.begin(); child != it_end; ++child)
@@ -328,11 +331,11 @@ mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 			{
 				if ((*child)->hasChildren())
 				{
-					mglGuiObject* const window = (*child)->getChildAtPosition(pt);
+					shared_ptr<mglGuiObject> const window = (*child)->getChildAtPosition(pt);
 					if (window)
 						return window;
 					else
-						return 0;
+						return nullptr;
 
 				}
 				else
@@ -340,16 +343,17 @@ mglGuiObject* mglGuiObject::getChildAtPosition(mglValCoord pt)
 			}
 		}
 	}
-	return 0;
+	return nullptr;
 }
 
-mglGuiObject* mglGuiObject::getChildByID(unsigned int ID)
+shared_ptr<mglGuiObject> mglGuiObject::getChildByID(unsigned int ID)
 {
-	if ((m_bHasChildren) && (m_Children.size() > ID))
+	if (m_bHasChildren)
 	{
-		return m_Children.at(ID);
+		if (m_Children.size() > ID)
+			return m_Children.at(ID);
 	}
-	return 0;
+	return NULL;
 }
 
 /**
@@ -367,7 +371,7 @@ void mglGuiObject::applyIGRCount(int _cnt)
  * in case of touch modification (sliders etc)
  * @return
  */
-mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
+shared_ptr<mglValue> mglGuiObject::getIncrement() // This is for touch (slider?) usage
 {
 	return NULL; // this is the base class
 }
@@ -377,7 +381,7 @@ mglValue* mglGuiObject::getIncrement() // This is for touch (slider?) usage
  * is defined by the implementation of the object.
  * @param _val
  */
-void mglGuiObject::setValue(mglValue* _val)
+void mglGuiObject::setValue(shared_ptr<mglValue> _val)
 {
 
 }
@@ -387,12 +391,12 @@ void mglGuiObject::setValue(mglValue* _val)
  * is defined by the implementation of the object.
  * @param _val
  */
-mglValue* mglGuiObject::getValue()
+shared_ptr<mglValue> mglGuiObject::getValue()
 {
 	return NULL;
 }
 
-void mglGuiObject::InitEditable(mglGuiObject* edited)
+void mglGuiObject::InitEditable(shared_ptr<mglGuiObject> edited)
 {
 
 }
@@ -406,12 +410,12 @@ mglValString mglGuiObject::getEditorName()
 	return m_EditorName;
 }
 
-mglValue* mglGuiObject::getUpperLimit()
+shared_ptr<mglValue> mglGuiObject::getUpperLimit()
 {
 	return NULL;
 }
 
-mglValue* mglGuiObject::getLowerLimit()
+shared_ptr<mglValue> mglGuiObject::getLowerLimit()
 {
 	return NULL;
 }

@@ -21,7 +21,7 @@ class mglMessageHandlerFactory
 public:
 	virtual ~mglMessageHandlerFactory();
 	virtual mglLibraryInfo* getLibInfo();
-	virtual mglMessageHandler* createMessageHandler(mglValString* classname);
+	virtual shared_ptr<mglMessageHandler> createMessageHandler(mglValString* classname);
 };
 
 

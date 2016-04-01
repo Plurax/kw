@@ -19,24 +19,26 @@ using namespace std;
 
 mglDataSourceManager::~mglDataSourceManager()
 {
-
 }
 
 void mglDataSourceManager::init()
 {
-	mglDataSourceFactory* defaultObjFactory = new mglDataSourceFactory();
-	mglDataLibHandle* defaultDataSourceLibHandle = new mglDataLibHandle(NULL,
-			mglSystem::Inst().m_libInfo,
-			defaultObjFactory);
+	// Note this is not a shared_ptr because this is also used for init of external factories!
+	auto defaultObjFactory = new mglDataSourceFactory();
+	auto defaultDataSourceLibHandle = shared_ptr<mglDataLibHandle>(new mglDataLibHandle(NULL,
+																						mglSystem::Inst().m_libInfo,
+																						defaultObjFactory));
 
-	m_loadedDataSources.insert(std::pair<mglValString,mglDataLibHandle*>(mglValString("mgl"),defaultDataSourceLibHandle));
+	m_loadedDataSources.insert(std::pair<mglValString,shared_ptr<mglDataLibHandle>>(
+								   mglValString("mgl"),
+								   defaultDataSourceLibHandle));
 }
 
-mglDataSource* mglDataSourceManager::createDataSource(mglValString* libname, mglValString* classname, DOMElement* configuration)
+shared_ptr<mglDataSource> mglDataSourceManager::createDataSource(shared_ptr<mglValString>& libname, shared_ptr<mglValString>& classname, DOMElement* configuration)
 {
 
 	// Found the requested library in the map?
-	std::map<mglValString,mglDataLibHandle*>::iterator libIterator = m_loadedDataSources.find(*libname);
+	std::map<mglValString,shared_ptr<mglDataLibHandle>>::iterator libIterator = m_loadedDataSources.find(*libname);
 
 	if (libIterator != m_loadedDataSources.end())
 	{
@@ -70,10 +72,10 @@ mglDataSource* mglDataSourceManager::createDataSource(mglValString* libname, mgl
 		LibInfoRetrieveFunc getLibInfofct = (LibInfoRetrieveFunc) dlsym(handle, "getLibInfo");
 #endif
 		mglDataSourceFactory* factory = getfactoryfct();
-		mglLibraryInfo* thisInfo = getLibInfofct();
-		mglDataLibHandle* DataSourceLibHandle = new mglDataLibHandle(handle, thisInfo, factory);
+		auto thisInfo = getLibInfofct();
+		auto DataSourceLibHandle = shared_ptr<mglDataLibHandle>(new mglDataLibHandle(handle, thisInfo, factory));
 
-		m_loadedDataSources.insert(std::pair<mglValString,mglDataLibHandle*>(*libname,DataSourceLibHandle ));
+		m_loadedDataSources.insert(std::pair<mglValString,shared_ptr<mglDataLibHandle>>(*libname,DataSourceLibHandle ));
 		return factory->createDataSource(classname, configuration);
 	}
     return NULL;

@@ -54,10 +54,10 @@ mglValFixedPoint::mglValFixedPoint(mglValString _string)
 	LOG_TRACE("mod string " << tmpBuffer);
 	sscanf(tmpBuffer, "%ld", &m_lValue);
 
+	m_Precision = enumValFixedPointPrec::prec11N6;
+
 	if (strlen(ptr) > 0)
 		m_Precision = getPrecisionFromString(ptr);
-	else
-		m_Precision = enumValFixedPointPrec::prec11N6;
 	m_isEmpty = false;
 
 	mglValString str = asString();
@@ -311,7 +311,8 @@ enumValFixedPointPrec mglValFixedPoint::getPrecisionFromString(char* _str)
 {
 	INIT_LOG("mglValFixedPoint", "getPrecisionFromString(char* _str)");
 
-	enumValFixedPointPrec retval;
+// Default is prec13N4
+	enumValFixedPointPrec retval = enumValFixedPointPrec::prec13N4;
 
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec15N2)]))
 		retval = enumValFixedPointPrec::prec15N2;

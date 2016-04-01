@@ -38,6 +38,9 @@
 #include "mglValues/mglValColor.h"
 #include "mglValues/mglValCoord.h"
 
+
+using namespace std;
+
 // Those are bit definitions for special features of several objects:
 static const char* enumObjectFlagNames[] = { "SELECTABLE", "EDITABLE", "ENTERABLE", "POSITIONRELATIVE", "DRAGGABLEX", "DRAGGABLEY", "FIXEDEDITOR" };
 enum class enumObjectFlagsBitNums {
@@ -79,10 +82,10 @@ using namespace std;
 class mglSystem;
 class mglGuiObject;
 
-typedef vector<mglGuiObject*> mglGuiObjectList;
-typedef map<mglValString, mglGuiObject*> mglGuiObjectMap;
+typedef vector<shared_ptr<mglGuiObject>> mglGuiObjectList;
+typedef map<mglValString, shared_ptr<mglGuiObject>> mglGuiObjectMap;
 
-class mglGuiObject
+class mglGuiObject : public std::enable_shared_from_this<mglGuiObject>
 {
 public:
 
@@ -107,20 +110,20 @@ public:
 	float GetWidth();
 	void SetWidth(float fWidth);
 
-	virtual mglGuiObject* getChildAtPosition(mglValCoord pt);
-	void setParentWindow(mglGuiObject* parent);
-	void setNextWindow(mglGuiObject* parent);
-	void setPrevWindow(mglGuiObject* parent);
+	virtual shared_ptr<mglGuiObject> getChildAtPosition(mglValCoord pt);
+	void setParentWindow(shared_ptr<mglGuiObject> parent);
+	void setNextWindow(shared_ptr<mglGuiObject> parent);
+	void setPrevWindow(shared_ptr<mglGuiObject> parent);
 	void setEditor(mglValString* _editor);
 
 	// Interface for editables - if not used call the parent function (and nothing happens)
 	virtual void applyIGRCount(int _cnt);
-	virtual mglValue* getIncrement(); // This is for touch (slider?) usage
-	virtual mglValue* getUpperLimit();
-	virtual mglValue* getLowerLimit();
-	virtual void setValue(mglValue* _val);
-	virtual mglValue* getValue();
-	virtual void InitEditable(mglGuiObject* edited);
+	virtual shared_ptr<mglValue> getIncrement(); // This is for touch (slider?) usage
+	virtual shared_ptr<mglValue> getUpperLimit();
+	virtual shared_ptr<mglValue> getLowerLimit();
+	virtual void setValue(shared_ptr<mglValue> _val);
+	virtual shared_ptr<mglValue> getValue();
+	virtual void InitEditable(shared_ptr<mglGuiObject> edited);
 	mglValString getEditorName(); // This will return of the editor which is desired to be used for this objects value
 
 	// Those functions are for draggable objects to avoid move out of their limits
@@ -138,25 +141,27 @@ public:
 	float GetHeight();
 	void SetHeight(float uiHeight);
 
-	virtual void Connect(mglMessageHandler* func);
-	mglMessage* ProcessMessage(mglMessage* message);
+	void Connect(shared_ptr<mglMessageHandler> func);
 
-	mglMessageHandler* getGuiAction();
+	shared_ptr<mglMessage> ProcessMessage(shared_ptr<mglMessage> message);
 
-	virtual void AddChild(mglGuiObject *Child);
+	shared_ptr<mglMessageHandler> getGuiAction();
+
+	virtual void AddChild(shared_ptr<mglGuiObject> Child);
+	virtual void initChildren();
 	void RemoveChild(unsigned int ChildID);
 	void RemoveChild(mglValString ChildName);
 	mglGuiObjectList* getChildren();
-	virtual mglGuiObject* getChildByID(unsigned int ID);
+	virtual shared_ptr<mglGuiObject> getChildByID(unsigned int ID);
 
 	void setState(unsigned short _state);
 	unsigned short getState();
 	const mglValString& getName();
 	void setName(mglValString name);
 
-	mglGuiObject* parent();
-	mglGuiObject* prev();
-	mglGuiObject* next();
+	shared_ptr<mglGuiObject> parent();
+	shared_ptr<mglGuiObject> prev();
+	shared_ptr<mglGuiObject> next();
 
 	unsigned long getOptionMask();
 	void setOptionMask(unsigned long _mask);
@@ -169,16 +174,17 @@ protected:
 	unsigned int uiElementState; // State of element, inactive, focussed, selected
 	unsigned long m_ulOptionMask;
 
-	mglMessageHandler* m_GuiAction;
+	shared_ptr<mglMessageHandler> m_GuiAction;
+	std::function<shared_ptr<mglMessageHandler>(shared_ptr<mglMessageHandler>)> m_GuiAction_fct;
 
 	mglValCoord m_Position;
 
 	float m_fHeight;
 	float m_fWidth;
 
-	mglGuiObject* m_pParent;
-	mglGuiObject* m_pPrev;
-	mglGuiObject* m_pNext;
+	shared_ptr<mglGuiObject> m_pParent;
+	shared_ptr<mglGuiObject> m_pPrev;
+	shared_ptr<mglGuiObject> m_pNext;
 
 	mglGuiObjectList m_Children;
 

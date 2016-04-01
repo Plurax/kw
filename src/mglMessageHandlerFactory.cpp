@@ -12,10 +12,10 @@
 /*
  * For the first time the standard object factory can only return mglWindow!
  */
-mglMessageHandler* mglMessageHandlerFactory::createMessageHandler(mglValString* classname)
+shared_ptr<mglMessageHandler> mglMessageHandlerFactory::createMessageHandler(mglValString* classname)
 {
 	if (classname->str()->compare("mglGuiAction") == 0)
-		return new mglMessageHandler();
+		return shared_ptr<mglMessageHandler>(new mglMessageHandler());
 
 	return NULL;
 }

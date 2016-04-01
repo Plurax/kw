@@ -10,6 +10,7 @@
 
 #include "mglValues/mglValString.h"
 #include <map>
+#include <memory>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ protected:
 	mglValString m_name;
 };
 
-typedef map<mglValString,mglDataSource*> mglDataSourceMap;
+typedef map<mglValString, shared_ptr<mglDataSource>> mglDataSourceMap;
 
 
 #endif /* MGLDATASOURCE_H_ */

@@ -14,7 +14,7 @@
 class mglDraggingContext
 {
 public:
-	mglGuiObject* m_DraggingObject;
+	shared_ptr<mglGuiObject> m_DraggingObject;
 	mglValCoord m_StartingCoord;
 	mglValCoord m_StartingObjectCoord;
 };

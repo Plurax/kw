@@ -37,7 +37,7 @@ class mglDataSourceFactory
 public:
 	virtual ~mglDataSourceFactory();
 
-	virtual mglDataSource* createDataSource(mglValString* classname, DOMElement* configuration);
+	virtual shared_ptr<mglDataSource> createDataSource(shared_ptr<mglValString>& classname, DOMElement* configuration);
 };
 
 typedef mglDataSourceFactory* (*DataSourceCreateFunc)();

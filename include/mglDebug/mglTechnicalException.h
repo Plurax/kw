@@ -17,6 +17,7 @@ class mglTechnicalException
 public:
 	mglTechnicalException();
 	mglTechnicalException(unsigned int _errno, string _msg);
+	mglValString getMessage();
 private:
 	unsigned int m_ErrNo;
 	string m_Message;

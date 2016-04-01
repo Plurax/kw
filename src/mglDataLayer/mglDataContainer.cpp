@@ -27,21 +27,20 @@ void mglDataContainer::deInit()
 /*
  * Attention - this will add the given pointer to the map - so dont delete it after adding - its not cloned!
  */
-void mglDataContainer::addValue(mglValString _key, mglValue* _val)
+void mglDataContainer::addValue(mglValString _key, shared_ptr<mglValue> _val)
 {
-	m_MapValues.insert(std::pair<mglValString,mglValue*>(_key, _val));
+	m_MapValues.insert(std::pair<mglValString, shared_ptr<mglValue>>(_key, _val));
 }
 
 void mglDataContainer::delValue(mglValString _str)
 {
-	std::map<mglValString, mglValue*>::iterator valIt = m_MapValues.find(_str);
-	delete valIt->second;
+	std::map<mglValString, shared_ptr<mglValue>>::iterator valIt = m_MapValues.find(_str);
 	m_MapValues.erase(valIt);
 }
 
 
-mglValue* mglDataContainer::getValue(mglValString key)
+shared_ptr<mglValue> mglDataContainer::getValue(mglValString key)
 {
-	std::map<mglValString, mglValue*>::iterator valIt = m_MapValues.find(key);
+	std::map<mglValString, shared_ptr<mglValue>>::iterator valIt = m_MapValues.find(key);
 	return valIt->second;
 }

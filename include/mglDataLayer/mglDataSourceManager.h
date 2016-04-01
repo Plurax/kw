@@ -58,10 +58,10 @@ public:
 
 	void init();
 
-	mglDataSource* createDataSource(mglValString* libname, mglValString* classname, DOMElement* configuration);
+	shared_ptr<mglDataSource> createDataSource(shared_ptr<mglValString>& libname, shared_ptr<mglValString>& classname, DOMElement* configuration);
 
 private:
-	map<mglValString, mglDataLibHandle*> m_loadedDataSources;
+	map<mglValString, shared_ptr<mglDataLibHandle>> m_loadedDataSources;
 
 };
 

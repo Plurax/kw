@@ -41,34 +41,35 @@ mglValColor::mglValColor(const char* hex)
 
 	const char* ptr = hex;
 	// Assume we got RRGGBBAA:
-	float* fPtr[4] = { &this->fRed, &this->fGreen, &this->fBlue, &this->fAlpha};
 
 	if (hex[0] == '0' && hex[1] == 'x')
 		ptr = &hex[2];
 
-	int istop = 4;
+	int istop = 3;
 	if (strlen(ptr) < 8)
 	{
-		istop = 3;
-		fAlpha = 1.0;
+		istop = 2;
 	}
 
-	for (int i = 0; i < istop; i++)
-	{
-		unsigned long x;
-		char tmp[3];
-		tmp[0] = ptr[i*2];
-		tmp[1] = ptr[i*2+1];
-		tmp[2] = '\0';
+	unsigned long x;
+	x = strtoul(hex, NULL, 16);
 
-		x = strtoul(tmp, NULL, 16);
-		if (x == 0)
-			*fPtr[i] = 0.0f;
-		else
-			*fPtr[i] = 1.0f * ((float)x / 255.0);
+	if (istop == 3)
+	{
+		fRed = 1.0f * ((float)(0xFF & (x >> 32)) / 255.0);
+		fGreen = 1.0f * ((float)(0xFF & (x >> 16)) / 255.0);
+		fBlue = 1.0f * ((float)(0xFF & (x >> 8)) / 255.0);
+		fAlpha = 1.0f * ((float)(0xFF & x) / 255.0);
+	}
+	else
+	{
+		fRed = 1.0f * ((float)(0xFF & (x >> 16)) / 255.0);
+		fGreen = 1.0f * ((float)(0xFF & (x >> 8)) / 255.0);
+		fBlue = 1.0f * ((float)(0xFF & x) / 255.0);
+		fAlpha = 1.0f;
 	}
 }
-
+	
 mglValString mglValColor::asString()
 {
 	std::stringstream str;

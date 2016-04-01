@@ -22,13 +22,13 @@ public:
 
 	void init();
 
-	mglGuiObject* createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration);
-	mglMessageHandler* createGuiAction(mglValString* libname, mglValString* classname);
+	shared_ptr<mglGuiObject> createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration);
+	shared_ptr<mglGuiObject> createGuiAction(mglValString* libname, mglValString* classname);
 
 private:
-	map<mglValString, mglGuiLibHandle*> m_loadedGuiLibraries;
+	map<mglValString, shared_ptr<mglGuiLibHandle>> m_loadedGuiLibraries;
 
-	map<mglValString, mglMessageHandlerLibHandle*> m_loadedActionLibraries;
+	map<mglValString, shared_ptr<mglMessageHandlerLibHandle>> m_loadedActionLibraries;
 };
 
 

@@ -9,13 +9,16 @@
 #define MGLMESSAGEHANDLER_H_
 
 #include "mglMessage.h"
+#include <memory>
+
+using namespace std;
 
 class mglMessageHandler
 {
 public:
 	mglMessageHandler();
 
-	virtual mglMessage* operator () (mglMessage* message);
+	virtual shared_ptr<mglMessage> operator () (shared_ptr<mglMessage> message);
 };
 
 

@@ -16,12 +16,12 @@ mglMessageHandler::mglMessageHandler()
 }
 
 
-mglMessage* mglMessageHandler::operator () (mglMessage* message)
+shared_ptr<mglMessage> mglMessageHandler::operator () (shared_ptr<mglMessage> message)
 {
-	INIT_LOG("mglGuiActionFunctor", "operator() (mglMessage* message)");
+	INIT_LOG("mglGuiActionFunctor", "operator() (shared_ptr<mglMessage> message)");
 	LOG_TRACE("Testfunction called!");
 
-	return NULL;
+ 	return nullptr;
 }
 
 

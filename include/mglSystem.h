@@ -48,10 +48,11 @@
 #endif
 class mglGuiObject;
 
-typedef map<int, mglMessageHandler*> mglMessageHandlerMap;
+typedef map<int, shared_ptr<mglMessageHandler>> mglMessageHandlerMap;
 
 
 using namespace xercesc;
+using namespace std;
 
 class mglSystem
 {
@@ -80,26 +81,26 @@ public:
 	}
 
 	void Draw(void);
-	void SetMainFrame(mglGuiObject *MainFrame);
+	void SetMainFrame(shared_ptr<mglGuiObject> MainFrame);
 
 	void closeMenu();
 	void returnFromMenu();
-	void openMenu(mglGuiObject *Menu, mglValCoord _coord);
+	void openMenu(shared_ptr<mglGuiObject>Menu, mglValCoord _coord);
 
 	void destroy();
-	mglGuiObject* getMainFrame(mglValString name);
-	mglGuiObject* getMenu(mglValString name);
+	shared_ptr<mglGuiObject> getMainFrame(mglValString name);
+	shared_ptr<mglGuiObject> getMenu(mglValString name);
 
-	mglGuiObject* getValueEditor();
-	mglGuiObject* getEditedObject();
+	shared_ptr<mglGuiObject> getValueEditor();
+	shared_ptr<mglGuiObject> getEditedObject();
 
-	mglMessage* processInputMessage(mglInputMessage* Message);
+	shared_ptr<mglMessage> processInputMessage(shared_ptr<mglInputMessage> Message);
 
 	void readConfiguration(mglValString& configFile);
 	void (*flushGL)();
-	mglGuiObject* getTargetWindow(mglValCoord pt);
+	shared_ptr<mglGuiObject> getTargetWindow(mglValCoord pt);
 
-	mglGuiObject* getGuiObject(mglValString _str);
+	shared_ptr<mglGuiObject> getGuiObject(mglValString _str);
 
 	mglGuiObjectMap m_mMainFrames;
 	mglGuiObjectMap m_mMenus;
@@ -111,17 +112,17 @@ public:
 
 	mglDataSourceMap m_DataSources;
 
-	mglDataSource* getDataSource(mglValString _name);
+	shared_ptr<mglDataSource> getDataSource(mglValString _name);
 
-	mglFontProvider* m_FontProvider;
-	mglTextureManager* m_TextureManager;
+	shared_ptr<mglFontProvider> m_FontProvider;
+	shared_ptr<mglTextureManager> m_TextureManager;
 
 	mglAppConfiguration m_Configuration;
 
 	mglLibraryInfo* m_libInfo;
 
 	void processEvents();
-	void addMessage(mglMessage* mess);
+	void addMessage(shared_ptr<mglMessage> mess);
 
 	void setMessageHandlers(DOMNode* _currentElement);
 	void loadMessageHandler(DOMNode* _currentElement);
@@ -137,7 +138,7 @@ private:
 	mglSystem();
 	xercesc::XercesDOMParser *m_ConfigFileParser;
     XMLCh* m_TAG_root;
-    void createGUIfromXML(DOMNode* currentElement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectMap& listToAdd, int _listtype);
+    void createGUIfromXML(DOMNode* currentElement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype);
     void createDataLayer(DOMNode* currentElement);
 
     XMLCh* m_TAG_ApplicationSettings;
@@ -149,19 +150,19 @@ private:
 	// This is for managing state changes when flipping between touch and IGR input
 	bool m_lastActionCausedByTouch;
 
-	mglDraggingContext* m_DraggingContext;
+	shared_ptr<mglDraggingContext> m_DraggingContext;
 
-	mglGuiObject* m_CurrentMainFrame;
-	mglGuiObject* m_CurrentMenu;
+	shared_ptr<mglGuiObject> m_CurrentMainFrame;
+	shared_ptr<mglGuiObject> m_CurrentMenu;
 
-	vector<mglSelectionContext*> m_vSelectionContexts;
+	vector<shared_ptr<mglSelectionContext>> m_vSelectionContexts;
 
 	mglTimer m_ContextMenuTimer;
-	mglGuiObject* m_ContextAnimation;
+	shared_ptr<mglGuiObject> m_ContextAnimation;
 
-	mglGuiObject* m_ValueEditor;
+	shared_ptr<mglGuiObject> m_ValueEditor;
 
-	std::queue<mglMessage*> m_MessageQueue;
+	queue<shared_ptr<mglMessage>> m_MessageQueue;
 };
 
 

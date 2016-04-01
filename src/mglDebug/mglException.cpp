@@ -21,3 +21,8 @@ mglTechnicalException::mglTechnicalException(unsigned int _errno, string _msg)
 	m_Message = _msg;
 }
 
+mglValString mglTechnicalException::getMessage()
+{
+	return mglValString(m_Message.c_str());
+}
+

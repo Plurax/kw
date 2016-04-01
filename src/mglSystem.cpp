@@ -21,6 +21,7 @@
 #endif
 
 #include "mglSystem.h"
+#include "mglDebug/mglTechnicalException.h"
 #include "mglValues/mglValCoord.h"
 
 using namespace std;
@@ -39,6 +40,9 @@ mglSystem::mglSystem()
  */
 void mglSystem::init(void(*ptr)(), mglValString& configfile)
 {
+	/* Note this is not used as shared pointer as we use this inforation within lib handles which 
+	   are propably initialized with external shared lib factories!
+	*/
 	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
 
 	if (ptr != NULL)
@@ -50,11 +54,11 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
 	}
 	mglDataSourceManager& dsManager = mglDataSourceManager::Inst();
 	dsManager.init();
-	m_ContextAnimation = NULL;
-	m_ValueEditor = NULL;
+	m_ContextAnimation = nullptr;
+	m_ValueEditor = nullptr;
 	m_ButtonDown = false;
 
-	m_DraggingContext = NULL;
+	m_DraggingContext = nullptr;
 
 	/* Prepare XML Parser */
    try
@@ -95,15 +99,15 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
 
 	if (ptr != NULL)
 	{
-		m_FontProvider = new mglFontProvider();
-		m_TextureManager = new mglTextureManager();
-		m_vSelectionContexts.push_back(new mglSelectionContext());
+		m_FontProvider = shared_ptr<mglFontProvider>(new mglFontProvider());
+		m_TextureManager = shared_ptr<mglTextureManager>(new mglTextureManager());
+		m_vSelectionContexts.push_back(shared_ptr<mglSelectionContext>(new mglSelectionContext()));
 	}
 
 	readConfiguration(configfile);
 
-	m_CurrentMainFrame = NULL;
-	m_CurrentMenu = NULL;
+	m_CurrentMainFrame = nullptr;
+	m_CurrentMenu = nullptr;
 
 	m_lastActionCausedByTouch = false;
 }
@@ -113,11 +117,10 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
  */
 mglSystem::~mglSystem()
 {
-	std::map<mglValString, mglGuiObject*>::iterator it;
+	std::map<mglValString, shared_ptr<mglGuiObject>>::iterator it;
 	it = m_mMainFrames.begin();
 	while (it != m_mMainFrames.begin())
 	{
-		delete it->second;
 		m_mMainFrames.erase(it);
 		it--;
 	}
@@ -125,7 +128,6 @@ mglSystem::~mglSystem()
 	it = m_mMenus.begin();
 	while (it != m_mMenus.begin())
 	{
-		delete it->second;
 		m_mMenus.erase(it);
 		it--;
 	}
@@ -133,12 +135,10 @@ mglSystem::~mglSystem()
 	it = m_mEditors.begin();
 	while (it != m_mEditors.begin())
 	{
-		delete it->second;
 		m_mEditors.erase(it);
 		it--;
 	}
 
-	delete m_FontProvider;
    XMLPlatformUtils::Terminate(); // Deinit XERCES
 }
 
@@ -150,10 +150,10 @@ mglSystem::~mglSystem()
  * @param Message
  * @return
  */
-mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
+shared_ptr<mglMessage> mglSystem::processInputMessage(shared_ptr<mglInputMessage> Message)
 {
 	INIT_LOG("mglSystem", "processInputMessage(mglInputMessage* Message)");
-	mglGuiObject* Target;
+	shared_ptr<mglGuiObject> Target;
 
 	// If the input message is a mouse or IGR press set the timer!
 	if ((Message->getInputType() == eInputMouseButtonPress) ||
@@ -176,8 +176,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		else
 			Message->setContextTimeEnd(false);
 		m_ButtonDown = false;
-		delete m_ContextAnimation;
-		m_ContextAnimation = NULL;
+		m_ContextAnimation = nullptr;
 	}
 
 	/**
@@ -186,16 +185,16 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	 * As we only allow one menu at a time, this can only be used by mainframes.
 	 */
 	if ((m_ButtonDown && (m_ContextMenuTimer.getCurrentDiffTime() >= m_Configuration.getContextAnimationDelayStart())) &&
-			(m_ValueEditor == NULL) &&
-			(m_CurrentMenu == NULL))
+			(!m_ValueEditor) &&
+			(!m_CurrentMenu))
 	{
-		if (m_ContextAnimation == NULL)
+		if (!m_ContextAnimation)
 		{
-			m_ContextAnimation = mglGuiLibManager::Inst().createGUIObject(m_Configuration.getContextAnimationLib(),
-					m_Configuration.getContextAnimationClass(), NULL);
+			m_ContextAnimation = shared_ptr<mglGuiObject>(mglGuiLibManager::Inst().createGUIObject(m_Configuration.getContextAnimationLib(),
+																								   m_Configuration.getContextAnimationClass(), NULL));
 
 			mglValCoord spawnCoord;
-			if ((m_vSelectionContexts.back()->m_Focus != NULL) &&
+			if ((m_vSelectionContexts.back()->m_Focus) &&
 					(!m_lastActionCausedByTouch))
 			{
 				spawnCoord = m_vSelectionContexts.back()->m_Focus->GetPosition();
@@ -213,18 +212,18 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		m_lastActionCausedByTouch = true;
 
 		Target = getTargetWindow(Message->getCoord());
-		if (Target != NULL)
+		if (Target)
 		{
 			if ((Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableX)) ||
 				(Target->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableY)))
 			{
-				m_DraggingContext = new mglDraggingContext;
+				m_DraggingContext = shared_ptr<mglDraggingContext>(new mglDraggingContext);
 				m_DraggingContext->m_DraggingObject = Target;
 				m_DraggingContext->m_StartingObjectCoord = Target->GetPosition();
 				m_DraggingContext->m_StartingCoord = Message->getCoord();
 			}
 
-			if (Target->getGuiAction() != NULL)
+			if (Target->getGuiAction() != nullptr)
 			{
 				Message->setTarget(Target);
 
@@ -237,18 +236,17 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	{
 		m_lastActionCausedByTouch = true;
 
-		if (m_DraggingContext != NULL)
+		if (m_DraggingContext)
 		{
-			delete m_DraggingContext;
-			m_DraggingContext = NULL;
+			m_DraggingContext.reset();
 		}
 		else
 		{
 			Target = getTargetWindow(Message->getCoord());
-			if (Target != NULL)
+			if (Target)
 			{
 				// clear an active focus
-				if ((m_vSelectionContexts.back()->m_Focus != NULL) && (m_vSelectionContexts.back()->m_Focus != Target))
+				if ((m_vSelectionContexts.back()->m_Focus != nullptr) && (m_vSelectionContexts.back()->m_Focus != Target))
 				{
 					m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
 				}
@@ -258,7 +256,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				{
 					if (Message->getInputType() == eInputMouseButtonRelease)
 					{
-						if (m_ValueEditor == NULL)
+						if (!m_ValueEditor)
 						{
 							/** First we need to decide which editor has to be opened
 							 *
@@ -288,7 +286,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 							mglGuiObjectMap::iterator findIt = m_mEditors.find(valType);
 							if (findIt == m_mEditors.end())
 							{
-								THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving editor. " << valType.str()->c_str() << " does not exist!");
+								THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving editor. \"" << valType.str()->c_str() << "\" does not exist!");
 							}
 							m_ValueEditor = findIt->second;
 
@@ -322,16 +320,16 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 						else
 						{
 							// Hide the editor menu - this is used as "commit"
-							m_vSelectionContexts.back()->m_Editing = NULL;
+							m_vSelectionContexts.back()->m_Editing = nullptr;
 							m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
-							m_ValueEditor = NULL;
+							m_ValueEditor = nullptr;
 							LOG_TRACE("Closed editor");
 						}
 					}
 				}
 				else
 				{
-					if (Target->getGuiAction() != NULL)
+					if (Target->getGuiAction())
 					{
 						Message->setTarget(Target);
 
@@ -344,16 +342,16 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				/**
 				 * In this case - we cancel the input because the context editor was open but the user clicked aside of it
 				 */
-				if (m_ValueEditor != NULL)
+				if (m_ValueEditor)
 				{
-					m_ValueEditor = NULL;
+					m_ValueEditor = nullptr;
 					if (m_vSelectionContexts.back()->m_Focus != m_vSelectionContexts.back()->m_Editing)
 						m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_STANDARD);
 					else
 						if (m_vSelectionContexts.back()->m_Focus == m_vSelectionContexts.back()->m_Editing)
 								m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
 
-					m_vSelectionContexts.back()->m_Editing = NULL;
+					m_vSelectionContexts.back()->m_Editing = nullptr;
 				}
 			}
 		}
@@ -362,10 +360,10 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 	if (Message->getInputType() == eInputMouseMove)
 	{
 		// In case of Mouse move we need to check if the mouse is already down and a dragging object is caught
-		if (m_DraggingContext != NULL)
+		if (m_DraggingContext)
 		{
-			float xDiff = 0.0;
 			float yDiff = 0.0;
+			float xDiff = 0.0;
 
 			if (m_DraggingContext->m_DraggingObject->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_DraggableX))
 				xDiff = m_DraggingContext->m_StartingCoord.m_fX - Message->getCoord().m_fX;
@@ -400,7 +398,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			 * Attention - now we check if an editor is opened - to realize modifications on the target object we call the edited
 			 * value functor with the information editor object. The functor then can implement the modification of the values.
 			 */
-			if ((m_ValueEditor != NULL) && (m_vSelectionContexts.back()->m_Editing != NULL))
+			if ((m_ValueEditor) && (m_vSelectionContexts.back()->m_Editing))
 			{
 				Message->setTarget(m_ValueEditor);
 				Message->setEditedObject(m_vSelectionContexts.back()->m_Editing);
@@ -408,7 +406,18 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				/**
 				 * This will send the movement message of the editor to the editor object
 				 */
+				
 				m_ValueEditor->ProcessMessage(Message);
+			}
+			else
+			{
+				/**
+				 * In this case we assume that the mainframe directly contains sliders which are used here.
+				 * So we send the message to the dragged object itself.
+				 * But this means that we can not know which object is edited. This needs to be handled within the handler.
+				 */
+				Message->setTarget(m_DraggingContext->m_DraggingObject);
+				m_DraggingContext->m_DraggingObject->ProcessMessage(Message);
 			}
 		}
 	}
@@ -420,24 +429,24 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		/**
 		 * The user opened a touch editor but he committed with the IGR button
 		 */
-		if (m_ValueEditor != NULL)
+		if (m_ValueEditor)
 		{
-			if (m_DraggingContext != NULL)
+			if (m_DraggingContext)
 			{
 				//TODO: Call the process handler of the value object to allow reaction on commit (e.g. sending values to controller)
-				m_DraggingContext = NULL;
+				m_DraggingContext = nullptr;
 			}
-			m_ValueEditor = NULL;
+			m_ValueEditor = nullptr;
 			if (m_vSelectionContexts.back()->m_Focus != m_vSelectionContexts.back()->m_Editing)
 				m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_STANDARD);
 			else
 				if (m_vSelectionContexts.back()->m_Focus == m_vSelectionContexts.back()->m_Editing)
 						m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
 
-			m_vSelectionContexts.back()->m_Editing = NULL;
+			m_vSelectionContexts.back()->m_Editing = nullptr;
 		}
 		else
-		if (m_vSelectionContexts.back()->m_Focus != NULL)
+		if (m_vSelectionContexts.back()->m_Focus != nullptr)
 		{
 			LOG_TRACE("Entering focus handler");
 			if (!(m_vSelectionContexts.back()->m_Focus->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Editable)))
@@ -449,7 +458,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 			else
 			{
 				LOG_TRACE("Object is editable");
-				if (m_vSelectionContexts.back()->m_Editing == NULL)
+				if (m_vSelectionContexts.back()->m_Editing == nullptr)
 				{
 					m_vSelectionContexts.back()->m_Editing = m_vSelectionContexts.back()->m_Focus;
 					m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_SELECTED);
@@ -457,7 +466,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				else
 				{
 					m_vSelectionContexts.back()->m_Editing->setState(OBJ_STATE_FOCUSSED);
-					m_vSelectionContexts.back()->m_Editing = NULL;
+					m_vSelectionContexts.back()->m_Editing = nullptr;
 				}
 			}
 		}
@@ -468,10 +477,10 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 		m_lastActionCausedByTouch = false;
 
 		// we are in focus level - step through the selection list
-		if (m_vSelectionContexts.back()->m_Editing == NULL)
+		if (m_vSelectionContexts.back()->m_Editing == nullptr)
 		{
-			mglGuiObject* pTemp = NULL;
-			mglGuiObject* pSwap = NULL;
+			shared_ptr<mglGuiObject> pTemp = nullptr;
+			shared_ptr<mglGuiObject> pSwap = nullptr;
 
 			int iCount = Message->getIGRCount();
 			bool bForward,bEntry = false;
@@ -484,20 +493,20 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				iCount *= -1;
 			}
 
-			if (m_vSelectionContexts.back()->m_pCurrentSelectionList == NULL)
+			if (m_vSelectionContexts.back()->m_pCurrentSelectionList == nullptr)
 			{
 				bEntry = true;
 				m_vSelectionContexts.back()->m_pCurrentSelectionList = m_vSelectionContexts.back()->m_SelectListParent->getChildren();
 				if (bForward)
 				{
 					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
-					while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
+					while ((pTemp != nullptr) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
 						pTemp = pTemp->next();
 				}
 				else
 				{
 					pTemp = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->rbegin());
-					while ((pTemp != NULL) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
+					while ((pTemp != nullptr) && (!(pTemp->getOptionMask() & static_cast<unsigned long>(enumObjectFlags::Obj_Selectable))))
 						pTemp = pTemp->prev();
 				}
 
@@ -508,7 +517,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 				m_vSelectionContexts.back()->m_Focus->setState(OBJ_STATE_STANDARD);
 			}
 
-			while ((iCount != 0) && (pTemp != NULL))
+			while ((iCount != 0) && (pTemp != nullptr))
 			{
 				if (!bEntry)
 				{
@@ -517,7 +526,7 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 					else
 						pSwap = pTemp->prev();
 
-					if (pSwap == NULL) // reached end of concatenation
+					if (pSwap == nullptr) // reached end of concatenation
 					{
 						if (bForward)
 							pSwap = *(m_vSelectionContexts.back()->m_pCurrentSelectionList->begin());
@@ -532,31 +541,31 @@ mglMessage* mglSystem::processInputMessage(mglInputMessage* Message)
 						iCount--;
 			}
 
-			if (pTemp != NULL)
+			if (pTemp != nullptr)
 			{
 				pTemp->setState(OBJ_STATE_FOCUSSED);
 				m_vSelectionContexts.back()->m_Focus = pTemp;
 			}
 			else
 			{
-				m_vSelectionContexts.back()->m_Focus = NULL;
-				m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+				m_vSelectionContexts.back()->m_Focus = nullptr;
+				m_vSelectionContexts.back()->m_pCurrentSelectionList = nullptr;
 			}
 		}
 		else
 		{
 			// Editables are detected via the flag, but the functor has to implement the IGR count management
 			Message->setTarget(m_vSelectionContexts.back()->m_Editing);
-			mglMessage* retMsg =  m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
+			auto retMsg =  m_vSelectionContexts.back()->m_Editing->ProcessMessage(Message);
 
-			if (m_ValueEditor != NULL)
+			if (m_ValueEditor != nullptr)
 			{
 				m_ValueEditor->setValue(m_vSelectionContexts.back()->m_Editing->getValue());
 			}
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -575,19 +584,19 @@ void mglSystem::Draw(void)
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, 0.1); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
 
-	if (m_CurrentMenu != NULL)
+	if (m_CurrentMenu != nullptr)
 		m_CurrentMenu->Draw();
 
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, 0.2); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
 
-	if (m_ContextAnimation != NULL)
+	if (m_ContextAnimation != nullptr)
 		m_ContextAnimation->Draw();
 
 	glLoadIdentity();
 	glTranslatef(0.0, 0.0, 0.3); // Menu layer is translated one unit onto the user (we are in projection - this will not cause zoom)
 
-	if (m_ValueEditor != NULL)
+	if (m_ValueEditor != nullptr)
 		m_ValueEditor->Draw();
 
 	(*flushGL)();
@@ -595,11 +604,11 @@ void mglSystem::Draw(void)
 }
 
 
-mglGuiObject* mglSystem::getGuiObject(mglValString _str)
+shared_ptr<mglGuiObject> mglSystem::getGuiObject(mglValString _str)
 {
-	std::map<mglValString, mglGuiObject*>::iterator findIt = m_mGuiObjects.find(_str);
+	std::map<mglValString, shared_ptr<mglGuiObject>>::iterator findIt = m_mGuiObjects.find(_str);
 	if (findIt == m_mGuiObjects.end())
-		return NULL;
+		return nullptr;
 	else
 		return findIt->second;
 }
@@ -611,13 +620,12 @@ mglGuiObject* mglSystem::getGuiObject(mglValString _str)
  * @param pt
  * @return
  */
-mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
+shared_ptr<mglGuiObject> mglSystem::getTargetWindow(mglValCoord pt)
 {
-	mglGuiObject* destination;
+	shared_ptr<mglGuiObject> destination = m_ValueEditor; // set target to non IGR editor object (keyboard, slider etc);
 	mglValCoord coord;
-	destination = m_ValueEditor; // set target to non IGR editor object (keyboard, slider etc)
 
-	if (destination != NULL)
+	if (destination != nullptr)
 	{
 
 		// then search within the concatenation for the final input target
@@ -630,12 +638,12 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 			destination = m_ValueEditor->getChildAtPosition(pt);
 			return destination;
 		}
-		return NULL; /** A context editor menu is modal - if we press aside of it - we cancel the input */
+		return nullptr; /** A context editor menu is modal - if we press aside of it - we cancel the input */
 	}
 
 	destination = m_CurrentMenu; // set target to current menu if not null
 
-	if (destination != NULL)
+	if (destination != nullptr)
 	{
 		if (destination->isVisible())
 		{
@@ -654,7 +662,7 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 
 	destination = m_CurrentMainFrame; // set target to current root mainframe
 	if (!destination->isVisible())
-		return 0;
+		return nullptr;
 
 	coord = (m_CurrentMainFrame)->calcPosition();
 	// then search within the concatenation for the final input target
@@ -667,10 +675,10 @@ mglGuiObject* mglSystem::getTargetWindow(mglValCoord pt)
 		return destination;
 	}
 
-	return 0;
+	return nullptr;
 }
 
-mglGuiObject* mglSystem::getMainFrame(mglValString name)
+shared_ptr<mglGuiObject> mglSystem::getMainFrame(mglValString name)
 {
 	mglGuiObjectMap::iterator it = m_mMainFrames.find(name);
 	if (it == m_mMainFrames.end())
@@ -678,11 +686,11 @@ mglGuiObject* mglSystem::getMainFrame(mglValString name)
 		INIT_LOG("mglSystem", "getMainFrame");
 		THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving main frame. " << name.str()->c_str() << " Does not exist!");
 	}
-	mglGuiObject* retval = it->second;
+	shared_ptr<mglGuiObject> retval = it->second;
 	return retval;
 }
 
-mglGuiObject* mglSystem::getMenu(mglValString name)
+shared_ptr<mglGuiObject> mglSystem::getMenu(mglValString name)
 {
 	mglGuiObjectMap::iterator it = m_mMenus.find(name);
 	if (it == m_mMenus.end())
@@ -690,7 +698,7 @@ mglGuiObject* mglSystem::getMenu(mglValString name)
 		INIT_LOG("mglSystem", "getMenu");
 		THROW_TECHNICAL_EXCEPTION(876, "Error while retrieving menu. " << name.str()->c_str() << " Does not exist!");
 	}
-	mglGuiObject* retval = it->second;
+	shared_ptr<mglGuiObject> retval = it->second;
 	return retval;
 }
 
@@ -700,23 +708,23 @@ mglGuiObject* mglSystem::getMenu(mglValString name)
  * This behaviour allows changing main frames out of menus.
  * @param MainFrame
  */
-void mglSystem::SetMainFrame(mglGuiObject *MainFrame)
+void mglSystem::SetMainFrame(shared_ptr<mglGuiObject> MainFrame)
 {
 	m_CurrentMainFrame = MainFrame;
-	m_vSelectionContexts.front()->m_pCurrentSelectionList = NULL;
+	m_vSelectionContexts.front()->m_pCurrentSelectionList = nullptr;
 
 	m_vSelectionContexts.front()->m_SelectListParent = m_CurrentMainFrame;
 }
 
-void mglSystem::openMenu(mglGuiObject *Menu, mglValCoord _coord)
+void mglSystem::openMenu(shared_ptr<mglGuiObject> Menu, mglValCoord _coord)
 {
-	m_vSelectionContexts.push_back(new mglSelectionContext());
+	m_vSelectionContexts.push_back(shared_ptr<mglSelectionContext>(new mglSelectionContext()));
 
 	m_CurrentMenu = Menu;
 	if (!_coord.empty())
 		Menu->SetPosition(_coord);
 	m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
-	mglGuiObject* obj = NULL;
+	shared_ptr<mglGuiObject> obj = nullptr;
 
 	if (!m_lastActionCausedByTouch)
 	{
@@ -732,7 +740,7 @@ void mglSystem::openMenu(mglGuiObject *Menu, mglValCoord _coord)
 		m_vSelectionContexts.back()->m_Focus = obj;
 	}
 	else
-		m_vSelectionContexts.back()->m_pCurrentSelectionList = NULL;
+		m_vSelectionContexts.back()->m_pCurrentSelectionList = nullptr;
 
 	m_vSelectionContexts.back()->m_SelectListParent = m_CurrentMenu;
 	m_vSelectionContexts.back()->m_Menu = m_CurrentMenu;
@@ -746,10 +754,9 @@ void mglSystem::closeMenu()
 {
 	while (m_vSelectionContexts.size() > 1)
 	{
-		delete m_vSelectionContexts.back();
 		m_vSelectionContexts.pop_back();
 	}
-	m_CurrentMenu = NULL;
+	m_CurrentMenu = nullptr;
 }
 
 
@@ -759,7 +766,6 @@ void mglSystem::closeMenu()
  */
 void mglSystem::returnFromMenu()
 {
-	delete m_vSelectionContexts.back();
 	m_vSelectionContexts.pop_back();
 	m_CurrentMenu = m_vSelectionContexts.back()->m_Menu;
 }
@@ -773,9 +779,6 @@ void mglSystem::returnFromMenu()
 void mglSystem::readConfiguration(mglValString& configFile)
 {
 	INIT_LOG("mglSystem", "readConfiguration(mglValString& configFile)");
-
-	// Test to see if the file is ok.
-   struct stat fileStatus;
 
    errno = 0;
    /**/
@@ -832,7 +835,7 @@ void mglSystem::readConfiguration(mglValString& configFile)
 		for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
 		{
 			DOMNode* currentNode = children->item(xx);
-			if( currentNode->getNodeType() &&  // true is not NULL
+			if( currentNode->getNodeType() &&  // true is not nullptr
 					currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
 			{
 				// Found node which is an Element. Re-cast node as element
@@ -856,17 +859,17 @@ void mglSystem::readConfiguration(mglValString& configFile)
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_mMainFrames, 0);
+					createGUIfromXML(currentNode, nullptr, nullptr, m_mMainFrames, 0);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_mMenus, 1);
+					createGUIfromXML(currentNode, nullptr, nullptr, m_mMenus, 1);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Editors))
 				{
-					createGUIfromXML(currentNode, NULL, NULL, m_mEditors, 2);
+					createGUIfromXML(currentNode, nullptr, nullptr, m_mEditors, 2);
 				}
 
 				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
@@ -905,11 +908,17 @@ void mglSystem::readConfiguration(mglValString& configFile)
       XMLString::release(&TAG_MessageHandlers);
 
    }
+   catch (mglTechnicalException& e)
+   {
+//	   char* message = xercesc::XMLString::transcode(e.);
+
+	   LOG_TRACE(e.getMessage());
+   }
    catch (exception& e)
    {
 //	   char* message = xercesc::XMLString::transcode(e.);
 
-	   mglValString tmp = mglValString("Huh!");
+	   mglValString tmp = mglValString("Exception occured during init!");
 	   LOG_TRACE(tmp);
    }
 
@@ -930,15 +939,15 @@ void mglSystem::readConfiguration(mglValString& configFile)
  * @param prev - previous element for recursive usage
  * @param listToAdd - pointer to the list where root objects will be added
  */
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev, mglGuiObjectMap& listToAdd, int _listtype)
+void mglSystem::createGUIfromXML(DOMNode* GUIELement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype)
 {
 	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
 
 	DOMNodeList*      children = GUIELement->getChildNodes();
 	const  XMLSize_t nodeCount = children->getLength();
 
-	mglGuiObject* thisWindow = NULL;
-	mglGuiObject* prevWindow = NULL;
+	shared_ptr<mglGuiObject> thisWindow = nullptr;
+	shared_ptr<mglGuiObject> prevWindow = nullptr;
 
 	XMLCh* TAG_mglWindowItem = XMLString::transcode("mglWindowItem");
 	XMLCh* TAG_name = XMLString::transcode("name");
@@ -1062,8 +1071,9 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 
 				// Create the configured element via the factory
 				thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
-													classname,
-													DE_configuration);
+																	  classname,
+																	  DE_configuration);
+				LOG_TRACE("Create performed...: " << *classname);
 
 				// The custom editor setting is optional - we check if this tag was set and set the editor afterwards
 				if (editorname != NULL)
@@ -1080,23 +1090,27 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				{
 					if ((handlerlibname->str()->compare("NULL") == 0) || (handlerclassname->str()->compare("NULL") == 0))
 					{
-						thisWindow->Connect(NULL);
+						thisWindow->Connect(nullptr);
 						LOG_TRACE("Connected NULL");
 					}
 					else
 					{
 						// After we created the object we can attach the handler if it exists
-						mglMessageHandler* funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
+						auto funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
 						thisWindow->Connect(funct);
 					}
 				}
 
 				// A created gui object is also registered by its name
-				m_mGuiObjects.insert(std::pair<mglValString,mglGuiObject*>(mglValString(*name),thisWindow));
+				m_mGuiObjects.insert(std::pair<mglValString, shared_ptr<mglGuiObject>>(mglValString(*name),thisWindow));
+
+				/* Init Children of currently created object - this is a workaround for shared_from_this in constructor - as we dont want
+				   to use raw pointers anymore */
+				thisWindow->initChildren();
 
 				// We are at parent level - so this is a main frame
-				if (parent == NULL)
-					listToAdd.insert(std::pair<mglValString, mglGuiObject*>(mglValString(*name), thisWindow));
+				if (parent == nullptr)
+					listToAdd.insert(std::pair<mglValString, shared_ptr<mglGuiObject>>(mglValString(*name), thisWindow));
 				else
 				{
 					thisWindow->setParentWindow(parent);
@@ -1104,14 +1118,14 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglG
 				}
 
 				thisWindow->setPrevWindow(prevWindow);
-				thisWindow->setNextWindow(NULL);
+				thisWindow->setNextWindow(nullptr);
 				if (prevWindow)
 					prevWindow->setNextWindow(thisWindow);
 
 				// Now ascend down and create the children
 				if (DE_children->getChildNodes()->getLength() > 0)
 				{
-					createGUIfromXML(DE_children, thisWindow, NULL, listToAdd, _listtype);
+					createGUIfromXML(DE_children, thisWindow, nullptr, listToAdd, _listtype);
 				}
 				prevWindow = thisWindow;
 
@@ -1253,8 +1267,8 @@ void mglSystem::loadMessageHandler(DOMNode* _currentElement)
 	if (handlerlibname != NULL && handlerclassname != NULL && msgID_str != NULL)
 	{
 		// After we created the object we can attach the handler if it exists
-		mglMessageHandler* funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
-		m_mMessageHandlers.insert(std::pair<int,mglMessageHandler*>(messageId,funct));
+		auto funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
+		m_mMessageHandlers.insert(std::pair<int, shared_ptr<mglMessageHandler>>(messageId,funct));
 	}
 
 	delete handlerlibname;
@@ -1284,7 +1298,7 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 	DOMNodeList*      children = currentElement->getChildNodes();
 	const  XMLSize_t nodeCount = children->getLength();
 
-	mglDataSource* thisDS;
+	shared_ptr<mglDataSource> thisDS;
 
 	XMLCh* TAG_DataSource = XMLString::transcode("DataSource");
 
@@ -1319,14 +1333,14 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 
 				// Create the configured element via the factory
 
-				mglValString* name = new mglValString(XMLString::transcode(DE_name->getTextContent()));
-				mglValString* libname = new mglValString(XMLString::transcode(DE_libname->getTextContent()));
-				mglValString* classname = new mglValString(XMLString::transcode(DE_classname->getTextContent()));
+				auto name = shared_ptr<mglValString>(new mglValString(XMLString::transcode(DE_name->getTextContent())));
+				auto libname = shared_ptr<mglValString>(new mglValString(XMLString::transcode(DE_libname->getTextContent())));
+				auto classname = shared_ptr<mglValString>(new mglValString(XMLString::transcode(DE_classname->getTextContent())));
 
 				thisDS = mglDataSourceManager::Inst().createDataSource(libname,
 													classname,
 													DE_configuration);
-				m_DataSources.insert(pair<mglValString,mglDataSource*>(*name,thisDS));
+				m_DataSources.insert(pair<mglValString, shared_ptr<mglDataSource>>(*name,thisDS));
 			}
 		}
 	}
@@ -1334,7 +1348,7 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
 	XMLString::release(&TAG_DataSource);
 
 	LOG_TRACE("Initializing data sources...");
-	map<mglValString,mglDataSource*>::iterator itDS;
+	map<mglValString, shared_ptr<mglDataSource>>::iterator itDS;
 	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
 		itDS->second->init();
 }
@@ -1346,11 +1360,11 @@ void mglSystem::createDataLayer(DOMNode* _currentElement)
  * @param _name
  * @return
  */
-mglDataSource* mglSystem::getDataSource(mglValString _name)
+shared_ptr<mglDataSource> mglSystem::getDataSource(mglValString _name)
 {
 	mglDataSourceMap::iterator itDS = m_DataSources.find(_name);
 	if (itDS == m_DataSources.end())
-		return NULL;
+		return nullptr;
 	else
 		return itDS->second;
 }
@@ -1365,10 +1379,11 @@ void mglSystem::processEvents()
 {
 	while (!m_MessageQueue.empty())
 	{
-		mglMessage* processing = m_MessageQueue.front();
+		auto processing = m_MessageQueue.front();
 		if (processing->getMessageType() == eMessageType::mtInput)
 		{
-			processInputMessage(static_cast<mglInputMessage*>(processing));
+			auto inputMessage =  static_pointer_cast<mglInputMessage>(processing);
+			processInputMessage(inputMessage);
 		}
 		else
 		{
@@ -1379,10 +1394,9 @@ void mglSystem::processEvents()
 			if (findIt != m_mMessageHandlers.end())
 			{
 				// This will execute the handler
-				(*findIt->second)(static_cast<mglInputMessage*>(processing));
+				(*findIt->second)(processing);
 			}
 		}
-		delete processing;
 		m_MessageQueue.pop();
 	}
 }
@@ -1393,7 +1407,7 @@ void mglSystem::processEvents()
  *
  * @param mess The message to add.
  */
-void mglSystem::addMessage(mglMessage* mess)
+void mglSystem::addMessage(shared_ptr<mglMessage> mess)
 {
 	m_MessageQueue.push(mess);
 }
@@ -1404,7 +1418,7 @@ void mglSystem::destroy()
 	INIT_LOG("mglSystem", "destroy");
 
 	LOG_TRACE("Clearing data sources...");
-	map<mglValString, mglDataSource*>::iterator itDS;
+	map<mglValString, shared_ptr<mglDataSource>>::iterator itDS;
 	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
 		itDS->second->deInit();
 
@@ -1413,12 +1427,12 @@ void mglSystem::destroy()
 
 
 
-mglGuiObject* mglSystem::getValueEditor()
+shared_ptr<mglGuiObject> mglSystem::getValueEditor()
 {
 	return m_ValueEditor;
 }
 
-mglGuiObject* mglSystem::getEditedObject()
+shared_ptr<mglGuiObject> mglSystem::getEditedObject()
 {
 	return m_vSelectionContexts.back()->m_Editing;
 }

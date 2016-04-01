@@ -13,7 +13,10 @@ mglFontProvider::mglFontProvider(void)
 
 mglFontProvider::~mglFontProvider()  // destructor
 {
-	while(!m_VecFonts.empty()) delete m_VecFonts.back(), m_VecFonts.pop_back();
+	while(!m_VecFonts.empty()) { 
+		delete m_VecFonts.back();
+		m_VecFonts.pop_back();
+	}
 }
 
 

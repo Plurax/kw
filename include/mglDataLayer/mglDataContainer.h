@@ -36,11 +36,11 @@ public:
 	void init();
 	void deInit();
 
-	void addValue(mglValString _key, mglValue* _val);
+	void addValue(mglValString _key, shared_ptr<mglValue> _val);
 	void delValue(mglValString _str);
-	mglValue* getValue(mglValString key);
+	shared_ptr<mglValue> getValue(mglValString key);
 private:
-	map<mglValString, mglValue*> m_MapValues;
+	map<mglValString, shared_ptr<mglValue>> m_MapValues;
 };
 
 #endif /* MGLDATACONTAINER_H_ */

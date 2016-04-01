@@ -12,9 +12,9 @@
 
 mglSelectionContext::mglSelectionContext()
 {
-	m_Focus = NULL;
-	m_pCurrentSelectionList = NULL;
-	m_Menu = NULL;
-	m_SelectListParent = NULL;
-	m_Editing = NULL;
+	m_Focus = nullptr;
+	m_pCurrentSelectionList = nullptr;
+	m_Menu = nullptr;
+	m_SelectListParent = nullptr;
+	m_Editing = nullptr;
 }
