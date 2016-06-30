@@ -13,70 +13,74 @@
 
 mglValString::mglValString()
 {
-	m_string = new string("");
+	m_string = make_shared<string>("");
 	m_isEmpty = true;
 }
 
 
 mglValString::mglValString(char* _cstr)
 {
-	m_string = new string(_cstr);
+	m_string = make_shared<string>(_cstr);
 	m_isEmpty = false;
 }
 
 
 mglValString::mglValString(const char* _cstr)
 {
-	m_string = new string(_cstr);
+	m_string = make_shared<string>(_cstr);
 	m_isEmpty = false;
 }
 
 
 mglValString::mglValString(string& _str)
 {
-	m_string = new string(_str);
+	m_string = make_shared<string>(_str);
 	m_isEmpty = false;
 }
 
 
 mglValString::mglValString(string* _str)
 {
-	m_string = new string(*_str);
+	m_string = make_shared<string>(*_str);
 	m_isEmpty = false;
 }
 
 
 mglValString::mglValString(const string _str)
 {
-	m_string = new string(_str);
+	m_string = make_shared<string>(_str);
 	m_isEmpty = false;
 }
 
 
 mglValString::mglValString(mglValString*_str)
 {
-	m_string = new string(*_str->str());
+	m_string = make_shared<string>(*_str->str());
 	m_isEmpty = false;
 }
 
+mglValString::mglValString(shared_ptr<mglValString> _str)
+{
+	m_string = make_shared<string>(*_str->str());
+	m_isEmpty = false;
+}
 
 mglValString::mglValString(const mglValString& right) // Copy constructor
 {
-	m_string = new string(*right.m_string);
+	m_string = make_shared<string>(*right.m_string);
 	m_isEmpty = false;
 }
 
 
 mglValString::~mglValString()
 {
-	if (m_string != NULL)
-		delete m_string;
+// nothing to do as string is kept as smart pointer
 }
 
 
 std::ostream& operator<< (std::ostream& stream, const mglValString& _valstring)
 {
-		  stream << (*_valstring.str());
+		  stream << (*_valstring.const_str());
 		  return stream;
 }
 
@@ -125,13 +129,12 @@ mglValString& mglValString::operator = (const mglValString& _str)
 	// First check if the local helds already a string - this must be deleted to avoid mem leak caused by overwriting the value!
 	if (this->m_string != NULL)
 	{
-		delete this->m_string;
 		this->m_string = NULL;
 	}
 
 	if (_str.m_string != NULL)
 	{
-		this->m_string = new string(*_str.m_string);
+		this->m_string = make_shared<string>(*_str.m_string);
 	}
 
 	return *this;
@@ -144,9 +147,15 @@ bool mglValString::operator < (const mglValString& _right) const
 }
 
 
-const string* mglValString::str() const
+shared_ptr<string> mglValString::str()
 {
 	return m_string;
+}
+
+const shared_ptr<string> mglValString::const_str() const
+{
+	const shared_ptr<string> clone = make_shared<string>(m_string->c_str());
+	return clone;
 }
 
 mglValString mglValString::getType()

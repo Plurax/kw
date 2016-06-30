@@ -33,16 +33,8 @@
 #include "mglGui/mglGuiObject.h"
 #include "mglGui/mglGuiLibHandle.h"
 #include "mglGui/mglGuiObjectFactory.h"
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
 
+#include <json.hpp>
 
 using namespace std;
 
@@ -60,8 +52,8 @@ public:
 
 	void init();
 
-	shared_ptr<mglGuiObject> createGUIObject(mglValString* libname, mglValString* classname, DOMElement* configuration);
-	shared_ptr<mglMessageHandler> createMessageHandler(mglValString* libname, mglValString* classname);
+	shared_ptr<mglGuiObject> createGUIObject(shared_ptr<mglValString> libname, shared_ptr<mglValString> classname, json configuration);
+	shared_ptr<mglMessageHandler> createMessageHandler(shared_ptr<mglValString> libname, shared_ptr<mglValString> classname);
 
 private:
 	map<mglValString, shared_ptr<mglGuiLibHandle>> m_loadedGuiLibraries;

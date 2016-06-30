@@ -13,84 +13,33 @@ using namespace std;
 mglGuiObject::mglGuiObject()
 {}
 
-mglGuiObject::mglGuiObject(DOMElement* xmlconfiguration)
+mglGuiObject::mglGuiObject(json configuration)
 {
-
-	DOMNodeList*      children = xmlconfiguration->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_xpos = XMLString::transcode("xpos");
-	XMLCh* TAG_ypos = XMLString::transcode("ypos");
-	XMLCh* TAG_width = XMLString::transcode("width");
-	XMLCh* TAG_height = XMLString::transcode("height");
-	XMLCh* TAG_backgroundcolor = XMLString::transcode("backgroundcolor");
-	XMLCh* TAG_optionflags= XMLString::transcode("optionflags");
-
-	int x,y,width,height;
+	int x,y;
 
 	m_ulOptionMask = 0;
 
 	m_EditorName = mglValString();
 
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	x = configuration["xpos"].get<float>();
+	y = configuration["ypos"].get<float>();
+
+	m_fWidth = configuration["width"].get<float>();
+	m_fHeight = configuration["height"].get<float>();
+
+	std::string xstr = configuration["backgroundcolor"];
+	m_BackGroundColor = mglValColor(xstr.c_str());
+
+	if (configuration.count("optionflags"))
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_xpos))
-			{
-				std::string xstr = XMLString::transcode(currentElement->getTextContent());
-				x = atoi(xstr.c_str());
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_ypos))
-			{
-				std::string xstr = XMLString::transcode(currentElement->getTextContent());
-				y = atoi(xstr.c_str());
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_width))
-			{
-				std::string xstr = XMLString::transcode(currentElement->getTextContent());
-				width = atoi(xstr.c_str());
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_height))
-			{
-				std::string xstr = XMLString::transcode(currentElement->getTextContent());
-				height = atoi(xstr.c_str());
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_backgroundcolor))
-			{
-				std::string xstr = XMLString::transcode(currentElement->getTextContent());
-				m_BackGroundColor = mglValColor(xstr.c_str());
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_optionflags))
-			{
-				char* optionflags = XMLString::transcode(currentElement->getTextContent());
-				m_ulOptionMask = mglGuiObject::getOptionMaskFromString(string(optionflags));
-			}
-		}
+		xstr = (configuration["optionflags"]).get<string>();
+		m_ulOptionMask = mglGuiObject::getOptionMaskFromString(xstr);
 	}
-
-
-	XMLString::release(&TAG_xpos);
-	XMLString::release(&TAG_ypos);
-	XMLString::release(&TAG_width);
-	XMLString::release(&TAG_height);
-	XMLString::release(&TAG_backgroundcolor);
-	XMLString::release(&TAG_optionflags);
+	else
+		m_ulOptionMask = 0;
 
 	m_GuiAction = nullptr; // on creation there is no function defined!
 	m_Position = mglValCoord(x, y, 0);
-	m_fHeight = height;
-	m_fWidth = width;
 	m_bVisible = true;
 	m_bHasChildren = false;
 }
@@ -257,7 +206,7 @@ void mglGuiObject::setParentWindow(shared_ptr<mglGuiObject> parent)
 	m_pParent = parent;
 }
 
-void mglGuiObject::setEditor(mglValString* _editor)
+void mglGuiObject::setEditor(shared_ptr<mglValString> _editor)
 {
 	m_EditorName = mglValString(*_editor);
 }

@@ -8,7 +8,7 @@
 
 #include "mglDataLayer/mglDataContainer.h"
 
-mglDataContainer::mglDataContainer(DOMElement* configuration)
+mglDataContainer::mglDataContainer(json configuration)
 {
 
 }

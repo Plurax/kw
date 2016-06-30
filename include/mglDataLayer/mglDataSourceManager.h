@@ -22,6 +22,8 @@
 #include <errno.h>
 #include <stdexcept>
 
+#include <json.hpp>
+
 #ifdef WIN32
 #include "Windows.h"
 #else
@@ -32,18 +34,7 @@
 #include "mglDataLayer/mglDataSourceFactory.h"
 #include "mglDataLayer/mglDataLibHandle.h"
 
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
-
-using namespace xercesc;
+using json = nlohmann::json;
 
 class mglDataSourceManager
 {
@@ -58,7 +49,7 @@ public:
 
 	void init();
 
-	shared_ptr<mglDataSource> createDataSource(shared_ptr<mglValString>& libname, shared_ptr<mglValString>& classname, DOMElement* configuration);
+	shared_ptr<mglDataSource> createDataSource(shared_ptr<mglValString>& libname, shared_ptr<mglValString>& classname, json configuration);
 
 private:
 	map<mglValString, shared_ptr<mglDataLibHandle>> m_loadedDataSources;

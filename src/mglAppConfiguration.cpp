@@ -8,126 +8,43 @@
 #include "mglAppConfiguration.h"
 #include "mglDebug/mglLogger.h"
 
-void mglAppConfiguration::init(DOMNode* appconfig)
+void mglAppConfiguration::init(json appconfig)
 {
-	INIT_LOG("mglAppConfiguration", "init(DOMNode* appconfig)");
-
-	DOMNodeList*      children = appconfig->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_GL = XMLString::transcode("GL");
-	XMLCh* TAG_yres = XMLString::transcode("yres");
-	XMLCh* TAG_xres = XMLString::transcode("xres");
-
-	XMLCh* TAG_contextanimationclass = XMLString::transcode("ContextAnimationClass");
-	XMLCh* TAG_contextanimationlib = XMLString::transcode("ContextAnimationLib");
-	XMLCh* TAG_ContextDelayStart = XMLString::transcode("ContextDelayStart");
-	XMLCh* TAG_ContextDelayEnd = XMLString::transcode("ContextDelayEnd");
-	XMLCh* TAG_FullScreen = XMLString::transcode("FullScreen");
+	INIT_LOG("mglAppConfiguration", "init(json appconfig)");
 
 	unsigned long int uisReadVal = 0;
 	char* valTagText;
 
+	// Set defaults for delaystart and end
 	m_contextDelayStart = boost::posix_time::duration_from_string(std::string("00:00:00.100"));;
 	m_contextDelayEnd = boost::posix_time::duration_from_string(std::string("00:00:00.100"));
 
+	auto numberval = (((appconfig)["GL"]["xres"]).get<int>());
+	m_xres = (unsigned short)numberval;
 
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
-	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+	numberval = (((appconfig)["GL"]["yres"]).get<int>());
+	m_yres = (unsigned short)numberval;
 
-			if ( XMLString::equals(currentElement->getTagName(), TAG_GL))
-			{
-				DOMNodeList* channel_children = currentElement->getChildNodes();
-				for( XMLSize_t ccxx = 0; ccxx < channel_children->getLength(); ++ccxx )
-				{
-					DOMNode* channel_child= channel_children->item(ccxx);
+	m_ContextAnimationClass = make_shared<mglValString>(((appconfig)["GL"]["ContextAnimationClass"]).get<string>());
 
-					if( channel_child->getNodeType() &&  // true is not NULL
-							channel_child->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-					{
-						// Found node which is an Element. Re-cast node as element
-						DOMElement* child_Element = dynamic_cast< xercesc::DOMElement* >( channel_child );
+	m_ContextAnimationLib = make_shared<mglValString>(((appconfig)["GL"]["ContextAnimationLib"]).get<string>());
 
-						if ( XMLString::equals(child_Element->getTagName(), TAG_xres))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%lu", &uisReadVal);
-							m_xres = (unsigned short)uisReadVal;
-							XMLString::release(&valTagText);
-						}
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_yres))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%lu", &uisReadVal);
-							m_yres = (unsigned short)uisReadVal;
-							XMLString::release(&valTagText);
-						}
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_contextanimationclass))
-						{
-							m_ContextAnimationClass = new mglValString(XMLString::transcode(child_Element->getTextContent()));
-							XMLString::release(&valTagText);
-						}
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_contextanimationlib))
-						{
-							m_ContextAnimationLib = new mglValString(XMLString::transcode(child_Element->getTextContent()));
-							XMLString::release(&valTagText);
-						}
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayStart))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
+	valTagText = const_cast<char*>(((appconfig)["GL"]["ContextDelayStart"]).get<string>().c_str());
 							
-							m_contextDelayStart = boost::posix_time::duration_from_string(valTagText);;
-							LOG_DEBUG("DelayStart: " << m_contextDelayStart);
-							XMLString::release(&valTagText);
-						}
+	m_contextDelayStart = boost::posix_time::duration_from_string(valTagText);;
+	LOG_DEBUG("DelayStart: " << m_contextDelayStart);
 
-						if ( XMLString::equals(child_Element->getTagName(), TAG_ContextDelayEnd))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
+	valTagText = const_cast<char*>(((appconfig)["GL"]["ContextDelayEnd"]).get<string>().c_str());
 
-							m_contextDelayEnd = boost::posix_time::duration_from_string(valTagText);;
-							XMLString::release(&valTagText);
-						}
+	m_contextDelayEnd = boost::posix_time::duration_from_string(valTagText);;
 
-						if ( XMLString::equals(child_Element->getTagName(), TAG_FullScreen))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
-							sscanf(valTagText, "%lu", &uisReadVal);
-							if (uisReadVal > 0)
-								m_FullScreen = true;
-							else
-								m_FullScreen = false;
-							XMLString::release(&valTagText);
-						}
-					}
-				}
-			}
-		}
-	}
+	numberval = (((appconfig)["GL"]["FullScreen"]).get<bool>());
+	if (numberval > 0)
+		m_FullScreen = true;
+	else
+		m_FullScreen = false;
 
-	XMLString::release(&TAG_GL);
-	XMLString::release(&TAG_yres);
-	XMLString::release(&TAG_xres);
-
-	XMLString::release(&TAG_contextanimationclass);
-	XMLString::release(&TAG_contextanimationlib);
-	XMLString::release(&TAG_ContextDelayStart);
-	XMLString::release(&TAG_ContextDelayEnd);
-	XMLString::release(&TAG_FullScreen);
-
-
-	LOG_TRACE("yres: " << m_yres << " xres: " << m_xres);
+	LOG_DEBUG("yres: " << m_yres << " xres: " << m_xres);
 }
 
 unsigned short mglAppConfiguration::getYRes()
@@ -146,12 +63,12 @@ bool mglAppConfiguration::getFullScreen()
 	return m_FullScreen;
 }
 
-mglValString* mglAppConfiguration::getContextAnimationClass()
+shared_ptr<mglValString> mglAppConfiguration::getContextAnimationClass()
 {
 	return m_ContextAnimationClass;
 }
 
-mglValString* mglAppConfiguration::getContextAnimationLib()
+shared_ptr<mglValString> mglAppConfiguration::getContextAnimationLib()
 {
 	return m_ContextAnimationLib;
 }

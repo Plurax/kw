@@ -34,7 +34,7 @@ void mglDataSourceManager::init()
 								   defaultDataSourceLibHandle));
 }
 
-shared_ptr<mglDataSource> mglDataSourceManager::createDataSource(shared_ptr<mglValString>& libname, shared_ptr<mglValString>& classname, DOMElement* configuration)
+shared_ptr<mglDataSource> mglDataSourceManager::createDataSource(shared_ptr<mglValString>& libname, shared_ptr<mglValString>& classname, json configuration)
 {
 
 	// Found the requested library in the map?
@@ -42,7 +42,7 @@ shared_ptr<mglDataSource> mglDataSourceManager::createDataSource(shared_ptr<mglV
 
 	if (libIterator != m_loadedDataSources.end())
 	{
-		return libIterator->second->m_factory->createDataSource(classname, configuration);
+		return libIterator->second->m_factory->createDataSource(classname.get(), configuration);
 	}
 	else
 	{
@@ -76,7 +76,7 @@ shared_ptr<mglDataSource> mglDataSourceManager::createDataSource(shared_ptr<mglV
 		auto DataSourceLibHandle = shared_ptr<mglDataLibHandle>(new mglDataLibHandle(handle, thisInfo, factory));
 
 		m_loadedDataSources.insert(std::pair<mglValString,shared_ptr<mglDataLibHandle>>(*libname,DataSourceLibHandle ));
-		return factory->createDataSource(classname, configuration);
+		return factory->createDataSource(classname.get(), configuration);
 	}
     return NULL;
 }

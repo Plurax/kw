@@ -17,22 +17,11 @@
 #include <sstream>
 #include <map>
 #include <vector>
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
-
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/XMLUni.hpp>
+#include <json.hpp>
 
 class mglDynamicLoggerInfo;
 using namespace std;
+using json = nlohmann::json;
 
 struct __static_log_info {
 	const char* psz_libname;
@@ -102,7 +91,7 @@ public:
 			return _instance;
 		}
 
-	void configure(xercesc::DOMNode* loggerconfig);
+	void configure(json loggerconfig);
 
 	void addLibraryFilter(string& channel, string& name, unsigned short value);
 	void addClassFilter(string& channel, string& name, unsigned short value);

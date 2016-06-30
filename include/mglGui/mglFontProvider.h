@@ -27,21 +27,10 @@
 
 #include "FTGL/ftgl.h"
 
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
+#include <json.hpp>
 
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/XMLUni.hpp>
-
-using namespace xercesc;
 using namespace std;
+using json = nlohmann::json;
 
 class mglFontProvider
 {
@@ -49,15 +38,13 @@ public:
 	mglFontProvider(); // private constructor (singleton class)
 	~mglFontProvider();  // destructor
 
-    void loadFonts(DOMNode* currentElement);
+    void loadFonts(json fontconfig);
 
-    void AddFont(int _size, mglValString* _name, mglValString* _file);
+    void AddFont(int _size, shared_ptr<mglValString> _name, shared_ptr<mglValString> _file);
 	FTFont* GetFontByID(unsigned short index);
 	FTFont* GetFontByName(mglValString& _string);
 
 private:
-    void loadFont(DOMNode* currentElement);
-
     std::map<mglValString, FTFont*> m_MapFonts;
 	std::vector<FTFont*> m_VecFonts;
 };

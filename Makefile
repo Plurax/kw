@@ -10,9 +10,9 @@ BUILDTIME = $(shell date +%Y%m%d-%H%M%S)
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -D"__LIBNAME="\"MGlBase\" -D"__BUILD_DATE="\"$(BUILDTIME)\" -O0 -g -Wall -c -fmessage-length=0 -std=c++14 -fPIC -MMD -MP
+CFLAGS := -D"__LIBNAME="\"MGlBase\" -D"__BUILD_DATE="\"$(BUILDTIME)\" -O0 -g -Wall -c -fmessage-length=0 -std=c++14 -fPIC
 LIB := 
-INC := -I/usr/include/freetype2 -I/usr/include -I include -I/home/cromas/newgit/mgl/include -I/home/cromas/externalsources/boost_1_58_0 -I/home/cromas/git/mgl/workspace/xerces-c-3.1.1-x86_64-linux-gcc-3.4/include/
+INC := -I/home/cromas/newgit/json/src -I/usr/include/freetype2 -I/usr/include -I include -I/home/cromas/newgit/mgl/include -I/home/cromas/externalsources/boost_1_58_0
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."

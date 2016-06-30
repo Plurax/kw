@@ -15,16 +15,8 @@
 
 #include "mglGui/mglGuiObject.h"
 #include "mglLibraryInfo.h"
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
 
+#include <json.hpp>
 
 
 using namespace std;
@@ -35,7 +27,7 @@ class mglGuiObjectFactory
 public:
 	virtual ~mglGuiObjectFactory() {};
 	virtual mglLibraryInfo* getLibInfo();
-	virtual shared_ptr<mglGuiObject> createGuiObject(mglValString* classname, DOMElement* configuration);
+	virtual shared_ptr<mglGuiObject> createGuiObject(mglValString* classname, json configuration);
 	virtual void deleteGuiObject(mglGuiObject* _obj);
 };
 

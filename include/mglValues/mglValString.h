@@ -9,6 +9,7 @@
 #define MGLVALSTRING_H_
 
 #include <string>
+#include <memory>
 #include "mglValue.h"
 
 class mglValString;
@@ -29,7 +30,8 @@ public:
 	  mglValString(string& _str);
 	  mglValString(string* _str);
 	  mglValString(const string _str);
-	  mglValString(mglValString*_str);
+	  mglValString(mglValString* _str);
+	  mglValString(shared_ptr<mglValString> _str);
 
 	  friend std::ostream& operator<< (std::ostream& stream, const mglValString& _valstring);
 
@@ -47,9 +49,10 @@ public:
 	  mglValString& operator = (const mglValString& _str);
 	  bool operator < (const mglValString& _right) const;
 
-	  const string* str() const;
+	  shared_ptr<string> str();
+	  const shared_ptr<string> const_str() const;
 private:
-	  string* m_string;
+	  shared_ptr<string> m_string;
 	  bool m_isEmpty;
 };
 

@@ -14,22 +14,10 @@
 #include "mglLibHandle.h"
 #include "mglValues/mglValString.h"
 #include <memory>
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
-
-
+#include <json.hpp>
 
 using namespace std;
-using namespace xercesc;
-
+using json = nlohmann::json; 
 
 
 class mglDataSourceFactory
@@ -37,7 +25,7 @@ class mglDataSourceFactory
 public:
 	virtual ~mglDataSourceFactory();
 
-	virtual shared_ptr<mglDataSource> createDataSource(shared_ptr<mglValString>& classname, DOMElement* configuration);
+	virtual shared_ptr<mglDataSource> createDataSource(mglValString* classname, json configuration);
 };
 
 typedef mglDataSourceFactory* (*DataSourceCreateFunc)();

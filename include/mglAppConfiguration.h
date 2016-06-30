@@ -12,27 +12,16 @@
 
 #include "mglValues/mglValString.h"
 
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
-
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/XMLUni.hpp>
-
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <json.hpp>
 
-using namespace xercesc;
+
+using json = nlohmann::json;
 
 class mglAppConfiguration
 {
 public:
-	void init(xercesc::DOMNode* appconfig);
+	void init(json appconfig);
 
 	unsigned short getYRes();
 	unsigned short getXRes();
@@ -40,8 +29,8 @@ public:
 	boost::posix_time::time_duration getContextAnimationDelayEnd();
 	bool getFullScreen();
 
-	mglValString* getContextAnimationClass();
-	mglValString* getContextAnimationLib();
+	shared_ptr<mglValString> getContextAnimationClass();
+	shared_ptr<mglValString> getContextAnimationLib();
 
 private:
 	unsigned short m_yres;
@@ -60,8 +49,8 @@ private:
 	*/
 	bool m_OnePxAbove = false; 
 
-	mglValString* m_ContextAnimationClass;
-	mglValString* m_ContextAnimationLib;
+	shared_ptr<mglValString> m_ContextAnimationClass;
+	shared_ptr<mglValString> m_ContextAnimationLib;
 };
 
 #endif /* MGLAPPCONFIGURATION_H_ */

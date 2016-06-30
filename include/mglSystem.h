@@ -27,31 +27,16 @@
 #include "mglAppConfiguration.h"
 #include "mglGui/mglSelectionContext.h"
 
+#include <json.hpp>
 #include "mglValues/mglValString.h"
 
 #include "mglLibHandle.h"
 
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
-
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#ifdef WIN32
-#include <xercesc/util/Transcoders/Win32/Win32TransService.hpp>
-#endif
 class mglGuiObject;
 
 typedef map<int, shared_ptr<mglMessageHandler>> mglMessageHandlerMap;
 
-
-using namespace xercesc;
+using json = nlohmann::json;
 using namespace std;
 
 class mglSystem
@@ -124,9 +109,7 @@ public:
 	void processEvents();
 	void addMessage(shared_ptr<mglMessage> mess);
 
-	void setMessageHandlers(DOMNode* _currentElement);
-	void loadMessageHandler(DOMNode* _currentElement);
-
+	void setMessageHandlers(json messageconfig);
 
 	// On windows we force to use UTF8 - so we need to create a seperate Transcoder!
 #ifdef WIN32
@@ -136,12 +119,13 @@ private:
 	int m_pixelformat;
 
 	mglSystem();
-	xercesc::XercesDOMParser *m_ConfigFileParser;
-    XMLCh* m_TAG_root;
-    void createGUIfromXML(DOMNode* currentElement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype);
-    void createDataLayer(DOMNode* currentElement);
 
-    XMLCh* m_TAG_ApplicationSettings;
+//    XMLCh* m_TAG_root;
+
+    void createGUIfromJSON(json GUIElement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype);
+    void createDataLayer(json currentElement);
+
+//    XMLCh* m_TAG_ApplicationSettings;
 
 	bool m_dbf;
 

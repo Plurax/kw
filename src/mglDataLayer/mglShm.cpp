@@ -34,14 +34,11 @@
 
 
 
-mglShm::mglShm(DOMElement* configuration)
+mglShm::mglShm(json configuration)
 {
 	INIT_LOG("mglShm", "mglShm");
 
-	DOMNodeList*      children = configuration->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_key = XMLString::transcode("key");
+/*	XMLCh* TAG_key = XMLString::transcode("key");
 	XMLCh* TAG_size = XMLString::transcode("size");
 
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
@@ -64,7 +61,6 @@ mglShm::mglShm(DOMElement* configuration)
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
 				m_semkey = (key_t)atoi(xstr.c_str());
 			}
-*/
 			if ( XMLString::equals(currentElement->getTagName(), TAG_size))
 			{
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
@@ -73,9 +69,7 @@ mglShm::mglShm(DOMElement* configuration)
 
 		}
 	}
-
-	XMLString::release(&TAG_key);
-	XMLString::release(&TAG_size);
+*/
 
 	LOG_TRACE("Init SHM with key " << m_key << " and size " << m_size);
 }

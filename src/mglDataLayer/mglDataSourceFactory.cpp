@@ -16,7 +16,7 @@ mglDataSourceFactory::~mglDataSourceFactory()
 {
 }
 
-shared_ptr<mglDataSource> mglDataSourceFactory::createDataSource(shared_ptr<mglValString>& classname, DOMElement* configuration)
+shared_ptr<mglDataSource> mglDataSourceFactory::createDataSource(mglValString* classname, json configuration)
 {
 //	if (classname->str()->compare("mglShm") == 0)
 //		return new mglShm(configuration);

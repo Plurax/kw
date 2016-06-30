@@ -8,6 +8,7 @@
 #include "mglDebug/mglDebug.h"
 #include "mglValues/mglValFixedPoint.h"
 #include <string>
+#include <cstring>
 
 const short mglValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
 const long mglValFixedPoint::precNScalings[7] = { 100, 10000, 1000000, 100000000, 10000000000, 1000000000000};
@@ -17,6 +18,7 @@ mglValFixedPoint::mglValFixedPoint()
 {
 	m_isEmpty = true;
 	m_Precision = enumValFixedPointPrec::prec11N6;
+	m_lValue = 0;
 }
 
 
@@ -56,11 +58,11 @@ mglValFixedPoint::mglValFixedPoint(mglValString _string)
 
 	m_Precision = enumValFixedPointPrec::prec11N6;
 
-	if (strlen(ptr) > 0)
+	if (*ptr == ' ') // skip space
+		ptr++;
+ 	if (strlen(ptr) > 0)
 		m_Precision = getPrecisionFromString(ptr);
 	m_isEmpty = false;
-
-	mglValString str = asString();
 }
 
 mglValFixedPoint::mglValFixedPoint(enumValFixedPointPrec prec)
@@ -80,6 +82,11 @@ mglValString mglValFixedPoint::asString() const
 {
 	int i;
 	char tmp[21] = "";
+	
+	if (m_isEmpty)
+	{
+		return mglValString("unset Object mglValFixedPoint!");
+	}
 
 #ifdef WIN32
 	_snprintf(tmp, 20, "%ld", m_lValue);
@@ -312,20 +319,38 @@ enumValFixedPointPrec mglValFixedPoint::getPrecisionFromString(char* _str)
 	INIT_LOG("mglValFixedPoint", "getPrecisionFromString(char* _str)");
 
 // Default is prec13N4
-	enumValFixedPointPrec retval = enumValFixedPointPrec::prec13N4;
+	enumValFixedPointPrec retval  = enumValFixedPointPrec::prec13N4;
 
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec15N2)]))
+	{
 		retval = enumValFixedPointPrec::prec15N2;
+		LOG_TRACE("MATCH on prec15N2");
+	}
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec13N4)]))
+	{
 		retval =  enumValFixedPointPrec::prec13N4;
+		LOG_TRACE("MATCH on prec13N4");
+	}
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec11N6)]))
+	{
 		retval =  enumValFixedPointPrec::prec11N6;
+		LOG_TRACE("MATCH on prec11N6");
+	}
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec9N8)]))
+	{
 		retval =  enumValFixedPointPrec::prec9N8;
+		LOG_TRACE("MATCH on prec9N8");
+	}
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec7N10)]))
+	{
 		retval =  enumValFixedPointPrec::prec7N10;
+		LOG_TRACE("MATCH on prec7N10");
+	}
 	if (0 == strcmp(_str, enumValFixedPointPrecNames[static_cast<unsigned long>(enumValFixedPointPrec::prec5N12)]))
+	{
 		retval =  enumValFixedPointPrec::prec5N12;
+		LOG_TRACE("MATCH on prec5N12");
+	}
 
 	LOG_TRACE("retval = " << static_cast<unsigned long>(retval));
 	return retval;

@@ -134,38 +134,15 @@ void mglTextureManager::UnloadAllTextures()
  * After creation of the object each one is initialized.
  * @param _currentElement
  */
-void mglTextureManager::initTextures(DOMNode* _currentElement)
+void mglTextureManager::initTextures(json _currentElement)
 {
-	INIT_LOG("mglTextureManager", "initTextures(DOMNode* _currentElement)");
+	INIT_LOG("mglTextureManager", "initTextures(json _currentElement)");
 
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_Texture = XMLString::transcode("Texture");
-
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	for (json::iterator it = _currentElement.begin(); it != _currentElement.end(); ++it) 
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_Texture))
-			{
-				std::string filename = XMLString::transcode(currentElement->getTextContent());
-				RegisterTexture(filename.c_str(), GL_RGBA, GL_RGB, 0);
+		std::string filename = _currentElement["Texture"];
+		RegisterTexture(filename.c_str(), GL_RGBA, GL_RGB, 0);
 
-				LOG_TRACE("Got texture named: " << filename.c_str());
-
-			}
-		}
+		LOG_TRACE("Got texture named: " << filename.c_str());
 	}
-
-	XMLString::release(&TAG_Texture);
-
 }

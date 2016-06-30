@@ -19,116 +19,31 @@ mglFontProvider::~mglFontProvider()  // destructor
 	}
 }
 
-
 /**
  * Load all fonts listed below of the given XML element.
  * Each font tag should contain an absolute path to a font file.
  * @param _currentElement
  */
-void mglFontProvider::loadFonts(DOMNode* _currentElement)
+void mglFontProvider::loadFonts(json fontconfig)
 {
 	INIT_LOG("mglSystem", "loadFonts(DOMNode* _currentElement)");
-
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_Font = XMLString::transcode("Font");
-
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
-	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_Font))
-			{
-				loadFont(currentElement);
-			}
-		}
-	}
-
-	XMLString::release(&TAG_Font);
-
-}
-
-/**
- * Load all fonts listed below of the given XML element.
- * Each font tag should contain an absolute path to a font file.
- * @param _currentElement
- */
-void mglFontProvider::loadFont(DOMNode* _currentElement)
-{
-	INIT_LOG("mglSystem", "loadFonts(DOMNode* _currentElement)");
-
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_FontFile = XMLString::transcode("file");
-	XMLCh* TAG_FontSize = XMLString::transcode("size");
-	XMLCh* TAG_FontName = XMLString::transcode("name");
-
 	int fontsize = 0;
-	mglValString* file_str = NULL;
-	mglValString* name_str = NULL;
-	string* size_str = NULL;
-	string* advance_str = NULL;
 
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	for (auto& element : fontconfig["Fonts"])
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_FontFile))
-			{
-				file_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
-				LOG_TRACE("Got Font from file: " << (*file_str));
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_FontSize))
-			{
-				size_str = new string(XMLString::transcode(currentElement->getTextContent()));
-				fontsize = atoi(size_str->c_str());;
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_FontName))
-			{
-				name_str = new mglValString(XMLString::transcode(currentElement->getTextContent()));
-			}
-
-		}
+		LOG_TRACE("Adding font " << (element["file"]).get<string>());
+		shared_ptr<mglValString> file = make_shared<mglValString>(((element["file"])).get<string>());
+		int size = (element["size"]).get<int>();
+		shared_ptr<mglValString> name = make_shared<mglValString>(((element["name"])).get<string>());
+		AddFont(size, name, file);
 	}
-
-	AddFont(fontsize, name_str, file_str);
-
-	delete name_str;
-	delete file_str;
-	delete size_str;
-
-	XMLString::release(&TAG_FontFile);
-	XMLString::release(&TAG_FontName);
-	XMLString::release(&TAG_FontSize);
 }
 
 // this will add a font to the list
-void mglFontProvider::AddFont(int _size, mglValString* _name, mglValString* _file)
+void mglFontProvider::AddFont(int _size, shared_ptr<mglValString> _name, shared_ptr<mglValString> _file)
 {
 	INIT_LOG("mglFontProvider", "AddFont(int _size, mglValString* _name, string* _AdvanceString, mglValString* _file)");
-
+	LOG_TRACE("Loading Font " << *_name << " from File " << *_file);
 	if (_name == NULL)
 	{
 		INIT_LOG("mglFontProvider", "AddTexFont(FTTexFont* fontobject)");

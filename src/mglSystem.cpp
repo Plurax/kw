@@ -10,7 +10,9 @@
 #include <errno.h>
 #include <stdexcept>
 #include "mglReleaseInfo.h"
-
+#include <boost/filesystem.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
+#include <iostream>
 #include "boost/filesystem.hpp"
 
 #ifdef WIN32
@@ -43,7 +45,7 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
 	/* Note this is not used as shared pointer as we use this inforation within lib handles which 
 	   are propably initialized with external shared lib factories!
 	*/
-	m_libInfo = new mglLibraryInfo("mgl", "0.1", "Embedded GL Toolkit", "Christoph Romas",	"Proprietary - tbd");
+	m_libInfo = new mglLibraryInfo("mgl", "0.2", "Embedded GL Toolkit", "Christoph Romas",	"MIT - www.electroknit.io");
 
 	if (ptr != NULL)
 	{
@@ -60,48 +62,11 @@ void mglSystem::init(void(*ptr)(), mglValString& configfile)
 
 	m_DraggingContext = nullptr;
 
-	/* Prepare XML Parser */
-   try
-   {
-	   // Please regard that Locale needs to be set! Otherwise automatic transcoder engine of Xercesc will not work!
-	   XMLPlatformUtils::Initialize();  // Initialize Xerces infrastructure
-
-	   static XMLCh* UTF8_ENCODING = NULL;
-
-#ifdef WIN32
-	   XMLTransService::Codes failReason;
-#endif
-
-	   XMLPlatformUtils::Initialize(); // first we must create the transservice
-
-#ifdef WIN32
-	   UTF8_ENCODING = XMLString::transcode("UTF-8");
-	   UTF8_TRANSCODER =
-		   XMLPlatformUtils::fgTransService->makeNewTranscoderFor(UTF8_ENCODING,
-		   failReason,
-		   1024);
-	   if (!UTF8_TRANSCODER) {
-		   std::cout  << "ERROR: XML::Xerces: INIT: Could not create UTF-8 transcoder";
-	   }
-#endif
-   }
-   catch( XMLException& e )
-   {
-      char* message = XMLString::transcode( e.getMessage() );
-      cerr << "XML toolkit initialization error: " << message << endl;
-      XMLString::release( &message );
-      // throw exception here to return ERROR_XERCES_INIT
-   }
-
-   // Tags and attributes used in XML file.
-   // Can't call transcode till after Xerces Initialize()
-   m_ConfigFileParser = new XercesDOMParser;
-
 	if (ptr != NULL)
 	{
-		m_FontProvider = shared_ptr<mglFontProvider>(new mglFontProvider());
-		m_TextureManager = shared_ptr<mglTextureManager>(new mglTextureManager());
-		m_vSelectionContexts.push_back(shared_ptr<mglSelectionContext>(new mglSelectionContext()));
+		m_FontProvider = make_shared<mglFontProvider>();
+		m_TextureManager = make_shared<mglTextureManager>();
+		m_vSelectionContexts.push_back(make_shared<mglSelectionContext>());
 	}
 
 	readConfiguration(configfile);
@@ -139,7 +104,6 @@ mglSystem::~mglSystem()
 		it--;
 	}
 
-   XMLPlatformUtils::Terminate(); // Deinit XERCES
 }
 
 
@@ -152,7 +116,7 @@ mglSystem::~mglSystem()
  */
 shared_ptr<mglMessage> mglSystem::processInputMessage(shared_ptr<mglInputMessage> Message)
 {
-	INIT_LOG("mglSystem", "processInputMessage(mglInputMessage* Message)");
+	INIT_LOG("mglSystem", "processInputMessage(shared_ptr<mglInputMessage> Message)");
 	shared_ptr<mglGuiObject> Target;
 
 	// If the input message is a mouse or IGR press set the timer!
@@ -779,157 +743,48 @@ void mglSystem::returnFromMenu()
 void mglSystem::readConfiguration(mglValString& configFile)
 {
 	INIT_LOG("mglSystem", "readConfiguration(mglValString& configFile)");
+	
+	errno = 0;
+	if (!boost::filesystem::exists(configFile.str()->c_str()))
+	{
+		if( errno == ENOENT )      // errno declared by include file errno.h
+			throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
+		else if( errno == ENOTDIR )
+			throw ( std::runtime_error("A component of the path is not a directory."));
+		else if( errno == ELOOP )
+			throw ( std::runtime_error("Too many symbolic links encountered while traversing the path."));
+		else if( errno == EACCES )
+			throw ( std::runtime_error("Permission denied."));
+		else if( errno == ENAMETOOLONG )
+			throw ( std::runtime_error("File can not be read\n"));
+	}
 
-   errno = 0;
-   /**/
-//   if(stat(configFile.str()->c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
-   if (!boost::filesystem::exists(configFile.str()->c_str()))
-   {
-       if( errno == ENOENT )      // errno declared by include file errno.h
-          throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
-       else if( errno == ENOTDIR )
-          throw ( std::runtime_error("A component of the path is not a directory."));
-       else if( errno == ELOOP )
-          throw ( std::runtime_error("Too many symbolic links encountered while traversing the path."));
-       else if( errno == EACCES )
-          throw ( std::runtime_error("Permission denied."));
-       else if( errno == ENAMETOOLONG )
-          throw ( std::runtime_error("File can not be read\n"));
-   }
+	std::stringstream ss;
+	boost::filesystem::path p(configFile.str()->c_str());
+	ss << std::ifstream( p.string().c_str() ).rdbuf();
 
-   m_ConfigFileParser->setValidationScheme( XercesDOMParser::Val_Never );
-   m_ConfigFileParser->setDoNamespaces( false );
-   m_ConfigFileParser->setDoSchema( false );
-   m_ConfigFileParser->setLoadExternalDTD( false );
+	json config(ss);
 
-   XMLCh* TAG_GUI = XMLString::transcode("GUI");
-   XMLCh* TAG_DataLayer= XMLString::transcode("DataLayer");
-   XMLCh* TAG_Menus = XMLString::transcode("MENUS");
-   XMLCh* TAG_Editors = XMLString::transcode("EDITORS");
-   XMLCh* TAG_AppConfiguration = XMLString::transcode("AppConfiguration");
-   XMLCh* TAG_Logging = XMLString::transcode("Logging");
-   XMLCh* TAG_Fonts= XMLString::transcode("Fonts");
-   XMLCh* TAG_Textures = XMLString::transcode("Textures");
-   XMLCh* TAG_MessageHandlers = XMLString::transcode("MessageHandlers");
-
-   try
-   {
-	   m_ConfigFileParser->parse(configFile.str()->c_str());
-
-      // no need to free this pointer - owned by the parent parser object
-      xercesc::DOMDocument* xmlDoc = m_ConfigFileParser->getDocument();
-
-      // Get the top-level element: NAme is "root". No attributes for "root"
-
-      DOMElement* elementRoot = xmlDoc->getDocumentElement();
-      if( !elementRoot )
-    	  throw(std::runtime_error( "empty XML document" ));
-	  // Parse XML file for tags of interest: "ApplicationSettings"
-      // Look one level nested within "root". (child of root)
-
-		DOMNodeList*      children = elementRoot->getChildNodes();
-		const  XMLSize_t nodeCount = children->getLength();
-
-		// For all nodes, children of "root" in the XML tree.
-
-		for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
-		{
-			DOMNode* currentNode = children->item(xx);
-			if( currentNode->getNodeType() &&  // true is not nullptr
-					currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-			{
-				// Found node which is an Element. Re-cast node as element
-				DOMElement* currentElement
-							= dynamic_cast< xercesc::DOMElement* >( currentNode );
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_Logging))
-				{
-					mglLogger::Inst().configure(currentNode);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_AppConfiguration))
-				{
-					m_Configuration.init(currentNode);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_DataLayer))
-				{
-					createDataLayer(currentNode);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_GUI))
-				{
-					createGUIfromXML(currentNode, nullptr, nullptr, m_mMainFrames, 0);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_Menus))
-				{
-					createGUIfromXML(currentNode, nullptr, nullptr, m_mMenus, 1);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_Editors))
-				{
-					createGUIfromXML(currentNode, nullptr, nullptr, m_mEditors, 2);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_Fonts))
-				{
-					m_FontProvider->loadFonts(currentNode);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_MessageHandlers))
-				{
-					setMessageHandlers(currentNode);
-				}
-
-				if ( XMLString::equals(currentElement->getTagName(), TAG_Textures))
-				{
-					m_TextureManager->initTextures(currentNode);
-				}
-			}
-	  }
-   }
-   catch( xercesc::XMLException& e )
-   {
-      char* message = xercesc::XMLString::transcode( e.getMessage() );
-      ostringstream errBuf;
-
-	  mglValString tmp = mglValString(message);
-	  LOG_TRACE(tmp);
-	  XMLString::release(&message);
-
-      XMLString::release(&TAG_GUI);
-      XMLString::release(&TAG_DataLayer);
-      XMLString::release(&TAG_Menus);
-      XMLString::release(&TAG_Editors);
-      XMLString::release(&TAG_AppConfiguration);
-      XMLString::release(&TAG_Logging);
-      XMLString::release(&TAG_Textures);
-      XMLString::release(&TAG_MessageHandlers);
-
-   }
-   catch (mglTechnicalException& e)
-   {
-//	   char* message = xercesc::XMLString::transcode(e.);
-
-	   LOG_TRACE(e.getMessage());
-   }
-   catch (exception& e)
-   {
-//	   char* message = xercesc::XMLString::transcode(e.);
-
-	   mglValString tmp = mglValString("Exception occured during init!");
-	   LOG_TRACE(tmp);
-   }
-
-   XMLString::release(&TAG_GUI);
-   XMLString::release(&TAG_DataLayer);
-   XMLString::release(&TAG_Menus);
-   XMLString::release(&TAG_Editors);
-   XMLString::release(&TAG_AppConfiguration);
-   XMLString::release(&TAG_Logging);
-   XMLString::release(&TAG_Textures);
-   XMLString::release(&TAG_MessageHandlers);
+	try
+	{
+		mglLogger::Inst().configure(config["Logging"]);
+		m_Configuration.init(config["AppConfiguration"]);
+		createDataLayer(config["DataLayer"]);
+		createGUIfromJSON(config["GUI"], nullptr, nullptr, m_mMainFrames, 0);
+		createGUIfromJSON(config["MENUS"], nullptr, nullptr, m_mMenus, 1);
+		createGUIfromJSON(config["EDITORS"], nullptr, nullptr, m_mEditors, 2);
+		m_FontProvider->loadFonts(config["Font"]);
+		setMessageHandlers(config["MessageHandlers"]);
+		m_TextureManager->initTextures(config["Textures"]);
+	}
+	catch (mglTechnicalException& e)
+	{
+		LOG_EXCEPTION(e.getMessage());
+	}
+	catch (exception& e)
+	{
+		LOG_EXCEPTION("Exception occured during init!: " << e.what());
+	}
 }
 
 /**
@@ -939,235 +794,144 @@ void mglSystem::readConfiguration(mglValString& configFile)
  * @param prev - previous element for recursive usage
  * @param listToAdd - pointer to the list where root objects will be added
  */
-void mglSystem::createGUIfromXML(DOMNode* GUIELement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype)
+void mglSystem::createGUIfromJSON(json GUIElement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype)
 {
-	INIT_LOG("mglSystem", "createGUIfromXML(DOMNode* GUIELement, mglGuiObject* parent, mglGuiObject* prev)");
-
-	DOMNodeList*      children = GUIELement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
+	INIT_LOG("mglSystem", "createGUIfromJSON(json GUIElement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype)");
 
 	shared_ptr<mglGuiObject> thisWindow = nullptr;
 	shared_ptr<mglGuiObject> prevWindow = nullptr;
 
-	XMLCh* TAG_mglWindowItem = XMLString::transcode("mglWindowItem");
-	XMLCh* TAG_name = XMLString::transcode("name");
-	XMLCh* TAG_libname = XMLString::transcode("libname");
-	XMLCh* TAG_classname = XMLString::transcode("classname");
-	XMLCh* TAG_handlerLib = XMLString::transcode("handlerLib");
-	XMLCh* TAG_handlerClass = XMLString::transcode("handlerClass");
-	XMLCh* TAG_editor = XMLString::transcode("editorName");
-	XMLCh* TAG_config = XMLString::transcode("config");
-	XMLCh* TAG_children = XMLString::transcode("children");
+	shared_ptr<mglValString> name = nullptr;
+	shared_ptr<mglValString> libname = nullptr;
+	shared_ptr<mglValString> classname = nullptr;
+	shared_ptr<mglValString> handlerlibname = nullptr;
+	shared_ptr<mglValString> handlerclassname = nullptr;
+	shared_ptr<mglValString> editorname = nullptr;
 
-	mglValString* name = NULL;
-	mglValString* libname = NULL;
-	mglValString* classname = NULL;
-	mglValString* handlerlibname = NULL;
-	mglValString* handlerclassname = NULL;
-	mglValString* editorname = NULL;
+	json configuration;
+	json children;
 
-	DOMElement* DE_configuration;
-	DOMElement* DE_children;
-
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	for (auto& element : GUIElement["mglWindowItem"])
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		LOG_TRACE("Caught Window Item");
+        /*
+		 * The JSON should always contain the following tags at this point:
+		 * <name>,<libname>, <classname>, <handlerLib>, <handlerClass> and <configuration>
+		 * The programmer can even replace the frame object implementation by using
+		 * his own library at this point!
+		 */
+
+		if (element.count("name"))
+			name = make_shared<mglValString>(((element["name"])).get<string>());
+		if (element.count("libname"))
+			libname = make_shared<mglValString>(((element["libname"])).get<string>());
+		if (element.count("classname"))
+			classname = make_shared<mglValString>(((element["classname"])).get<string>());
+		if (element.count("handlerLib"))
+			handlerlibname = make_shared<mglValString>(((element["handlerLib"])).get<string>());
+		if (element.count("handlerClass"))
+			handlerclassname = make_shared<mglValString>(((element["handlerClass"])).get<string>());
+		if (element.count("editorName"))
+			editorname = make_shared<mglValString>(((element["editorName"])).get<string>());
+		if (element.count("config"))
+			configuration = element["config"];
+
+		if (element.count("children"))
+			children = element["children"];
+
+		// Check for attributes
+		if (_listtype == 0) // mainframes
 		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_mglWindowItem))
-			{
-				/* The XML should always contain the following tags at this point:
-				 * <name>,<libname>, <classname>, <handlerLib>, <handlerClass> and <configuration>
-				 * The programmer can even replace the frame object implementation by using
-				 * his own library at this point!
-				 */
-				DOMNodeList*      configchildren = currentElement->getChildNodes();
-				const  XMLSize_t configchildrenCount = configchildren->getLength();
 
+		}
+		if (_listtype == 1) // menus
+		{
 
-				for( XMLSize_t xx = 0; xx < configchildrenCount; ++xx )
-				{
-					DOMNode* configSubNode = configchildren->item(xx);
-					if( configSubNode->getNodeType() &&  // true is not NULL
-							configSubNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-					{
-						// Found node which is an Element. Re-cast node as element
-						DOMElement* configCurrentElement
-									= dynamic_cast< xercesc::DOMElement* >( configSubNode );
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_name))
-						{
-							name = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_libname))
-						{
-							libname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_classname))
-						{
-							classname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_handlerLib))
-						{
-							handlerlibname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_handlerClass))
-						{
-							handlerclassname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_editor))
-						{
-							editorname = new mglValString(XMLString::transcode(configCurrentElement->getTextContent()));
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_config))
-						{
-							DE_configuration = configCurrentElement;
-						}
-
-						if ( XMLString::equals(configCurrentElement->getTagName(), TAG_children))
-						{
-							DE_children= configCurrentElement;
-						}
-					}
-
-				}
-
-
-				// Check for attributes
-				if (_listtype == 0) // mainframes
-				{
-
-				}
-				if (_listtype == 1) // menus
-				{
-
-				}
-				if (_listtype == 2) // editors
-				{
-/*					XMLCh* ATTR_valtype = XMLString::transcode("valtype");
-					const XMLCh* windowitem_attr = currentElement->getAttribute(ATTR_valtype);
-					mglValString* str_valtype = new mglValString(XMLString::transcode(windowitem_attr));
-					LOG_TRACE("Attribute: valtype is " << str_valtype->str()->c_str());
-*/				}
-
-
-				/*
-				 * Name is mandatory
-				 */
-				LOG_TRACE("Got GUI Element named: " << *name);
-				LOG_TRACE("Got GUI Element libname: " << *libname);
-				LOG_TRACE("Got GUI Element classname: " << *classname);
-
-				// Create the configured element via the factory
-				thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
-																	  classname,
-																	  DE_configuration);
-				LOG_TRACE("Create performed...: " << *classname);
-
-				// The custom editor setting is optional - we check if this tag was set and set the editor afterwards
-				if (editorname != NULL)
-				{
-					thisWindow->setEditor(editorname);
-					delete editorname;
-					editorname = NULL;
-				}
-
-				/* If one of both strings is NULL connect the functor to NULL, otherwise its possible to create functors within the
-				 * 				constructor of the guiobject without using XML configuration
-				 */
-				if ((handlerlibname != NULL) && (handlerclassname != NULL))
-				{
-					if ((handlerlibname->str()->compare("NULL") == 0) || (handlerclassname->str()->compare("NULL") == 0))
-					{
-						thisWindow->Connect(nullptr);
-						LOG_TRACE("Connected NULL");
-					}
-					else
-					{
-						// After we created the object we can attach the handler if it exists
-						auto funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
-						thisWindow->Connect(funct);
-					}
-				}
-
-				// A created gui object is also registered by its name
-				m_mGuiObjects.insert(std::pair<mglValString, shared_ptr<mglGuiObject>>(mglValString(*name),thisWindow));
-
-				/* Init Children of currently created object - this is a workaround for shared_from_this in constructor - as we dont want
-				   to use raw pointers anymore */
-				thisWindow->initChildren();
-
-				// We are at parent level - so this is a main frame
-				if (parent == nullptr)
-					listToAdd.insert(std::pair<mglValString, shared_ptr<mglGuiObject>>(mglValString(*name), thisWindow));
-				else
-				{
-					thisWindow->setParentWindow(parent);
-					parent->AddChild(thisWindow);
-				}
-
-				thisWindow->setPrevWindow(prevWindow);
-				thisWindow->setNextWindow(nullptr);
-				if (prevWindow)
-					prevWindow->setNextWindow(thisWindow);
-
-				// Now ascend down and create the children
-				if (DE_children->getChildNodes()->getLength() > 0)
-				{
-					createGUIfromXML(DE_children, thisWindow, nullptr, listToAdd, _listtype);
-				}
-				prevWindow = thisWindow;
-
-				// Clear temp strings
-				if (name != NULL)
-				{
-					delete name;
-					name = NULL;
-				}
-				if (libname != NULL)
-				{
-					delete libname;
-					libname = NULL;
-				}
-				if (classname != NULL)
-				{
-					delete classname;
-					classname = NULL;
-				}
-				if (handlerlibname != NULL)
-				{
-					delete handlerlibname;
-					handlerlibname = NULL;
-				}
-				if (handlerclassname != NULL)
-				{
-					delete handlerclassname;
-					handlerclassname = NULL;
-				}
-			}
+		}
+		if (_listtype == 2) // editors
+		{
+/*			XMLCh* ATTR_valtype = XMLString::transcode("valtype");
+			const XMLCh* windowitem_attr = currentElement->getAttribute(ATTR_valtype);
+			mglValString* str_valtype = new mglValString(XMLString::transcode(windowitem_attr));
+			LOG_TRACE("Attribute: valtype is " << str_valtype->str()->c_str());
+*/
 		}
 
+		LOG_TRACE("Got GUI Element named: " << *name);
+		LOG_TRACE("Got GUI Element libname: " << *libname);
+		LOG_TRACE("Got GUI Element classname: " << *classname);
+		
+		// Create the configured element via the factory
+		thisWindow = mglGuiLibManager::Inst().createGUIObject(libname,
+															  classname,
+															  configuration);
+		LOG_TRACE("Create performed...: " << *classname);
+		
+		// The custom editor setting is optional - we check if this tag was set and set the editor afterwards
+		if (editorname)
+		{
+			thisWindow->setEditor(editorname);
+			editorname = nullptr;
+		}
+		
+		/* If one of both strings is NULL connect the functor to NULL, otherwise its possible to create functors within the
+		 * 				constructor of the guiobject without using XML configuration
+		 */
+
+		if ((handlerlibname) && (handlerclassname))
+		{
+			if ((handlerlibname->str()->compare("NULL") == 0) || (handlerclassname->str()->compare("NULL") == 0))
+			{
+				thisWindow->Connect(nullptr);
+				LOG_TRACE("Connected NULL");
+			}
+			else
+			{
+				// After we created the object we can attach the handler if it exists
+				shared_ptr<mglMessageHandler> funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
+				thisWindow->Connect(funct);
+			}
+		}
+		
+		// A created gui object is also registered by its name
+		m_mGuiObjects.insert(std::pair<mglValString, shared_ptr<mglGuiObject>>(mglValString(*name),thisWindow));
+
+		/* Init Children of currently created object - this is a workaround for shared_from_this in constructor - as we dont want
+		 * to use raw pointers anymore. With this you can create your own objects and let them initialize further children
+		 * with out config in the JSON. This should be useful e.g. for keypads or objects with many children you dont want to 
+		 * describe within the config.
+		 */
+		thisWindow->initChildren();
+
+		// We are at parent level - so this is a main frame
+		if (parent == nullptr)
+			listToAdd.insert(std::pair<mglValString, shared_ptr<mglGuiObject>>(mglValString(*name), thisWindow));
+		else
+		{
+			thisWindow->setParentWindow(parent);
+			parent->AddChild(thisWindow);
+		}
+
+		thisWindow->setPrevWindow(prevWindow);
+		thisWindow->setNextWindow(nullptr);
+		if (prevWindow)
+			prevWindow->setNextWindow(thisWindow);
+
+		// Now ascend down and create the children
+		if (children.size() > 0)
+		{
+			LOG_TRACE("Creating children for \"" << *name << "\"...");
+			createGUIfromJSON(children, thisWindow, nullptr, listToAdd, _listtype);
+		}
+		prevWindow = thisWindow;
+
+		// Clear temp strings
+		name = nullptr;
+		libname = nullptr;
+		classname = nullptr;
+		handlerlibname = nullptr;
+		handlerclassname = nullptr;
 	}
-	XMLString::release(&TAG_mglWindowItem);
-	XMLString::release(&TAG_name);
-	XMLString::release(&TAG_libname);
-	XMLString::release(&TAG_classname);
-	XMLString::release(&TAG_handlerLib);
-	XMLString::release(&TAG_handlerClass);
-	XMLString::release(&TAG_config);
-	XMLString::release(&TAG_children);
-	XMLString::release(&TAG_editor);
 }
 
 /**
@@ -1177,180 +941,91 @@ void mglSystem::createGUIfromXML(DOMNode* GUIELement, shared_ptr<mglGuiObject> p
  *
  * @param _currentElement
  */
-void mglSystem::setMessageHandlers(DOMNode* _currentElement)
+void mglSystem::setMessageHandlers(json messageconfig)
 {
-	INIT_LOG("mglSystem", "setMessageHandlers(DOMNode* _currentElement)");
-
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_Handler = XMLString::transcode("Handler");
-
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
-	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_Handler))
-			{
-				loadMessageHandler(currentElement);
-			}
-		}
-	}
-
-	XMLString::release(&TAG_Handler);
-
-}
-
-
-/**
- * Load Messagehandlers and assign them to the configured message ids.
- * @param _currentElement
- */
-void mglSystem::loadMessageHandler(DOMNode* _currentElement)
-{
-	INIT_LOG("mglSystem", "loadMessageHandler(DOMNode* _currentElement)");
-
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_handlerLib = XMLString::transcode("handlerLib");
-	XMLCh* TAG_handlerClass = XMLString::transcode("handlerClass");
-	XMLCh* TAG_MessageId = XMLString::transcode("MessageId");
+	INIT_LOG("mglSystem", "setMessageHandlers(json messageconfig)");
 
 	int messageId = -1; // -1 is initial faulty - 0 is forbidden (internal gui messages)
-	mglValString* handlerlibname = NULL;
-	mglValString* handlerclassname = NULL;
-	string* msgID_str = NULL;
+	shared_ptr<mglValString> handlerlibname = nullptr;
+	shared_ptr<mglValString> handlerclassname = nullptr;
+	shared_ptr<string> msgID_str = nullptr;
 
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	if (messageconfig == nullptr)
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		LOG_INFO("No message handlers found in config...");
+		return;
+	}
+	else
+		LOG_TRACE("Initializing message handlers...");
+
+	for (auto& element : messageconfig)
+	{
+
+		handlerlibname = make_shared<mglValString>(((element["handlerLib"])).get<string>());
+		handlerclassname = make_shared<mglValString>(((element["handlerClass"])).get<string>());
+		msgID_str = make_shared<string>(((element["MessageId"])).get<string>());
+		messageId = atoi(msgID_str->c_str());;
+
+		/* Now create the message handler from the lib and attach it onto the ID
+		 */
+		if (handlerlibname != nullptr && handlerclassname != nullptr && msgID_str != nullptr)
 		{
-
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerLib))
-			{
-				handlerlibname = new mglValString(XMLString::transcode(currentElement->getTextContent()));
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_handlerClass))
-			{
-				handlerclassname = new mglValString(XMLString::transcode(currentElement->getTextContent()));
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_MessageId))
-			{
-				msgID_str = new string(XMLString::transcode(currentElement->getTextContent()));
-				messageId = atoi(msgID_str->c_str());;
-			}
+			// After we created the object we can attach the handler if it exists
+			LOG_TRACE("Got a configured handler library: " << handlerlibname << " class: " << handlerclassname << " MessageID: " << messageId); 
+			shared_ptr<mglMessageHandler> funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
+			m_mMessageHandlers.insert(std::pair<int, shared_ptr<mglMessageHandler>>(messageId,funct));
+			handlerlibname.reset();
+			handlerclassname.reset();
+			msgID_str.reset();
 		}
 	}
-
-	/* Now create the message handler from the lib and attach it onto the ID
-	 */
-	if (handlerlibname != NULL && handlerclassname != NULL && msgID_str != NULL)
-	{
-		// After we created the object we can attach the handler if it exists
-		auto funct = mglGuiLibManager::Inst().createMessageHandler(handlerlibname, handlerclassname);
-		m_mMessageHandlers.insert(std::pair<int, shared_ptr<mglMessageHandler>>(messageId,funct));
-	}
-
-	delete handlerlibname;
-	delete handlerclassname;
-	delete msgID_str;
-	msgID_str = NULL;
-
-	XMLString::release(&TAG_handlerLib);
-	XMLString::release(&TAG_handlerClass);
-	XMLString::release(&TAG_MessageId);
 }
-
-
-
 
 /**
  * Creates the datalayer configured below the given element.
  * After creation of the object each one is initialized.
  * @param _currentElement
  */
-void mglSystem::createDataLayer(DOMNode* _currentElement)
+void mglSystem::createDataLayer(json _currentElement)
 {
-	INIT_LOG("mglSystem", "createDataLayer(DOMNode* _currentElement)");
-
-	DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(_currentElement);
-
-	DOMNodeList*      children = currentElement->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
+	INIT_LOG("mglSystem", "createDataLayer(json _currentElement)");
 
 	shared_ptr<mglDataSource> thisDS;
 
-	XMLCh* TAG_DataSource = XMLString::transcode("DataSource");
+	LOG_TRACE("Loading and initializing data sources...");
 
-	// For all nodes, children of "GUI" in the XML tree.
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	for (json::iterator it = _currentElement.begin(); it != _currentElement.end(); ++it) 
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		if ( it.key() == "DataSource")
 		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-			if ( XMLString::equals(currentElement->getTagName(), TAG_DataSource))
-			{
-				/* The XML should always contain the following tags at this point:
-				 * <name>,<libname>, <classname> and <conf>
-				 * The programmer can even replace the frame object implementation by using
-				 * his own library at this point!
-				 */
+			/* The XML should always contain the following tags at this point:
+			 * <name>,<libname>, <classname> and <conf>
+			 * The programmer can even replace the frame object implementation by using
+			 * his own library at this point!
+			 */
 
-				DOMElement* DE_name = currentElement->getFirstElementChild();
-				DOMElement* DE_libname = DE_name->getNextElementSibling();
-				DOMElement* DE_classname = DE_libname->getNextElementSibling();
+			auto name = make_shared<mglValString>(((*it)["name"]).get<string>());
+			auto libname = make_shared<mglValString>(((*it)["libname"]).get<string>());
+			auto classname = make_shared<mglValString>(((*it)["classname"]).get<string>());
 
-				DOMElement* DE_configuration = DE_classname->getNextElementSibling();
+			auto configuration = (*it)["configuration"];
 
-				/*
-				 * Name is mandatory
-				 */
-				LOG_TRACE("Got DataSource named: " << XMLString::transcode(DE_name->getTextContent()) << " Classname: " << XMLString::transcode(DE_classname->getTextContent()));
+			// Create the configured element via the factory
 
-				// Create the configured element via the factory
-
-				auto name = shared_ptr<mglValString>(new mglValString(XMLString::transcode(DE_name->getTextContent())));
-				auto libname = shared_ptr<mglValString>(new mglValString(XMLString::transcode(DE_libname->getTextContent())));
-				auto classname = shared_ptr<mglValString>(new mglValString(XMLString::transcode(DE_classname->getTextContent())));
-
-				thisDS = mglDataSourceManager::Inst().createDataSource(libname,
-													classname,
-													DE_configuration);
+			thisDS = mglDataSourceManager::Inst().createDataSource(libname,
+																   classname,
+																   configuration);
+			if (thisDS)
 				m_DataSources.insert(pair<mglValString, shared_ptr<mglDataSource>>(*name,thisDS));
-			}
+
+			thisDS = nullptr; // Kill local reference
 		}
 	}
 
-	XMLString::release(&TAG_DataSource);
-
-	LOG_TRACE("Initializing data sources...");
 	map<mglValString, shared_ptr<mglDataSource>>::iterator itDS;
 	for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
 		itDS->second->init();
+	LOG_TRACE("Data sources completed...");
 }
 
 
@@ -1377,12 +1052,14 @@ shared_ptr<mglDataSource> mglSystem::getDataSource(mglValString _name)
  */
 void mglSystem::processEvents()
 {
+	INIT_LOG("mglSystem", "processEvents()");
+
 	while (!m_MessageQueue.empty())
 	{
-		auto processing = m_MessageQueue.front();
+		shared_ptr<mglMessage> processing = m_MessageQueue.front();
 		if (processing->getMessageType() == eMessageType::mtInput)
 		{
-			auto inputMessage =  static_pointer_cast<mglInputMessage>(processing);
+			shared_ptr<mglInputMessage> inputMessage =  dynamic_pointer_cast<mglInputMessage>(processing);
 			processInputMessage(inputMessage);
 		}
 		else
@@ -1395,6 +1072,10 @@ void mglSystem::processEvents()
 			{
 				// This will execute the handler
 				(*findIt->second)(processing);
+			}
+			else
+			{
+				LOG_TRACE("Could not find handler for message type!");
 			}
 		}
 		m_MessageQueue.pop();

@@ -25,44 +25,20 @@
 
 using namespace std;
 
-mglSocketClient::mglSocketClient(DOMElement* configuration)
+mglSocketClient::mglSocketClient(json configuration)
 {
 	INIT_LOG("mglSocket", "mglSocket");
 
-	DOMNodeList*      children = configuration->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_port = XMLString::transcode("port");
-	XMLCh* TAG_host = XMLString::transcode("host");
-
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	for (json::iterator it = configuration.begin(); it != configuration.end(); ++it) 
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_port))
-			{
-				char* xstr = XMLString::transcode(currentElement->getTextContent());
-				m_Port = atoi(xstr);
-				XMLString::release(&xstr);
-			}
-
-			if ( XMLString::equals(currentElement->getTagName(), TAG_host))
-			{
-				char* xstr = XMLString::transcode(currentElement->getTextContent());
-				m_Host = new mglValString(xstr);
-				XMLString::release(&xstr);
-			}
-		}
+		string str = configuration["port"];
+		const char* xstr = str.c_str();
+		m_Port = atoi(xstr);
+		
+		str = configuration["port"];
+		xstr = str.c_str();
+		m_Host = new mglValString(xstr);
 	}
-
-	XMLString::release(&TAG_host);
-	XMLString::release(&TAG_port);
 
 	m_SocketFd = -1; // initial fail state
 

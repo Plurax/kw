@@ -12,12 +12,12 @@
 /*
  * For the first time the standard object factory can only return mglWindow!
  */
-shared_ptr<mglGuiObject> mglGuiObjectFactory::createGuiObject(mglValString* classname, DOMElement* configuration)
+shared_ptr<mglGuiObject> mglGuiObjectFactory::createGuiObject(mglValString* classname, json configuration)
 {
 	if (classname->str()->compare("mglGuiObject") == 0)
-		return shared_ptr<mglGuiObject>(new mglGuiObject(configuration));
-
-	return NULL;
+		return make_shared<mglGuiObject>(configuration);
+	
+	return nullptr;
 }
 
 

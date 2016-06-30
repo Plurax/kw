@@ -10,6 +10,7 @@
 #include "mglDebug/mglLogger.h"
 #include "mglValues/mglValColor.h"
 #include "mglValues/mglValString.h"
+#include <cstring>
 
 using namespace std;
 

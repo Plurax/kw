@@ -24,15 +24,7 @@
 #endif
 
 #include <mglMessageHandler.h>
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMText.hpp>
+#include <json.hpp>
 
 #include "mglMessage.h"
 #include "mglValues/mglValColor.h"
@@ -75,9 +67,8 @@ enum class enumObjectFlags {
 #define OBJ_STATE_FOCUSSED	(unsigned short) 2
 
 
-using namespace xercesc;
 using namespace std;
-
+using json = nlohmann::json;
 
 class mglSystem;
 class mglGuiObject;
@@ -95,7 +86,7 @@ public:
 	 * xml configuration. The parameter is the treepart of the xml configuration matching the <configuration> tag.
 	 * @param xmlconfiguration
 	 */
-	mglGuiObject(DOMElement* xmlconfiguration);
+	mglGuiObject(json configuration);
 
 	mglGuiObject();
 
@@ -114,7 +105,7 @@ public:
 	void setParentWindow(shared_ptr<mglGuiObject> parent);
 	void setNextWindow(shared_ptr<mglGuiObject> parent);
 	void setPrevWindow(shared_ptr<mglGuiObject> parent);
-	void setEditor(mglValString* _editor);
+	void setEditor(shared_ptr<mglValString> _editor);
 
 	// Interface for editables - if not used call the parent function (and nothing happens)
 	virtual void applyIGRCount(int _cnt);

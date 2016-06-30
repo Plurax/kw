@@ -1,14 +1,15 @@
 
 
-
+#include <json.hpp>
 #include "mglDebug/mglLogger.h"
 #include "mglDebug/mglLogChannel.h"
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 using namespace std;
-using namespace xercesc;
+using json = nlohmann::json;
 
 mglLogger::~mglLogger()
 {
@@ -22,119 +23,87 @@ mglLogger::mglLogger()
 }
 
 
-void mglLogger::configure(DOMNode* loggerconfig)
+void mglLogger::configure(json loggerconfig)
 {
-	DOMNodeList*      children = loggerconfig->getChildNodes();
-	const  XMLSize_t nodeCount = children->getLength();
-
-	XMLCh* TAG_Channel = XMLString::transcode("Channel");
-	XMLCh* TAG_stream = XMLString::transcode("stream");
-	XMLCh* TAG_mask = XMLString::transcode("mask");
-	XMLCh* TAG_libraries= XMLString::transcode("libraries");
-	XMLCh* TAG_classes = XMLString::transcode("classes");
-
 	int iChannelCount = 0; // Count number of channels - we only allow up to 5 channels
 	unsigned short uisReadVal = 0;
 	unsigned int ui;
 	char* valTagText;
 
-	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+	for (auto& element : loggerconfig["Channels"])
 	{
-		DOMNode* currentNode = children->item(xx);
-		if( currentNode->getNodeType() &&  // true is not NULL
-				currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
+		if (iChannelCount > DEF_MAX_LOG_CHANNELS)
 		{
-			// Found node which is an Element. Re-cast node as element
-			DOMElement* currentElement
-						= dynamic_cast< xercesc::DOMElement* >( currentNode );
+			std::cout << "Warning - Number of log channels exceeds limit of " << iChannelCount << " furhter channels are not regarded.\n";
+			continue;
+		}
+		m_Channels[iChannelCount] = new mglLogChannel(std::string(((element)["stream"]).get<string>()));
+		
+		// Read channel mask
+		auto valTagTextStr = ((element)["mask"]).get<string>();
+		valTagText = const_cast<char*>(valTagTextStr.c_str());
+		if ((valTagText[0] == '0') && (valTagText[1] == 'x'))
+			sscanf(valTagText, "0x%x", &ui);
+		else
+			sscanf(valTagText, "%u", &ui);
+		uisReadVal = (unsigned short)ui;
+		m_Channels[iChannelCount]->setMask(uisReadVal);
+		
+		// Read classes
+		if (element.count("classes"))
+		{
+			valTagTextStr = ((element)["classes"]).get<string>();
+			valTagText = const_cast<char*>(valTagTextStr.c_str());
+			char* prevPtr = valTagText;
+			char* nextPtr = valTagText;
 
-			if ( XMLString::equals(currentElement->getTagName(), TAG_Channel))
+			while (NULL != nextPtr)
 			{
-				if (iChannelCount >= DEF_MAX_LOG_CHANNELS)
-					continue; // ignore additional log channel settings
+				nextPtr = strchr(valTagText, ',');
 
-				DOMNodeList* channel_children = currentElement->getChildNodes();
-				for( XMLSize_t ccxx = 0; ccxx < channel_children->getLength(); ++ccxx )
+				if (nextPtr)
+					*nextPtr = '\0';
+
+				string newClass = string(prevPtr);
+				m_Channels[iChannelCount]->addClassFilter(newClass, 0xffff);
+				if (nextPtr)
 				{
-					DOMNode* channel_child= channel_children->item(ccxx);
-
-					if( channel_child->getNodeType() &&  // true is not NULL
-							channel_child->getNodeType() == DOMNode::ELEMENT_NODE ) // is element
-					{
-						// Found node which is an Element. Re-cast node as element
-						DOMElement* child_Element = dynamic_cast< xercesc::DOMElement* >( channel_child );
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_stream))
-						{
-							m_Channels[iChannelCount] = new mglLogChannel(std::string(XMLString::transcode(child_Element->getTextContent())));
-						}
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_mask))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
-							if ((valTagText[0] == '0') && (valTagText[1] == 'x'))
-								sscanf(valTagText, "0x%x", &ui);
-							else
-								sscanf(valTagText, "%u", &ui);
-							uisReadVal = (unsigned short)ui;
-							m_Channels[iChannelCount]->setMask(uisReadVal);
-							XMLString::release(&valTagText);
-						}
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_classes))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
-							char* prevPtr = valTagText;
-							char* nextPtr = valTagText;
-
-							while (NULL != nextPtr)
-							{
-								nextPtr = strchr(valTagText, ',');
-
-								if (nextPtr)
-									*nextPtr = '\0';
-
-								string newClass = string(prevPtr);
-								m_Channels[iChannelCount]->addClassFilter(newClass, 0xffff);
-								if (nextPtr)
-								{
-									nextPtr++;
-									prevPtr = nextPtr;
-								}
-							}
-						}
-
-
-						if ( XMLString::equals(child_Element->getTagName(), TAG_libraries))
-						{
-							valTagText = XMLString::transcode(child_Element->getTextContent());
-							char* prevPtr = valTagText;
-							char* nextPtr = valTagText;
-
-							while (NULL != nextPtr)
-							{
-								nextPtr = strchr(valTagText, ',');
-
-								if (nextPtr)
-									*nextPtr = '\0';
-
-								string newLib = string(prevPtr);
-								m_Channels[iChannelCount]->addLibraryFilter(newLib, 0xFFFF);
-
-								if (nextPtr)
-								{
-									nextPtr++;
-									prevPtr = nextPtr;
-								}
-							}
-						}
-					}
+					nextPtr++;
+					prevPtr = nextPtr;
 				}
-				iChannelCount++;
+			}
+		}				
+
+		// Read libraries
+		if (element.count("libraries"))
+		{
+			valTagTextStr = ((element)["libraries"]).get<string>();
+			valTagText = const_cast<char*>(valTagTextStr.c_str());
+			char* prevPtr = valTagText;
+			char* nextPtr = valTagText;
+
+			while (NULL != nextPtr)
+			{
+				nextPtr = strchr(valTagText, ',');
+			
+				if (nextPtr)
+					*nextPtr = '\0';
+
+				string newLib = string(prevPtr);
+				m_Channels[iChannelCount]->addLibraryFilter(newLib, 0xFFFF);
+
+				if (nextPtr)
+				{
+					nextPtr++;
+					prevPtr = nextPtr;
+				}
 			}
 		}
+		iChannelCount++;
 	}
 	m_isInitialized = true;
+	INIT_LOG("mglLogger", "configure(json loggerconfig)");
+	LOG_TRACE("Logging initialized...");
 }
 
 

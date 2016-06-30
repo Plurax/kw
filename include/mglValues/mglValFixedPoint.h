@@ -15,7 +15,7 @@ using namespace std;
 
 static const char* enumValFixedPointPrecNames[] = { "prec15N2", "prec13N4", "prec11N6", "prec9N8", "prec7N10", "prec5N12" };
 enum class enumValFixedPointPrec {
-	prec15N2,
+	prec15N2 = 0,
 	prec13N4,
 	prec11N6,
 	prec9N8,
