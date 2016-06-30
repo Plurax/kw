@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classmglGuiObject.html" title="mglGuiObject" alt="" coords="115,192,216,221"/>
-<area shape="rect" id="node5" href="$classmglValString.html" title="mglValString" alt="" coords="5,85,101,115"/>
-<area shape="rect" id="node7" href="$classmglValue.html" title="mglValue" alt="" coords="85,5,160,35"/>
-<area shape="rect" id="node11" href="$classmglValColor.html" title="mglValColor" alt="" coords="125,85,219,115"/>
-<area shape="rect" id="node9" href="$classmglGuiActionFunctor.html" title="mglGuiActionFunctor" alt="" coords="249,85,393,115"/>
-</map>
