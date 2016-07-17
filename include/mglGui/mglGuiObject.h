@@ -6,8 +6,8 @@
  */
 
 
-#ifndef H_MGL_WINDOW
-#define H_MGL_WINDOW
+#ifndef H_MGL_GUIOBJECT
+#define H_MGL_GUIOBJECT
 #include <stdio.h>
 #include <vector>
 #include <map>
