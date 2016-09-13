@@ -4,15 +4,16 @@
  *  Created on: 19.02.2014
  *      Author: cromas
  */
-#include <typeinfo>
-#include <iostream>
 
 
 #ifndef MGLVALUE_H_
 #define MGLVALUE_H_
 
+#include <typeinfo>
+#include <iostream>
+#include "mglObject.h"
 
-class mglValue
+class mglValue : public mglObject
 {
 public:
 	mglValue();

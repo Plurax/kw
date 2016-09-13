@@ -96,7 +96,7 @@ int mglValString::size()
 }
 
 
-bool mglValString::empty()
+bool mglValString::empty() const
 {
 	return m_isEmpty;
 }
@@ -111,8 +111,16 @@ void mglValString::erase (int pos, int len)
 
 mglValString mglValString::operator + (const mglValString& _right)
 {
-	if (this->m_string != NULL)
+	if (!this->empty())
 		return mglValString(*this->m_string + *_right.m_string);
+	else
+	{
+	// IS adding a string to an undefined string the string or is in an error?
+		if (!_right.empty())
+			return mglValString(_right);
+		else
+			return mglValString();
+	}
 }
 
 bool mglValString::operator == (const mglValString& _right)

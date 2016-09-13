@@ -8,6 +8,10 @@
 
 #include "mglLibraryInfo.h"
 
+mglLibraryInfo::~mglLibraryInfo()
+{
+}
+
 mglLibraryInfo::mglLibraryInfo(	string name, string version, string description, string author, string license)
 {
 	m_name = name;

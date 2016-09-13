@@ -9,6 +9,7 @@
 #define MGLDATASOURCE_H_
 
 #include "mglValues/mglValString.h"
+#include "mglObject.h"
 #include <map>
 #include <memory>
 
@@ -19,10 +20,11 @@ using namespace std;
  * All objects which act as a data source should inherit from this type to allow the management by the mglSystem singleton.
  * Custom code can retrieve the data source object from the mglSystem singleton to perform any desired action.
  */
-class mglDataSource
+class mglDataSource : public mglObject
 {
 public:
 	mglDataSource();
+	~mglDataSource();
 	virtual void init() = 0;
 	virtual void deInit() = 0;
 	mglDataSource(mglValString _name, unsigned int _type);

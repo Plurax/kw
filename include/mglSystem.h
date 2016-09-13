@@ -15,17 +15,12 @@
 
 #include "mglTimer.h"
 #include "mglDebug/mglLogger.h"
-#include "mglGui/mglGuiObject.h"
-#include "mglGui/mglInputMessage.h"
-#include "mglGui/mglDraggingContext.h"
-#include "mglGui/mglFontProvider.h"
-#include "mglGui/mglGuiLibManager.h"
-#include "mglDataLayer/mglDataSourceManager.h"
+#include "mglLibraryManager.h"
 #include "mglSystem.h"
 #include "mglBase.h"
 #include "mglMessage.h"
-#include "mglAppConfiguration.h"
-#include "mglGui/mglSelectionContext.h"
+#include "mglMessageHandler.h"
+#include "mglDataLayer/mglDataSource.h"
 
 #include <json.hpp>
 #include "mglValues/mglValString.h"
@@ -42,7 +37,7 @@ using namespace std;
 class mglSystem
 {
 public:
-	void init(void(*ptr)(), mglValString& configfile);
+	void init(mglValString& configfile);
 
 	~mglSystem();
 
@@ -65,44 +60,15 @@ public:
 #endif
 	}
 
-	void Draw(void);
-	void SetMainFrame(shared_ptr<mglGuiObject> MainFrame);
-
-	void closeMenu();
-	void returnFromMenu();
-	void openMenu(shared_ptr<mglGuiObject>Menu, mglValCoord _coord);
-
 	void destroy();
-	shared_ptr<mglGuiObject> getMainFrame(mglValString name);
-	shared_ptr<mglGuiObject> getMenu(mglValString name);
-
-	shared_ptr<mglGuiObject> getValueEditor();
-	shared_ptr<mglGuiObject> getEditedObject();
-
-	shared_ptr<mglMessage> processInputMessage(shared_ptr<mglInputMessage> Message);
 
 	void readConfiguration(mglValString& configFile);
-	void (*flushGL)();
-	shared_ptr<mglGuiObject> getTargetWindow(mglValCoord pt);
-
-	shared_ptr<mglGuiObject> getGuiObject(mglValString _str);
-
-	mglGuiObjectMap m_mMainFrames;
-	mglGuiObjectMap m_mMenus;
-	mglGuiObjectMap m_mEditors;
 
 	mglMessageHandlerMap m_mMessageHandlers;
-
-	mglGuiObjectMap m_mGuiObjects;
 
 	mglDataSourceMap m_DataSources;
 
 	shared_ptr<mglDataSource> getDataSource(mglValString _name);
-
-	shared_ptr<mglFontProvider> m_FontProvider;
-	shared_ptr<mglTextureManager> m_TextureManager;
-
-	mglAppConfiguration m_Configuration;
 
 	mglLibraryInfo* m_libInfo;
 
@@ -122,29 +88,7 @@ private:
 
 //    XMLCh* m_TAG_root;
 
-    void createGUIfromJSON(json GUIElement, shared_ptr<mglGuiObject> parent, shared_ptr<mglGuiObject> prev, mglGuiObjectMap& listToAdd, int _listtype);
     void createDataLayer(json currentElement);
-
-//    XMLCh* m_TAG_ApplicationSettings;
-
-	bool m_dbf;
-
-	bool m_ButtonDown; // is mouse or IGR button down?
-
-	// This is for managing state changes when flipping between touch and IGR input
-	bool m_lastActionCausedByTouch;
-
-	shared_ptr<mglDraggingContext> m_DraggingContext;
-
-	shared_ptr<mglGuiObject> m_CurrentMainFrame;
-	shared_ptr<mglGuiObject> m_CurrentMenu;
-
-	vector<shared_ptr<mglSelectionContext>> m_vSelectionContexts;
-
-	mglTimer m_ContextMenuTimer;
-	shared_ptr<mglGuiObject> m_ContextAnimation;
-
-	shared_ptr<mglGuiObject> m_ValueEditor;
 
 	queue<shared_ptr<mglMessage>> m_MessageQueue;
 };

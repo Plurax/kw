@@ -12,6 +12,11 @@ mglDataSource::mglDataSource()
 {
 }
 
+
+mglDataSource::~mglDataSource()
+{
+}
+
 mglDataSource::mglDataSource(mglValString _name, unsigned int _type)
 {
 	m_name = _name;

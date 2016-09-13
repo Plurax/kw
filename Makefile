@@ -12,7 +12,7 @@ SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -D"__LIBNAME="\"MGlBase\" -D"__BUILD_DATE="\"$(BUILDTIME)\" -O0 -g -Wall -c -fmessage-length=0 -std=c++14 -fPIC
 LIB := 
-INC := -I/home/cromas/newgit/json/src -I/usr/include/freetype2 -I/usr/include -I include -I/home/cromas/newgit/mgl/include -I/home/cromas/externalsources/boost_1_58_0
+INC := -I/home/chuhlich/newgit/json/src -I/usr/include/freetype2 -I/usr/include -I include -I/home/chuhlich/newgit/mgl/include -I/home/chuhlich/externalsources/boost_1_61_0
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."

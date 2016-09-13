@@ -10,14 +10,16 @@
 
 
 #include <string>
+#include "mglObject.h"
 
 using namespace std;
 
-class mglLibraryInfo
+class mglLibraryInfo : public mglObject
 {
 public:
 	mglLibraryInfo(	string name, string version, string description, string author, string license);
-
+	~mglLibraryInfo();
+	
 	string asString();
 	string m_name;
 	string m_version;
@@ -25,6 +27,8 @@ public:
 	string m_author;
 	string m_license;
 };
+
+typedef mglLibraryInfo* (*FctGetLibraryInfo)();
 
 
 

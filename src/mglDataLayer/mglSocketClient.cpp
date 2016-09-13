@@ -51,7 +51,7 @@ mglSocketClient::mglSocketClient(json configuration)
  */
 void mglSocketClient::init()
 {
-	INIT_LOG("mglSocket", "void init()");
+	// commented to avoid warnings INIT_LOG("mglSocket", "void init()");
 
 }
 
@@ -66,7 +66,7 @@ void mglSocketClient::init()
  */
 int mglSocketClient::write(char *buff, int len)
 {
-	INIT_LOG("mglSocket", "write(char* buff, size_t len");
+	// commented to avoid warning INIT_LOG("mglSocket", "write(char* buff, size_t len");
 	return ::write(m_SocketFd, buff, strlen(buff));
 
 }

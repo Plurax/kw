@@ -55,7 +55,7 @@ mglShm::mglShm(json configuration)
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());
 				m_key = (key_t)atoi(xstr.c_str());
 			}
-/*
+
 			if ( XMLString::equals(currentElement->getTagName(), TAG_semkey))
 			{
 				std::string xstr = XMLString::transcode(currentElement->getTextContent());

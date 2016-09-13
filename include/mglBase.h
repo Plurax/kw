@@ -49,12 +49,9 @@
 #define __LIBNAME "undefinedLib"
 #endif
 
-#include "mglGui/mglGuiObject.h"
-#include "mglGui/mglFontProvider.h"
-#include "mglGui/mglTextureManager.h"
+#include "mglObject.h"
 #include "mglSystem.h"
 #include "mglTimer.h"
-#include "FTGL/ftgl.h"
 
 
 

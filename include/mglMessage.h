@@ -9,7 +9,7 @@
 #define MGLMESSAGE_H_
 
 #include "mglValues/mglValString.h"
-
+#include "mglObject.h"
 
 enum eMessageType
 {
@@ -17,7 +17,7 @@ enum eMessageType
 };
 
 
-class mglMessage
+class mglMessage : public mglObject
 {
 public:
 	mglMessage(int messagetype);

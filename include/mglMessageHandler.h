@@ -10,14 +10,15 @@
 
 #include "mglMessage.h"
 #include <memory>
+#include "mglObject.h"
 
 using namespace std;
 
-class mglMessageHandler
+class mglMessageHandler : public mglObject
 {
 public:
 	mglMessageHandler();
-
+	~mglMessageHandler();
 	virtual shared_ptr<mglMessage> operator () (shared_ptr<mglMessage> message);
 };
 

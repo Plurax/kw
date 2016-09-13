@@ -22,3 +22,26 @@ mglLibraryInfo* mglLibHandle::getInfo()
 {
 	return m_LibraryInfo;
 }
+
+
+void mglLibHandle::addFactory(mglObjectFactory* factory, mglValString type)
+{
+	m_ObjectFactories.insert(std::pair<mglValString, mglObjectFactory*>(
+								   type,
+								   factory));
+}
+
+
+mglObjectFactory* mglLibHandle::getFactory(mglValString type)
+{
+	std::map<mglValString, mglObjectFactory*>::iterator factoryIterator = m_ObjectFactories.find(type);
+	
+	mglObjectFactory* factory = nullptr;
+
+	if (factoryIterator != m_ObjectFactories.end())
+	{
+		factory  = factoryIterator->second;
+	}
+
+	return factory;
+}

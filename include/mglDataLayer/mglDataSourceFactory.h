@@ -9,7 +9,7 @@
 #define MGLDATALAYERFACTORY_H_
 
 
-#include "mglDataLayer/mglDataSourceFactory.h"
+#include "mglObjectFactory.h"
 #include "mglDataLayer/mglDataSource.h"
 #include "mglLibHandle.h"
 #include "mglValues/mglValString.h"
@@ -20,12 +20,13 @@ using namespace std;
 using json = nlohmann::json; 
 
 
-class mglDataSourceFactory
+class mglDataSourceFactory : public mglObjectFactory
 {
 public:
-	virtual ~mglDataSourceFactory();
+	mglDataSourceFactory();
+	~mglDataSourceFactory();
 
-	virtual shared_ptr<mglDataSource> createDataSource(mglValString* classname, json configuration);
+	shared_ptr<mglObject> createObject(mglValString* classname, json configuration);
 };
 
 typedef mglDataSourceFactory* (*DataSourceCreateFunc)();

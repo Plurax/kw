@@ -12,11 +12,16 @@
 #include "mglDataLayer/mglShm.h"
 #include "mglDataLayer/mglDataContainer.h"
 
+
+mglDataSourceFactory::mglDataSourceFactory()
+{
+}
+
 mglDataSourceFactory::~mglDataSourceFactory()
 {
 }
 
-shared_ptr<mglDataSource> mglDataSourceFactory::createDataSource(mglValString* classname, json configuration)
+shared_ptr<mglObject> mglDataSourceFactory::createObject(mglValString* classname, json configuration)
 {
 //	if (classname->str()->compare("mglShm") == 0)
 //		return new mglShm(configuration);

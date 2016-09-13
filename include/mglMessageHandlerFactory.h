@@ -10,18 +10,20 @@
 
 #include <mglMessageHandler.h>
 #include "mglLibraryInfo.h"
+#include "mglObjectFactory.h"
 #include "mglValues/mglValString.h"
 #include <memory>
 
 using namespace std;
 
 
-class mglMessageHandlerFactory
+class mglMessageHandlerFactory : public mglObjectFactory
 {
 public:
-	virtual ~mglMessageHandlerFactory();
-	virtual mglLibraryInfo* getLibInfo();
-	virtual shared_ptr<mglMessageHandler> createMessageHandler(mglValString* classname);
+	mglMessageHandlerFactory();
+	~mglMessageHandlerFactory();
+
+	shared_ptr<mglObject> createObject(mglValString* classname, json configuration);
 };
 
 

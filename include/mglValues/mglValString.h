@@ -39,7 +39,7 @@ public:
 	  ~mglValString();
 
 	  int size();
-	  bool empty();
+	  bool empty() const;
 
 	  void erase(int pos, int len);
 	  mglValString getType();
@@ -51,6 +51,7 @@ public:
 
 	  shared_ptr<string> str();
 	  const shared_ptr<string> const_str() const;
+
 private:
 	  shared_ptr<string> m_string;
 	  bool m_isEmpty;

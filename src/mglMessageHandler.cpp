@@ -15,6 +15,10 @@ mglMessageHandler::mglMessageHandler()
 {
 }
 
+mglMessageHandler::~mglMessageHandler()
+{
+}
+
 
 shared_ptr<mglMessage> mglMessageHandler::operator () (shared_ptr<mglMessage> message)
 {
