@@ -8,7 +8,7 @@
 
 
 
-#include "mglValues/mglValue.h"
+#include "mglValue.h"
 
 
 mglValue::mglValue()

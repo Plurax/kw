@@ -11,7 +11,7 @@
 #include <mglMessageHandler.h>
 #include "mglLibraryInfo.h"
 #include "mglObjectFactory.h"
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include <memory>
 
 using namespace std;

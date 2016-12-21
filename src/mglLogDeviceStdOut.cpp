@@ -7,7 +7,7 @@
 
 
 
-#include "mglDebug/mglLogDeviceStdOut.h"
+#include "mglLogDeviceStdOut.h"
 
 void mglLogDeviceStdOut::flush()
 {

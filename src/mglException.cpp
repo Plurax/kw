@@ -6,7 +6,7 @@
  */
 
 
-#include "mglDebug/mglTechnicalException.h"
+#include "mglTechnicalException.h"
 
 
 

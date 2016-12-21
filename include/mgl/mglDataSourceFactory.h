@@ -10,9 +10,9 @@
 
 
 #include "mglObjectFactory.h"
-#include "mglDataLayer/mglDataSource.h"
+#include "mglDataSource.h"
 #include "mglLibHandle.h"
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include <memory>
 #include <json.hpp>
 

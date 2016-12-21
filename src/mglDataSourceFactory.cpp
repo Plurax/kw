@@ -7,10 +7,10 @@
 
 
 
-#include <mglDataLayer/mglSocketClient.h>
-#include "mglDataLayer/mglDataSourceFactory.h"
-#include "mglDataLayer/mglShm.h"
-#include "mglDataLayer/mglDataContainer.h"
+#include <mglSocketClient.h>
+#include "mglDataSourceFactory.h"
+#include "mglShm.h"
+#include "mglDataContainer.h"
 
 
 mglDataSourceFactory::mglDataSourceFactory()

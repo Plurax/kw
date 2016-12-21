@@ -8,7 +8,7 @@
 #ifndef MGLVALUES_MGLVALINTEGER_H_
 #define MGLVALUES_MGLVALINTEGER_H_
 
-#include <mglValues/mglValue.h>
+#include <mglValue.h>
 
 class mglValInteger: public mglValue {
 public:

@@ -5,8 +5,8 @@
  *      Author: cromas
  */
 
-#include <mglValues/mglValInteger.h>
-#include "mglDebug/mglDebug.h"
+#include <mglValInteger.h>
+#include "mglDebug.h"
 
 
 mglValInteger::mglValInteger()

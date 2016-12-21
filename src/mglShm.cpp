@@ -28,9 +28,9 @@
 #include <iostream>
 
 
-#include "mglDataLayer/mglShm.h"
-#include "mglDebug/mglLogger.h"
-#include "mglValues/mglValString.h"
+#include "mglShm.h"
+#include "mglLogger.h"
+#include "mglValString.h"
 
 
 

@@ -8,7 +8,7 @@
 #ifndef MGLDATASOURCE_H_
 #define MGLDATASOURCE_H_
 
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include "mglObject.h"
 #include <map>
 #include <memory>

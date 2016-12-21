@@ -6,10 +6,10 @@
  */
 
 #include "mglLibraryManager.h"
-#include "mglDebug/mglDebug.h"
+#include "mglDebug.h"
 #include "mglLibHandle.h"
 #include "mglSystem.h"
-#include "mglDataLayer/mglDataSourceFactory.h"
+#include "mglDataSourceFactory.h"
 #include "mglMessageHandlerFactory.h"
 
 using namespace std;

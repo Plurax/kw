@@ -1,37 +1,6 @@
 # @author  Barthélémy von Haller
 set(LIB_HEADERS
   "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/Version.h" # Generated header
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglBase.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglDataContainer.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglDataSourceFactory.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglDataSource.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglDebug.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLibHandle.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLibraryInfo.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLibraryManager.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLogChannel.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLogDeviceFile.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLogDevice.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLogDeviceStdErr.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLogDeviceStdOut.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglLogger.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglMessage.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglMessageHandlerFactory.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglMessageHandler.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglObjectFactory.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglObject.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglReleaseInfo.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglShm.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglSocketClient.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglSystem.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglTechnicalException.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglTimer.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglValColor.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglValCoord.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglValFixedPoint.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglValInteger.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglValString.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglValue.h"
 )
 
 set(LIB_SOURCES
@@ -84,6 +53,10 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES
   FRAMEWORK FALSE
   PUBLIC_HEADER "${LIB_HEADERS}" # specify the public headers
 )
+
+include_directories("${CMAKE_SOURCE_DIR}/include/mgl"
+  "${CMAKE_SOURCE_DIR}/ext/json/src"
+  )
 
 # This is a make target, so you can do a "make projArunner"
 #set(APPLICATION_NAME projArunner)

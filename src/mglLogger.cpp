@@ -1,8 +1,8 @@
 
 
 #include <json.hpp>
-#include "mglDebug/mglLogger.h"
-#include "mglDebug/mglLogChannel.h"
+#include "mglLogger.h"
+#include "mglLogChannel.h"
 #include <iostream>
 #include <fstream>
 #include <string>

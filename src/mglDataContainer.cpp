@@ -6,7 +6,7 @@
  */
 
 
-#include "mglDataLayer/mglDataContainer.h"
+#include "mglDataContainer.h"
 
 mglDataContainer::mglDataContainer(json configuration)
 {

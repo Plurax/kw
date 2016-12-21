@@ -6,10 +6,10 @@
  */
 
 
-#include "mglDebug/mglLogChannel.h"
-#include "mglDebug/mglLogDeviceFile.h"
-#include "mglDebug/mglLogDeviceStdOut.h"
-#include "mglDebug/mglLogDeviceStdErr.h"
+#include "mglLogChannel.h"
+#include "mglLogDeviceFile.h"
+#include "mglLogDeviceStdOut.h"
+#include "mglLogDeviceStdErr.h"
 #include <string>
 #include <sstream>
 #include <stdio.h>

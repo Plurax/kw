@@ -14,16 +14,16 @@
 #include <queue>
 
 #include "mglTimer.h"
-#include "mglDebug/mglLogger.h"
+#include "mglLogger.h"
 #include "mglLibraryManager.h"
 #include "mglSystem.h"
 #include "mglBase.h"
 #include "mglMessage.h"
 #include "mglMessageHandler.h"
-#include "mglDataLayer/mglDataSource.h"
+#include "mglDataSource.h"
 
 #include <json.hpp>
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 
 #include "mglLibHandle.h"
 

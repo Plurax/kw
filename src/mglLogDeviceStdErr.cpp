@@ -9,7 +9,7 @@
 
 
 
-#include "mglDebug/mglLogDeviceStdErr.h"
+#include "mglLogDeviceStdErr.h"
 
 void mglLogDeviceStdErr::flush()
 {

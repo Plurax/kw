@@ -5,8 +5,8 @@
  *      Author: cromas
  */
 
-#include "mglDebug/mglDebug.h"
-#include "mglValues/mglValFixedPoint.h"
+#include "mglDebug.h"
+#include "mglValFixedPoint.h"
 #include <string>
 #include <cstring>
 

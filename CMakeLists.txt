@@ -57,10 +57,10 @@ add_subdirectory(src)
 # SYSTEM PACKAGING (RPM, TGZ, ...)
 # _____________________________________________________________________________
 
-include(CPackConfig)
+#include(CPackConfig)
 
 #
 # CMAKE PACKAGING (for other CMake projects to use this one easily)
 # _____________________________________________________________________________
 
-include(PackageConfigurator)
+#include(PackageConfigurator)

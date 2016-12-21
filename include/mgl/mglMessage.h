@@ -8,7 +8,7 @@
 #ifndef MGLMESSAGE_H_
 #define MGLMESSAGE_H_
 
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include "mglObject.h"
 
 enum eMessageType

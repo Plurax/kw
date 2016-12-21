@@ -8,7 +8,7 @@
 #ifndef MGLOBJECTFACTORY_H_
 #define MGLOBJECTFACTORY_H_
 
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include "mglObject.h"
 #include "mglLibraryInfo.h"
 #include <memory>

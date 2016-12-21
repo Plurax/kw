@@ -9,7 +9,7 @@
 #define MGLLOGDEVICEFILE_H_
 
 #include "mglLogDevice.h"
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include <iostream>
 #include <fstream>
 

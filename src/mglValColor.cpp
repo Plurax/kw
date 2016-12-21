@@ -7,9 +7,9 @@
 
 #include <stdlib.h>
 #include <iostream>
-#include "mglDebug/mglLogger.h"
-#include "mglValues/mglValColor.h"
-#include "mglValues/mglValString.h"
+#include "mglLogger.h"
+#include "mglValColor.h"
+#include "mglValString.h"
 #include <cstring>
 
 using namespace std;

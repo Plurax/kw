@@ -9,7 +9,7 @@
 
 
 
-#include "mglDebug/mglLogDeviceFile.h"
+#include "mglLogDeviceFile.h"
 
 void mglLogDeviceFile::flush()
 {

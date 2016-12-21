@@ -7,7 +7,7 @@
 
 
 
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 
 
 

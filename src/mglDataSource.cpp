@@ -5,7 +5,7 @@
  *      Author: cromas
  */
 
-#include "mglDataLayer/mglDataSource.h"
+#include "mglDataSource.h"
 
 
 mglDataSource::mglDataSource()

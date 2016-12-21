@@ -4,8 +4,8 @@
  *  Created on: 21.11.2013
  *      Author: cromas
  */
-#include "../include/mglValues/mglValCoord.h"
-#include "../include/mglValues/mglValString.h"
+#include "mglValCoord.h"
+#include "mglValString.h"
 
 
 mglValCoord::mglValCoord(int x, int y, int z)

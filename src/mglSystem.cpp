@@ -24,8 +24,8 @@
 #endif
 
 #include "mglSystem.h"
-#include "mglDebug/mglTechnicalException.h"
-#include "mglValues/mglValCoord.h"
+#include "mglTechnicalException.h"
+#include "mglValCoord.h"
 
 
 using namespace std;

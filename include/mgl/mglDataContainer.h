@@ -10,7 +10,7 @@
 
 
 #include "mglDataSource.h"
-#include "mglValues/mglValString.h"
+#include "mglValString.h"
 #include <json.hpp>
 
 using namespace std;

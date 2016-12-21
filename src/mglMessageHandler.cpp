@@ -5,7 +5,7 @@
  *      Author: cromas
  */
 
-#include "mglDebug/mglLogger.h"
+#include "mglLogger.h"
 #include "mglMessageHandler.h"
 #include "mglMessage.h"
 
