@@ -1,3 +1,5 @@
+set (CMAKE_CXX_STANDARD 14)
+add_definitions(-D__LIBNAME="mgl")
 # @author  Barthélémy von Haller
 set(LIB_HEADERS
   "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/Version.h" # Generated header
