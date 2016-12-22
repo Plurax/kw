@@ -5,7 +5,7 @@
  *      Author: cromas
  */
 
-#include "../include/mglMessage.h"
+#include "mglMessage.h"
 
 
 mglMessage::mglMessage(int messagetype)

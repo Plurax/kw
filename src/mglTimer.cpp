@@ -5,7 +5,7 @@
  *      Author: cromas
  */
 
-#include "../include/mglTimer.h"
+#include "mglTimer.h"
 
 mglTimer::mglTimer()
 {
