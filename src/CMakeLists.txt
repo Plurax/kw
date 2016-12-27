@@ -2,7 +2,38 @@ set (CMAKE_CXX_STANDARD 14)
 add_definitions(-D__LIBNAME="mgl")
 # @author  Barthélémy von Haller
 set(LIB_HEADERS
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/Version.h" # Generated header
+  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglVersion.h" # Generated header
+  ../include/mgl/mglBase.h
+  ../include/mgl/mglDataContainer.h
+  ../include/mgl/mglDataSourceFactory.h
+  ../include/mgl/mglDataSource.h
+  ../include/mgl/mglDebug.h
+  ../include/mgl/mglLibHandle.h
+  ../include/mgl/mglLibraryInfo.h
+  ../include/mgl/mglLibraryManager.h
+  ../include/mgl/mglLogChannel.h
+  ../include/mgl/mglLogDeviceFile.h
+  ../include/mgl/mglLogDevice.h
+  ../include/mgl/mglLogDeviceStdErr.h
+  ../include/mgl/mglLogDeviceStdOut.h
+  ../include/mgl/mglLogger.h
+  ../include/mgl/mglMessage.h
+  ../include/mgl/mglMessageHandlerFactory.h
+  ../include/mgl/mglMessageHandler.h
+  ../include/mgl/mglObjectFactory.h
+  ../include/mgl/mglObject.h
+  ../include/mgl/mglReleaseInfo.h
+  ../include/mgl/mglShm.h
+  ../include/mgl/mglSocketClient.h
+  ../include/mgl/mglSystem.h
+  ../include/mgl/mglTechnicalException.h
+  ../include/mgl/mglTimer.h
+  ../include/mgl/mglValColor.h
+  ../include/mgl/mglValCoord.h
+  ../include/mgl/mglValFixedPoint.h
+  ../include/mgl/mglValInteger.h
+  ../include/mgl/mglValString.h
+  ../include/mgl/mglValue.h
 )
 
 set(LIB_SOURCES
@@ -61,11 +92,11 @@ include_directories("${CMAKE_SOURCE_DIR}/include/mgl"
   )
 
 # This is a make target, so you can do a "make projArunner"
-#set(APPLICATION_NAME projArunner)
-#add_executable(${APPLICATION_NAME} ${APP_SOURCES})
+set(APPLICATION_NAME mglRunner)
+add_executable(${APPLICATION_NAME} ${APP_SOURCES})
 
 # Links the target exe (projArunner) against the library (libprojA) and other required libraries
-#target_link_libraries(${APPLICATION_NAME} ${LIBRARY_NAME} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(${APPLICATION_NAME} ${LIBRARY_NAME} ${Boost_PROGRAM_OPTIONS_LIBRARY} rt boost_filesystem boost_system dl)
 
 # Says how and where to install software
 # Targets:

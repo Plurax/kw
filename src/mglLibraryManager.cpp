@@ -116,6 +116,10 @@ shared_ptr<mglObject> mglLibraryManager::createObject(shared_ptr<mglValString> l
 		FctCreateFunc getfactoryfct = (FctCreateFunc)dlsym(handle, s_Requestfunction.str()->c_str()); //"get<CLASSNAME>Factory"
 		FctGetLibraryInfo getLibraryInfo = (FctGetLibraryInfo)dlsym(handle, "getLibraryInfo"); //"getLibraryInfo"
 #endif
+		if (nullptr == getfactoryfct)
+		{
+			THROW_TECHNICAL_EXCEPTION(666, "Procadress retrieval for " << s_Requestfunction << " failed!");
+		}
 
 		mglObjectFactory* factory = getfactoryfct();
 

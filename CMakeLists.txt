@@ -1,4 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+
+# add a target to generate API documentation with Doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MGL.doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/MGL.doxyfile @ONLY)
+add_custom_target(doc
+${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/../MGL.doxyfile
+WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+COMMENT "Generating API documentation with Doxygen" VERBATIM
+)
+endif(DOXYGEN_FOUND)
+
 # Setting up project
 project(mgl)
 
@@ -18,11 +32,11 @@ find_package(Git QUIET) # if we don't find git or FindGit.cmake is not on the sy
 ## The Git module will trigger a reconfiguration for each pull that will bring a new revision on the local repository
 set (VCS_REVISION "-1")
 if(GIT_FOUND)
-    #include(GetGitRevisionDescription)
-    #get_git_head_revision(GIT_REFSPEC GIT_SHA1)
-    #message(STATUS "GIT branch ${GIT_REFSPEC}")
-    #message(STATUS "GIT revision ${GIT_SHA1}")
-    #set (VCS_REVISION ${GIT_SHA1})
+    include(GetGitRevisionDescription)
+    get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+    message(STATUS "GIT branch ${GIT_REFSPEC}")
+    message(STATUS "GIT revision ${GIT_SHA1}")
+    set (VCS_REVISION ${GIT_SHA1})
 endif()
 
 # This line finds the boost lib and headers. 
