@@ -91,12 +91,16 @@ include_directories("${CMAKE_SOURCE_DIR}/include/mgl"
   "${CMAKE_SOURCE_DIR}/ext/json/src"
   )
 
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
 # This is a make target, so you can do a "make projArunner"
 set(APPLICATION_NAME mglRunner)
 add_executable(${APPLICATION_NAME} ${APP_SOURCES})
 
 # Links the target exe (projArunner) against the library (libprojA) and other required libraries
-target_link_libraries(${APPLICATION_NAME} ${LIBRARY_NAME} ${Boost_PROGRAM_OPTIONS_LIBRARY} rt boost_filesystem boost_system dl)
+target_link_libraries(${APPLICATION_NAME} ${LIBRARY_NAME} ${Boost_PROGRAM_OPTIONS_LIBRARY} rt boost_filesystem boost_system dl Threads::Threads)
 
 # Says how and where to install software
 # Targets:

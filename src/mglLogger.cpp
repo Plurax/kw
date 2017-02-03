@@ -34,7 +34,7 @@ void mglLogger::configure(json loggerconfig)
 	{
 		if (iChannelCount > DEF_MAX_LOG_CHANNELS)
 		{
-			std::cout << "Warning - Number of log channels exceeds limit of " << iChannelCount << " furhter channels are not regarded.\n";
+			std::cout << "Warning - Number of log channels exceeds limit of " << iChannelCount << " further channels are not regarded.\n";
 			continue;
 		}
 		m_Channels[iChannelCount] = new mglLogChannel(std::string(((element)["stream"]).get<string>()));

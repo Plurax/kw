@@ -72,7 +72,7 @@ public:
 
 	mglLibraryInfo* m_libInfo;
 
-	void processEvents();
+	void processMessages();
 	void addMessage(shared_ptr<mglMessage> mess);
 
 	void setMessageHandlers(json messageconfig);

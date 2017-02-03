@@ -1,10 +1,9 @@
-//============================================================================
-// Name        : TestCtrl.cpp
-// Author      : Plurax
-// Version     :
-// Copyright   : Copyright by Plurax!
-// Description : Hello World in C++, Ansi-style
-//============================================================================
+/*
+ * main.cpp
+ *
+ *  Created on: 22.11.2016
+ *      Author: chuhlich
+ */
 
 #include <iostream>
 using namespace std;
@@ -27,7 +26,7 @@ int main() {
     	newMess->setMessageText("TestMessage!");
     	MainSystem.addMessage(newMess);
 
-    	MainSystem.processEvents();
+    	MainSystem.processMessages();
     	usleep(1000000);
     }
 
