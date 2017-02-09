@@ -2,7 +2,7 @@
  * mglMessageHandlerLibManager.h
  *
  *  Created on: 08.02.2015
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLLIBRARYMANAGER_H_

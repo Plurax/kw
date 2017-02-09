@@ -2,7 +2,7 @@
  * mglSocket.cpp
  *
  *  Created on: 26.04.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 

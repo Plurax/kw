@@ -2,7 +2,7 @@
  * mglValInteger.cpp
  *
  *  Created on: 26.10.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include <mglValInteger.h>

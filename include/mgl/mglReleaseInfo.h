@@ -2,7 +2,7 @@
  * mglReleaseInfo.h
  *
  *  Created on: 13.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLRELEASEINFO_H_

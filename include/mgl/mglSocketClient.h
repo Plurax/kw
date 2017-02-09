@@ -2,7 +2,7 @@
  * mglSocket.h
  *
  *  Created on: 26.04.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLSOCKET_H_

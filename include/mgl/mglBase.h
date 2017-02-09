@@ -2,7 +2,7 @@
  * mglBase.h
  *
  *  Created on: 12.10.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 #ifndef H_MGL_BASE
 #define H_MGL_BASE

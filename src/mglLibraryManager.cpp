@@ -2,7 +2,7 @@
  * mglObjectManager.cpp
  *
  *  Created on: 03.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include "mglLibraryManager.h"

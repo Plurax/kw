@@ -2,7 +2,7 @@
  * mglDataContainer.h
  *
  *  Created on: 25.04.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLDATACONTAINER_H_

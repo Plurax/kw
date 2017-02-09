@@ -2,7 +2,7 @@
  * mglLibHandle.h
  *
  *  Created on: 12.10.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLLIBHANDLE_H_

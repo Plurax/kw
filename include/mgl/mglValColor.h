@@ -2,7 +2,7 @@
  * mglColor.h
  *
  *  Created on: 09.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLCOLOR_H_

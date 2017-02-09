@@ -2,7 +2,7 @@
  * mglValString.h
  *
  *  Created on: 19.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLVALSTRING_H_

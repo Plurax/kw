@@ -2,7 +2,7 @@
  * mglDebug.h
  *
  *  Created on: 12.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLDEBUG_H_

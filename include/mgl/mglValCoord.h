@@ -2,7 +2,7 @@
  * mglCoord.h
  *
  *  Created on: 21.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLCOORD_H_

@@ -2,7 +2,7 @@
  * mglValString.cpp
  *
  *  Created on: 28.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 

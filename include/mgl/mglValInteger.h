@@ -2,7 +2,7 @@
  * mglValInteger.h
  *
  *  Created on: 26.10.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLVALUES_MGLVALINTEGER_H_

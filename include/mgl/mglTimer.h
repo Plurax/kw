@@ -2,7 +2,7 @@
  * mglTimer.h
  *
  *  Created on: 06.12.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLTIMER_H_

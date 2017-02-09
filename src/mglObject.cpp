@@ -2,7 +2,7 @@
  * mglObject.cpp
  *
  *  Created on: 11.08.2016
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include "mglObject.h"

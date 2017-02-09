@@ -2,7 +2,7 @@
  * mglShm.cpp
  *
  *  Created on: 27.01.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 #include <stdlib.h>
 #include <stdio.h>

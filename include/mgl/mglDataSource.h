@@ -2,7 +2,7 @@
  * mglDataSource.h
  *
  *  Created on: 27.01.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLDATASOURCE_H_

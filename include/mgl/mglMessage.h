@@ -2,7 +2,7 @@
  * mglMessage.h
  *
  *  Created on: 09.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLMESSAGE_H_

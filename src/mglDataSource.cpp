@@ -2,7 +2,7 @@
  * mglDataSource.cpp
  *
  *  Created on: 01.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include "mglDataSource.h"

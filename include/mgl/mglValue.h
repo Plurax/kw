@@ -2,7 +2,7 @@
  * mglValue.h
  *
  *  Created on: 19.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 

@@ -2,7 +2,7 @@
  * mglColor.cpp
  *
  *  Created on: 09.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include <stdlib.h>

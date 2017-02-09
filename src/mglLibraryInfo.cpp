@@ -2,7 +2,7 @@
  * mglLibraryInfo.cpp
  *
  *  Created on: 13.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 

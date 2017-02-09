@@ -2,7 +2,7 @@
  * mglGuiActinFunctor.cpp
  *
  *  Created on: 21.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include "mglLogger.h"

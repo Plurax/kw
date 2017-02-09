@@ -2,7 +2,7 @@
  * mglLibHandle.cpp
  *
  *  Created on: 12.10.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include "mglLibHandle.h"

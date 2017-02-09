@@ -2,7 +2,7 @@
  * mglTimer.cpp
  *
  *  Created on: 06.12.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #include "mglTimer.h"

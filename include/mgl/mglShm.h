@@ -2,7 +2,7 @@
  * mglShm.h
  *
  *  Created on: 27.01.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLSHM_H_

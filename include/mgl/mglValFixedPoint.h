@@ -2,7 +2,7 @@
  * mglValFixedPoint.h
  *
  *  Created on: 13.11.2013
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLVALFIXEDPOINT_H_

@@ -2,7 +2,7 @@
  * mglException.h
  *
  *  Created on: 11.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 #ifndef MGLEXCEPTION_H_
