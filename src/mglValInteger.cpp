@@ -76,7 +76,6 @@ mglValInteger mglValInteger::operator + (const mglValInteger& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
-		INIT_LOG("mglValInteger", "operator +");
 		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
 	}
 	return mglValInteger(this->m_Value + right.m_Value);
@@ -86,7 +85,6 @@ mglValInteger& mglValInteger::operator += (mglValInteger const& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
-		INIT_LOG("mglValInteger", "operator +=");
 		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
 	}
 
@@ -98,7 +96,6 @@ mglValInteger mglValInteger::operator - (const mglValInteger& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
-		INIT_LOG("mglValInteger", "operator -");
 		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
 	}
 
@@ -109,7 +106,6 @@ mglValInteger& mglValInteger::operator -= (mglValInteger const& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
-		INIT_LOG("mglValInteger", "operator -");
 		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
 	}
 
@@ -121,7 +117,6 @@ mglValInteger mglValInteger::operator * (const mglValInteger& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
-		INIT_LOG("mglValInteger", "operator *");
 		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
 	}
 
@@ -133,7 +128,6 @@ mglValInteger mglValInteger::operator / (const mglValInteger& right)
 {
 	if (this->m_isEmpty || right.m_isEmpty)
 	{
-		INIT_LOG("mglValInteger", "operator /");
 		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
 	}
 

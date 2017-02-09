@@ -9,7 +9,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
-#include <stdexcept>
+#include <exception>
+//#include <stdexcept>
 #include "mglReleaseInfo.h"
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
@@ -66,8 +67,6 @@ mglSystem::~mglSystem()
  */
 void mglSystem::readConfiguration(mglValString& configFile)
 {
-  INIT_LOG("mglSystem", "readConfiguration(mglValString& configFile)");
-	
   errno = 0;
   if (!boost::filesystem::exists(configFile.str()->c_str()))
   {
@@ -100,11 +99,11 @@ void mglSystem::readConfiguration(mglValString& configFile)
   }
   catch (mglTechnicalException& e)
   {
-    LOG_EXCEPTION(e.getMessage());
+    LOG_EXCEPTION << e.getMessage();
   }
   catch (exception& e)
   {
-    LOG_EXCEPTION("Exception occured during init!: " << e.what());
+    LOG_EXCEPTION << "Exception occured during init!: " << e.what();
   }
 }
 
@@ -118,8 +117,6 @@ void mglSystem::readConfiguration(mglValString& configFile)
  */
 void mglSystem::setMessageHandlers(json messageconfig)
 {
-  INIT_LOG("mglSystem", "setMessageHandlers(json messageconfig)");
-
   int messageId = -1; // -1 is initial faulty - 0 is forbidden (internal gui messages)
   shared_ptr<mglValString> handlerlibname = nullptr;
   shared_ptr<mglValString> handlerclassname = nullptr;
@@ -127,11 +124,11 @@ void mglSystem::setMessageHandlers(json messageconfig)
 
   if (messageconfig == nullptr)
   {
-    LOG_INFO("No message handlers found in config...");
+    LOG_INFO << "No message handlers found in config...";
     return;
   }
   else
-    LOG_TRACE("Initializing message handlers...");
+    LOG_TRACE << "Initializing message handlers...";
 
   auto sMainclassname = make_shared<mglValString>("mglMessageHandler");
 
@@ -147,7 +144,7 @@ void mglSystem::setMessageHandlers(json messageconfig)
     if (handlerlibname != nullptr && handlerclassname != nullptr && msgID_str != nullptr)
     {
       // After we created the object we can attach the handler if it exists
-      LOG_TRACE("Got a configured handler library: " << *handlerlibname << " class: " << *handlerclassname << " MessageID: " << messageId);
+      LOG_TRACE << "Got a configured handler library: " << *handlerlibname << " class: " << *handlerclassname << " MessageID: " << messageId;
       shared_ptr<mglObject> funct = mglLibraryManager::Inst().createObject(handlerlibname, handlerclassname, sMainclassname, element["config"]);
       auto addObj = static_pointer_cast<mglMessageHandler>(funct);
       m_mMessageHandlers.insert(std::pair<int, shared_ptr<mglMessageHandler>>(messageId, addObj));
@@ -165,11 +162,9 @@ void mglSystem::setMessageHandlers(json messageconfig)
  */
 void mglSystem::createDataLayer(json _currentElement)
 {
-  INIT_LOG("mglSystem", "createDataLayer(json _currentElement)");
-
   shared_ptr<mglDataSource> thisDS;
 
-  LOG_TRACE("Loading and initializing data sources...");
+  LOG_TRACE << "Loading and initializing data sources...";
 
   for (json::iterator it = _currentElement.begin(); it != _currentElement.end(); ++it) 
   {
@@ -204,7 +199,7 @@ void mglSystem::createDataLayer(json _currentElement)
   map<mglValString, shared_ptr<mglDataSource>>::iterator itDS;
   for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
     itDS->second->init();
-  LOG_TRACE("Data sources completed...");
+  LOG_TRACE << "Data sources completed...";
 }
 
 
@@ -231,8 +226,6 @@ shared_ptr<mglDataSource> mglSystem::getDataSource(mglValString _name)
  */
 void mglSystem::processMessages()
 {
-  INIT_LOG("mglSystem", "processMessages()");
-
   while (!m_MessageQueue.empty())
   {
     shared_ptr<mglMessage> processing = m_MessageQueue.front();
@@ -247,7 +240,7 @@ void mglSystem::processMessages()
     }
     else
     {
-      LOG_TRACE("Could not find handler for message type!");
+      LOG_TRACE << "Could not find handler for message type!";
     }
     m_MessageQueue.pop();
   }
@@ -267,14 +260,10 @@ void mglSystem::addMessage(shared_ptr<mglMessage> mess)
 
 void mglSystem::destroy()
 {
-  INIT_LOG("mglSystem", "destroy");
-
-  LOG_TRACE("Clearing data sources...");
+  LOG_TRACE << "Clearing data sources...";
   map<mglValString, shared_ptr<mglDataSource>>::iterator itDS;
   for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
     itDS->second->deInit();
-
-  mglLogger::Inst().destroy();
 }
 
 

@@ -15,9 +15,9 @@
 	do { \
 		std::stringstream line; \
 		line << msg; \
-		LOG_EXCEPTION("\n########## EXCEPTION Exception exception ##########\n## File: " << _stat_log_info.psz_file << " Errnr.: " << errno << "\n## Msg.: " << msg << "\n########## ######### ######### ######### ##########\n") \
 		throw mglTechnicalException(errno, line.str()); \
 	} \
-	while (false);
+	while (false); \
+	LOG_EXCEPTION << "\n########## EXCEPTION Exception exception ##########\n## Errnr.: " << errno << "\n## Msg.: " << msg << "\n########## ######### ######### ######### ##########\n";
 
 #endif /* MGLDEBUG_H_ */

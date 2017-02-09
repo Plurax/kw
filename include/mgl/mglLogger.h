@@ -2,15 +2,13 @@
  * mglLogger.h
  *
  *  Created on: 11.02.2014
- *      Author: cromas
+ *      Author: chuhlich
  */
 
 
 #ifndef H_MGL_LOGGER
 #define H_MGL_LOGGER
 
-#include "mglLogChannel.h"
-#include "mglLogDevice.h"
 #include <stdio.h>
 #include <iostream>
 #include <iomanip>
@@ -19,92 +17,70 @@
 #include <vector>
 #include <json.hpp>
 
-class mglDynamicLoggerInfo;
+#include <boost/log/trivial.hpp>
+#include <boost/log/sources/global_logger_storage.hpp>
+
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+
+// We define our own severity levels
+enum severity_level
+{
+    l_info,
+    l_warning,
+    l_error,
+    l_debug,
+    l_trace,
+    l_panic,
+    l_exception
+};
+
+// register a global logger
+BOOST_LOG_GLOBAL_LOGGER(logger, boost::log::sources::severity_logger_mt<severity_level>)
+
+// just a helper macro used by the macros below - don't use it in your code
+#define LOG(severity) BOOST_LOG_SEV(logger::get(),severity)
+
+namespace logging = boost::log;
+namespace src = boost::log::sources;
+namespace expr = boost::log::expressions;
+namespace sinks = boost::log::sinks;
+namespace attrs = boost::log::attributes;
+
 using namespace std;
 using json = nlohmann::json;
 
-struct __static_log_info {
-	const char* psz_libname;
-	const char* psz_file;
-	const char* psz_classname;
-	const char* psz_method;
-};
 
-typedef struct __static_log_info static_log_info;
-
-#define INIT_LOG(classname, methodname) \
-	static __static_log_info _stat_log_info = {__LIBNAME, __FILE__, classname, methodname}
-
-#define LOG_LEVEL(level,tag,text) \
-	do { \
-		std::stringstream line; \
-		line << _stat_log_info.psz_libname << ";" << _stat_log_info.psz_file << ";" <<  _stat_log_info.psz_method << ";" << __LINE__  << ";" << tag << ": " << text; \
-		mglLogger::Inst().log(level,&_stat_log_info,line); \
-	} \
-	while (false);
-
-
-// The PLAIN Channels are used to provide logging mechanisms for application level logging (e.g. a socket or seperate application logfile?)
-#define LOG_MASK_PLAIN4 (unsigned short)0x00800
-#define LOG_MASK_PLAIN3 (unsigned short)0x00400
-#define LOG_MASK_PLAIN2 (unsigned short)0x00200
-#define LOG_MASK_PLAIN1 (unsigned short)0x00100
-
-#define LOG_MASK_EXCEPTION (unsigned short)0x0040
-#define LOG_MASK_PANIC (unsigned short)0x0020
-#define LOG_MASK_TRACE (unsigned short)0x0010
-#define LOG_MASK_DEBUG (unsigned short)0x0008
-#define LOG_MASK_ERROR (unsigned short)0x0004
-#define LOG_MASK_WARN  (unsigned short)0x0002
-#define LOG_MASK_INFO  (unsigned short)0x0001
-
-
-#define LOG_INFO(text) LOG_LEVEL(LOG_MASK_INFO,"I",text)
-#define LOG_WARN(text) LOG_LEVEL(LOG_MASK_WARN,"W",text)
-#define LOG_ERROR(text) LOG_LEVEL(LOG_MASK_ERROR,"E",text)
-#define LOG_DEBUG(text) LOG_LEVEL(LOG_MASK_DEBUG,"D",text)
-#define LOG_TRACE(text) LOG_LEVEL(LOG_MASK_TRACE,"T",text)
-#define LOG_PANIC(text) LOG_LEVEL(LOG_MASK_PANIC,"P",text)
-
-#define LOG_EXCEPTION(text) LOG_LEVEL(LOG_MASK_EXCEPTION,"X",text)
-/*\
-		do { \
-			std::stringstream line; \
-			line <<  _stat_log_info.psz_libname << ";" << _stat_log_info.psz_file << ";"; \
-			line << _stat_log_info.psz_method << ";" << __LINE__  << ";" << tag << ": "; \
-			line << "######## EXCEPTION Exception exception ########\n## ERRNO: " << errno << "\n" << "## Message: " << text; \
-			mglLogger::Inst().log(level,&_stat_log_info,line); \
-		} \
-		while (false);
-*/
-
-#define DEF_MAX_LOG_CHANNELS 5
+// ===== log macros =====
+#define LOG_TRACE         LOG(severity_level::l_trace)
+#define LOG_DEBUG         LOG(severity_level::l_debug)
+#define LOG_INFO          LOG(severity_level::l_info)
+#define LOG_WARNING       LOG(severity_level::l_warning)
+#define LOG_ERROR         LOG(severity_level::l_error)
+#define LOG_EXCEPTION     LOG(severity_level::l_exception)
 
 class mglLogger
 {
-public:
-	~mglLogger();
+ public:
+  ~mglLogger();
 
-	static mglLogger& Inst()
-		{
-			static mglLogger _instance;
-			return _instance;
-		}
+  static mglLogger& Inst()
+  {
+    static mglLogger _instance;
+    return _instance;
+  }
 
-	void configure(json loggerconfig);
+  void configure(json loggerconfig);
 
-	void addLibraryFilter(string& channel, string& name, unsigned short value);
-	void addClassFilter(string& channel, string& name, unsigned short value);
+ protected:
+  bool m_isInitialized;
 
-	void log(unsigned short level, static_log_info* info, stringstream& line);
-	bool destroy(void);
-protected:
-	mglLogChannel* m_Channels[DEF_MAX_LOG_CHANNELS];
-
-	bool m_isInitialized;
-
-	mglLogger();
-	mglLogger& operator=(const mglLogger& tm);
+  mglLogger();
+  mglLogger& operator=(const mglLogger& tm);
 };
 
 #endif

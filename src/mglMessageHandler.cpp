@@ -22,8 +22,7 @@ mglMessageHandler::~mglMessageHandler()
 
 shared_ptr<mglMessage> mglMessageHandler::operator () (shared_ptr<mglMessage> message)
 {
-	INIT_LOG("mglGuiActionFunctor", "operator() (shared_ptr<mglMessage> message)");
-	LOG_TRACE("Testfunction called!");
+	LOG_TRACE << "Testfunction called!";
 
  	return nullptr;
 }

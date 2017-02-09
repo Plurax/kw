@@ -1,4 +1,5 @@
 # @author  Barthélémy von Haller
+ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
 # Produce the final Version.h using template Version.h.in and substituting variables.
 # We don't want to polute our source tree with it, thus putting it in binary tree.

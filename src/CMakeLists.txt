@@ -1,5 +1,7 @@
 set (CMAKE_CXX_STANDARD 14)
 add_definitions(-D__LIBNAME="mgl")
+ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+
 # @author  Barthélémy von Haller
 set(LIB_HEADERS
   "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglVersion.h" # Generated header
@@ -11,11 +13,6 @@ set(LIB_HEADERS
   ../include/mgl/mglLibHandle.h
   ../include/mgl/mglLibraryInfo.h
   ../include/mgl/mglLibraryManager.h
-  ../include/mgl/mglLogChannel.h
-  ../include/mgl/mglLogDeviceFile.h
-  ../include/mgl/mglLogDevice.h
-  ../include/mgl/mglLogDeviceStdErr.h
-  ../include/mgl/mglLogDeviceStdOut.h
   ../include/mgl/mglLogger.h
   ../include/mgl/mglMessage.h
   ../include/mgl/mglMessageHandlerFactory.h
@@ -44,10 +41,6 @@ set(LIB_SOURCES
   mglLibHandle.cpp
   mglLibraryInfo.cpp
   mglLibraryManager.cpp
-  mglLogChannel.cpp
-  mglLogDeviceFile.cpp
-  mglLogDeviceStdErr.cpp
-  mglLogDeviceStdOut.cpp
   mglLogger.cpp
   mglMessage.cpp
   mglMessageHandler.cpp
@@ -100,7 +93,8 @@ set(APPLICATION_NAME mglRunner)
 add_executable(${APPLICATION_NAME} ${APP_SOURCES})
 
 # Links the target exe (projArunner) against the library (libprojA) and other required libraries
-target_link_libraries(${APPLICATION_NAME} ${LIBRARY_NAME} ${Boost_PROGRAM_OPTIONS_LIBRARY} rt boost_filesystem boost_system dl Threads::Threads)
+target_link_libraries(${APPLICATION_NAME} ${LIBRARY_NAME} dl Threads::Threads rt boost_filesystem boost_system boost_log_setup boost_log)
+#
 
 # Says how and where to install software
 # Targets:

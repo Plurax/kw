@@ -1,15 +1,64 @@
-
-
 #include <json.hpp>
 #include "mglLogger.h"
-#include "mglLogChannel.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstring>
 
-using namespace std;
-using json = nlohmann::json;
+#include <boost/log/core/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/support/date_time.hpp>
+#include <boost/core/null_deleter.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+#include <fstream>
+#include <ostream>
+
+
+namespace logging = boost::log;
+namespace src = boost::log::sources;
+namespace expr = boost::log::expressions;
+namespace sinks = boost::log::sinks;
+namespace attrs = boost::log::attributes;
+namespace keywords = boost::log::keywords;
+
+
+
+// The operator puts a human-friendly representation of the severity level to the stream
+std::ostream& operator<< (std::ostream& strm, severity_level level)
+{
+    static const char* strings[] =
+    {
+      "I",
+      "W",
+      "E",
+      "D",
+      "T",
+      "P",
+      "X"
+    };
+
+    if (static_cast< std::size_t >(level) < sizeof(strings) / sizeof(*strings))
+        strm << strings[level];
+    else
+        strm << static_cast< int >(level);
+
+    return strm;
+}
+
+
+BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp, "TimeStamp", boost::posix_time::ptime)
+BOOST_LOG_ATTRIBUTE_KEYWORD(severity, "Severity", severity_level)
+//BOOST_LOG_ATTRIBUTE_KEYWORD(class_attr, "Class", logging::trivial::severity_level)
+
 
 mglLogger::~mglLogger()
 {
@@ -18,127 +67,58 @@ mglLogger::~mglLogger()
 mglLogger::mglLogger()
 {
 	m_isInitialized = false;
-	for (int i = 0; i < DEF_MAX_LOG_CHANNELS; i++)
-		m_Channels[i] = NULL;
 }
 
+
+BOOST_LOG_GLOBAL_LOGGER_INIT(logger, boost::log::sources::severity_logger_mt< severity_level >)
+{
+  boost::log::sources::severity_logger_mt< severity_level > lg;
+  
+  logging::add_common_attributes();
+  
+  return lg;
+}
 
 void mglLogger::configure(json loggerconfig)
 {
-	int iChannelCount = 0; // Count number of channels - we only allow up to 5 channels
-	unsigned short uisReadVal = 0;
-	unsigned int ui;
-	char* valTagText;
+  // Setup the common formatter for all sinks
+  logging::formatter fmt = expr::stream
+    << ":" << severity << ":"
+    << expr::smessage;
 
-	for (auto& element : loggerconfig["Channels"])
+  for (auto& element : loggerconfig["Channels"])
+  {
+    LOG_TRACE << element.dump();
+    //! Create the sinks for the global boost logger
+    if (((element["type"])).get<string>() == "console")
+    {
+      logging::add_console_log(
+			       std::cout,
+			       keywords::format = (
+						   expr::stream << expr::format_date_time<     boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
+						   << " [" << expr::attr<     severity_level >("Severity") << "]: "
+						   << expr::smessage
+						   )
+			       );
+    }
+    else
+      if (((element["type"])).get<string>() == "file")
+      {
+	//! We dont use autoflush for files here as we should use cout if necessary!
+	logging::add_file_log
+	  (
+	   keywords::file_name = ((element["name"])).get<string>(),
+	   keywords::rotation_size = 10 * 1024 * 1024,
+	   keywords::time_based_rotation = sinks::file::rotation_at_time_point(0, 0, 0),
+	   keywords::format = "[%TimeStamp%] [%Severity%] : %Message%"
+	   );	
+      }
+      else
+	if (((element["type"])).get<string>() == string("file"))
 	{
-		if (iChannelCount > DEF_MAX_LOG_CHANNELS)
-		{
-			std::cout << "Warning - Number of log channels exceeds limit of " << iChannelCount << " further channels are not regarded.\n";
-			continue;
-		}
-		m_Channels[iChannelCount] = new mglLogChannel(std::string(((element)["stream"]).get<string>()));
-		
-		// Read channel mask
-		auto valTagTextStr = ((element)["mask"]).get<string>();
-		valTagText = const_cast<char*>(valTagTextStr.c_str());
-		if ((valTagText[0] == '0') && (valTagText[1] == 'x'))
-			sscanf(valTagText, "0x%x", &ui);
-		else
-			sscanf(valTagText, "%u", &ui);
-		uisReadVal = (unsigned short)ui;
-		m_Channels[iChannelCount]->setMask(uisReadVal);
-		
-		// Read classes
-		if (element.count("classes"))
-		{
-			valTagTextStr = ((element)["classes"]).get<string>();
-			valTagText = const_cast<char*>(valTagTextStr.c_str());
-			char* prevPtr = valTagText;
-			char* nextPtr = valTagText;
-
-			while (NULL != nextPtr)
-			{
-				nextPtr = strchr(valTagText, ',');
-
-				if (nextPtr)
-					*nextPtr = '\0';
-
-				string newClass = string(prevPtr);
-				m_Channels[iChannelCount]->addClassFilter(newClass, 0xffff);
-				if (nextPtr)
-				{
-					nextPtr++;
-					prevPtr = nextPtr;
-				}
-			}
-		}				
-
-		// Read libraries
-		if (element.count("libraries"))
-		{
-			valTagTextStr = ((element)["libraries"]).get<string>();
-			valTagText = const_cast<char*>(valTagTextStr.c_str());
-			char* prevPtr = valTagText;
-			char* nextPtr = valTagText;
-
-			while (NULL != nextPtr)
-			{
-				nextPtr = strchr(valTagText, ',');
-			
-				if (nextPtr)
-					*nextPtr = '\0';
-
-				string newLib = string(prevPtr);
-				m_Channels[iChannelCount]->addLibraryFilter(newLib, 0xFFFF);
-
-				if (nextPtr)
-				{
-					nextPtr++;
-					prevPtr = nextPtr;
-				}
-			}
-		}
-		iChannelCount++;
+	  
 	}
-	m_isInitialized = true;
-	INIT_LOG("mglLogger", "configure(json loggerconfig)");
-	LOG_TRACE("Logging initialized...");
-}
-
-
-void mglLogger::log(unsigned short level, static_log_info* info, stringstream& line)
-{
-	if (!m_isInitialized)
-		return;
-
-	for (int i = 0; i < DEF_MAX_LOG_CHANNELS; i++)
-	{
-		if (m_Channels[i]) // channel is defined?
-		{
-			if (level == LOG_MASK_EXCEPTION) // Always log exception messages
-			{
-				m_Channels[i]->log(line);
-			}
-			else if(m_Channels[i]->getMask() & level) // log level is in the mask?
-			{
-				if (m_Channels[i]->getLibraryFilter(info->psz_libname) & level)
-					if (m_Channels[i]->getClassFilter(info->psz_classname) & level)
-						m_Channels[i]->log(line); // todo class, library and its filters check
-			}
-		}
-	}
-}
-
-bool mglLogger::destroy(void)
-{
-	for (int i = 0; i < DEF_MAX_LOG_CHANNELS; i++)
-	{
-		if (m_Channels[i])
-		{
-			delete m_Channels[i];
-		}
-	}
-
-	return true;
+  }
+  m_isInitialized = true;
+  LOG_TRACE << "Logging initialized...";
 }

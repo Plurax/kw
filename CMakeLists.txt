@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
+
 
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
@@ -39,9 +41,10 @@ if(GIT_FOUND)
     set (VCS_REVISION ${GIT_SHA1})
 endif()
 
-# This line finds the boost lib and headers. 
+# This line finds the boost lib and headers.
 set(Boost_NO_BOOST_CMAKE ON) #  Don't do a find_package in config mode before searching for a regular boost install.
-find_package(Boost COMPONENTS unit_test_framework program_options REQUIRED)
+find_package(Boost COMPONENTS log_setup log unit_test_framework program_options REQUIRED)
+add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 # This sets the include directory for the reference project. This is the -I flag in gcc.
 # All the includes should be in this variable To add new directories to the include path,

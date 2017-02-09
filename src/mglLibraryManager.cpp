@@ -57,8 +57,6 @@ void mglLibraryManager::init()
  */
 shared_ptr<mglObject> mglLibraryManager::createObject(shared_ptr<mglValString> libname, shared_ptr<mglValString> classname, shared_ptr<mglValString> main_classname, json configuration)
 {
-	INIT_LOG("mglLibraryManager", "createObject(shared_ptr<mglValString> libname, shared_ptr<mglValString> classname, json configuration)");
-
 	// Found the requested library in the map?
 	std::map<mglValString,shared_ptr<mglLibHandle>>::iterator libIterator = m_loadedLibraries.find(*libname);
 
@@ -88,7 +86,7 @@ shared_ptr<mglObject> mglLibraryManager::createObject(shared_ptr<mglValString> l
 	// otherwise load lib and retrive factory...
 
 	{
-		LOG_DEBUG("Loading library: " << *libname);
+	  LOG_DEBUG << "Loading library: " << *libname;
 #ifdef WIN32
 		WCHAR ConvString[200];
 		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
@@ -107,7 +105,7 @@ shared_ptr<mglObject> mglLibraryManager::createObject(shared_ptr<mglValString> l
 			THROW_TECHNICAL_EXCEPTION(666, "Could not load library " << *libname);
 		}
 		
-		LOG_DEBUG("Loaded...");
+		LOG_DEBUG << "Loaded...";
 
 #ifdef WIN32
 		FctCreateFunc getfactoryfct = (FctCreateFunc)GetProcAddress(handle, s_Requestfunction.str()->c_str());
@@ -134,7 +132,7 @@ shared_ptr<mglObject> mglLibraryManager::createObject(shared_ptr<mglValString> l
 		// Add the factory into the typed map for future use
 		LibHandle->addFactory(factory, *main_classname);
 
-		LOG_DEBUG("Loaded Object library: " << libinfo->asString());
+		LOG_DEBUG << "Loaded Object library: " << libinfo->asString();
 
 		m_loadedLibraries.insert(std::pair<mglValString, shared_ptr<mglLibHandle>>(*libname,LibHandle));
 

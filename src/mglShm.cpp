@@ -36,8 +36,6 @@
 
 mglShm::mglShm(json configuration)
 {
-	INIT_LOG("mglShm", "mglShm");
-
 /*	XMLCh* TAG_key = XMLString::transcode("key");
 	XMLCh* TAG_size = XMLString::transcode("size");
 
@@ -71,7 +69,7 @@ mglShm::mglShm(json configuration)
 	}
 */
 
-	LOG_TRACE("Init SHM with key " << m_key << " and size " << m_size);
+	LOG_TRACE << "Init SHM with key " << m_key << " and size " << m_size;
 }
 
 /**
@@ -80,29 +78,27 @@ mglShm::mglShm(json configuration)
  */
 void mglShm::init()
 {
-	INIT_LOG("mglShm", "init");
-
 	/* Open the shared memory segment - create if necessary */
 	if((m_shmid = shmget(m_key, m_size, IPC_CREAT | 0666)) == -1)
 	{
-		LOG_TRACE("Shared memory segment exists - opening as client\n");
+	  LOG_TRACE << "Shared memory segment exists - opening as client\n";
 
 		  /* Segment probably already exists - try as a client */
 		if((m_shmid = shmget(m_key, m_size, 0)) == -1)
 		{
-		  LOG_ERROR("shmget");
+		  LOG_ERROR << "shmget";
 		  exit(1);
 		}
 	}
 	else
 	{
-		LOG_TRACE("Creating new shared memory segment");
+	  LOG_TRACE << "Creating new shared memory segment";
 	}
 
 	/* Attach (map) the shared memory segment into the current process */
 	if((m_segptr = (char *)shmat(m_shmid, 0, 0)) == (char *)-1)
 	{
-		LOG_ERROR("shmat");
+	  LOG_ERROR << "shmat";
 		exit(1);
 	}
 }
@@ -112,10 +108,7 @@ void mglShm::init()
  */
 void mglShm::deInit()
 {
-	INIT_LOG("mglShm", "deInit");
-
-	LOG_DEBUG("Detaching SHM key " << m_key << " Detach retcode: " << shmdt(m_segptr));
-//	LOG_DEBUG("Delete SHM" << shmctl(m_shmid, IPC_RMID, 0));
+	LOG_DEBUG << "Detaching SHM key " << m_key << " Detach retcode: " << shmdt(m_segptr);
 }
 
 /**
