@@ -7,16 +7,16 @@ ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MGL.doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/MGL.doxyfile @ONLY)
+#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/KW.doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/KW.doxyfile @ONLY)
 add_custom_target(doc
-${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/../MGL.doxyfile
+${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/../KW.doxyfile
 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 COMMENT "Generating API documentation with Doxygen" VERBATIM
 )
 endif(DOXYGEN_FOUND)
 
 # Setting up project
-project(mgl)
+project(kw)
 
 # The version number.
 # Set the version number of your project here (format is MAJOR.MINOR.PATCHLEVEL - e.g. 1.0.0)

@@ -1,2 +1,2 @@
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
-add_subdirectory(mgl)
+add_subdirectory(kw)

@@ -1,62 +1,62 @@
 set (CMAKE_CXX_STANDARD 14)
-add_definitions(-D__LIBNAME="mgl")
+add_definitions(-D__LIBNAME="kw")
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
 # @author  Barthélémy von Haller
 set(LIB_HEADERS
-  "${CMAKE_CURRENT_BINARY_DIR}/../include/mgl/mglVersion.h" # Generated header
-  ../include/mgl/mglBase.h
-  ../include/mgl/mglDataContainer.h
-  ../include/mgl/mglDataSourceFactory.h
-  ../include/mgl/mglDataSource.h
-  ../include/mgl/mglDebug.h
-  ../include/mgl/mglLibHandle.h
-  ../include/mgl/mglLibraryInfo.h
-  ../include/mgl/mglLibraryManager.h
-  ../include/mgl/mglLogger.h
-  ../include/mgl/mglMessage.h
-  ../include/mgl/mglMessageHandlerFactory.h
-  ../include/mgl/mglMessageHandler.h
-  ../include/mgl/mglObjectFactory.h
-  ../include/mgl/mglObject.h
-  ../include/mgl/mglReleaseInfo.h
-  ../include/mgl/mglShm.h
-  ../include/mgl/mglSocketClient.h
-  ../include/mgl/mglSystem.h
-  ../include/mgl/mglTechnicalException.h
-  ../include/mgl/mglTimer.h
-  ../include/mgl/mglValColor.h
-  ../include/mgl/mglValCoord.h
-  ../include/mgl/mglValFixedPoint.h
-  ../include/mgl/mglValInteger.h
-  ../include/mgl/mglValString.h
-  ../include/mgl/mglValue.h
+  "${CMAKE_CURRENT_BINARY_DIR}/../include/kw/kwVersion.h" # Generated header
+  ../include/kw/kwBase.h
+  ../include/kw/kwDataContainer.h
+  ../include/kw/kwDataSourceFactory.h
+  ../include/kw/kwDataSource.h
+  ../include/kw/kwDebug.h
+  ../include/kw/kwLibHandle.h
+  ../include/kw/kwLibraryInfo.h
+  ../include/kw/kwLibraryManager.h
+  ../include/kw/kwLogger.h
+  ../include/kw/kwMessage.h
+  ../include/kw/kwMessageHandlerFactory.h
+  ../include/kw/kwMessageHandler.h
+  ../include/kw/kwObjectFactory.h
+  ../include/kw/kwObject.h
+  ../include/kw/kwReleaseInfo.h
+  ../include/kw/kwShm.h
+  ../include/kw/kwSocketClient.h
+  ../include/kw/kwSystem.h
+  ../include/kw/kwTechnicalException.h
+  ../include/kw/kwTimer.h
+  ../include/kw/kwValColor.h
+  ../include/kw/kwValCoord.h
+  ../include/kw/kwValFixedPoint.h
+  ../include/kw/kwValInteger.h
+  ../include/kw/kwValString.h
+  ../include/kw/kwValue.h
 )
 
 set(LIB_SOURCES
-  mglDataContainer.cpp
-  mglDataSource.cpp
-  mglDataSourceFactory.cpp
-  mglException.cpp
-  mglLibHandle.cpp
-  mglLibraryInfo.cpp
-  mglLibraryManager.cpp
-  mglLogger.cpp
-  mglMessage.cpp
-  mglMessageHandler.cpp
-  mglMessageHandlerFactory.cpp
-  mglObject.cpp
-  mglObjectFactory.cpp
-  mglShm.cpp
-  mglSocketClient.cpp
-  mglSystem.cpp
-  mglTimer.cpp
-  mglValColor.cpp
-  mglValCoord.cpp
-  mglValFixedPoint.cpp
-  mglValInteger.cpp
-  mglValString.cpp
-  mglValue.cpp
+  kwDataContainer.cpp
+  kwDataSource.cpp
+  kwDataSourceFactory.cpp
+  kwException.cpp
+  kwLibHandle.cpp
+  kwLibraryInfo.cpp
+  kwLibraryManager.cpp
+  kwLogger.cpp
+  kwMessage.cpp
+  kwMessageHandler.cpp
+  kwMessageHandlerFactory.cpp
+  kwObject.cpp
+  kwObjectFactory.cpp
+  kwShm.cpp
+  kwSocketClient.cpp
+  kwSystem.cpp
+  kwTimer.cpp
+  kwValColor.cpp
+  kwValCoord.cpp
+  kwValFixedPoint.cpp
+  kwValInteger.cpp
+  kwValString.cpp
+  kwValue.cpp
 )
 
 set(APP_HEADERS
@@ -67,7 +67,7 @@ set(APP_SOURCES
 )
 
 # Define two variables in order not to repeat ourselves.
-set(LIBRARY_NAME mgl)
+set(LIBRARY_NAME kw)
 
 # Define the library
 add_library(${LIBRARY_NAME} SHARED ${LIB_SOURCES})
@@ -80,7 +80,7 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES
   PUBLIC_HEADER "${LIB_HEADERS}" # specify the public headers
 )
 
-include_directories("${CMAKE_SOURCE_DIR}/include/mgl"
+include_directories("${CMAKE_SOURCE_DIR}/include/kw"
   "${CMAKE_SOURCE_DIR}/ext/json/src"
   )
 
@@ -89,7 +89,7 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
 # This is a make target, so you can do a "make projArunner"
-set(APPLICATION_NAME mglRunner)
+set(APPLICATION_NAME kwRunner)
 add_executable(${APPLICATION_NAME} ${APP_SOURCES})
 
 # Links the target exe (projArunner) against the library (libprojA) and other required libraries

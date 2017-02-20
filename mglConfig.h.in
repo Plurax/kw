@@ -1,3 +1,0 @@
-// the configured options and settings for Tutorial
-#define mgl_VERSION_MAJOR @Tutorial_VERSION_MAJOR@
-#define mgl_VERSION_MINOR @Tutorial_VERSION_MINOR@

@@ -7,22 +7,22 @@
 
 #include <iostream>
 using namespace std;
-#include "mglBase.h"
+#include "kwBase.h"
 
 #include <unistd.h>
 
 
 
 int main() {
-    mglSystem& MainSystem = mglSystem::Inst();
-    mglValString configfile = mglValString("config/Configuration.json");
+    kwSystem& MainSystem = kwSystem::Inst();
+    kwValString configfile = kwValString("config/Configuration.json");
     MainSystem.init(configfile);
 
     bool done = false;
 
     while (!done)
     {
-    	auto newMess  = make_shared<mglMessage>(1);
+    	auto newMess  = make_shared<kwMessage>(1);
     	newMess->setMessageText("TestMessage!");
     	MainSystem.addMessage(newMess);
 

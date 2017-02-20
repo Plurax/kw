@@ -1,0 +1,97 @@
+/* This is a version template originally from Barthélémy von Haller
+   See his git hub basic project for using CMake
+   https://github.com/Barthelemy/CppProjectTemplate/
+*/
+
+
+#ifndef KW_VERSION_H
+#define KW_VERSION_H
+
+#include <string>
+#include <sstream>
+
+namespace ProjectTemplate {
+namespace kw {
+/// The current major version.
+#define KW_VERSION_MAJOR @VERSION_MAJOR@
+
+/// The current minor version.
+#define KW_VERSION_MINOR @VERSION_MINOR@
+
+/// The current patch level.
+#define KW_VERSION_PATCH @VERSION_PATCH@
+
+/// The current svn revision.
+#define KW_VCS_REVISION "@VCS_REVISION@"
+
+/// True if the current version is newer than the given one.
+#define KW_VERSION_GT(MAJOR, MINOR, PATCH) \
+  ((KW_VERSION_MAJOR > MAJOR) ||           \
+   (KW_VERSION_MAJOR ==                    \
+    MAJOR&&(KW_VERSION_MINOR > MINOR || (KW_VERSION_MINOR == MINOR&& KW_VERSION_PATCH > PATCH))))
+
+/// True if the current version is equal or newer to the given.
+#define KW_VERSION_GE(MAJOR, MINOR, PATCH) \
+  ((KW_VERSION_MAJOR > MAJOR) ||           \
+   (KW_VERSION_MAJOR ==                    \
+    MAJOR&&(KW_VERSION_MINOR > MINOR || (KW_VERSION_MINOR == MINOR&& KW_VERSION_PATCH >= PATCH))))
+
+/// True if the current version is older than the given one.
+#define KW_VERSION_LT(MAJOR, MINOR, PATCH) \
+  ((KW_VERSION_MAJOR < MAJOR) ||           \
+   (KW_VERSION_MAJOR ==                    \
+    MAJOR&&(KW_VERSION_MINOR < MINOR || (KW_VERSION_MINOR == MINOR&& KW_VERSION_PATCH < PATCH))))
+
+/// True if the current version is older or equal to the given.
+#define KW_VERSION_LE(MAJOR, MINOR, PATCH) \
+  ((KW_VERSION_MAJOR < MAJOR) ||           \
+   (KW_VERSION_MAJOR ==                    \
+    MAJOR&&(KW_VERSION_MINOR < MINOR || (KW_VERSION_MINOR == MINOR&& KW_VERSION_PATCH <= PATCH))))
+
+/// Information about the current kw version.
+class Version {
+public:
+  /// @return the current major version of kw.
+  static int getMajor()
+  {
+    return KW_VERSION_MAJOR;
+  }
+
+  /// @return the current minor version of kw.
+  static int getMinor()
+  {
+    return KW_VERSION_MINOR;
+  }
+
+  /// @return the current patch level of kw.
+  static int getPatch()
+  {
+    return KW_VERSION_PATCH;
+  }
+
+  /// @return the current kw version (MM.mm.pp).
+  static std::string getString()
+  {
+    std::ostringstream version;
+    version << KW_VERSION_MAJOR << '.' << KW_VERSION_MINOR << '.' << KW_VERSION_PATCH;
+    return version.str();
+  }
+
+  /// @return the SVN revision.
+  static std::string getRevision()
+  {
+    return KW_VCS_REVISION;
+  }
+
+  /// @return the current kw version plus the git revision (MM.mm.pp.rev).
+  static std::string getRevString()
+  {
+    std::ostringstream version;
+    version << getString() << '.' << KW_VCS_REVISION;
+    return version.str();
+  }
+};
+}
+}
+
+#endif // KW_VERSION_H
