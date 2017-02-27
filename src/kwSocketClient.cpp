@@ -103,7 +103,7 @@ kwValString kwSocketClient::sendRequest(kwValString* request)
     LOG_TRACE << "ERROR opening socket";
   bzero((char *) &m_Serv_addr, sizeof(m_Serv_addr));
 
-  m_Server = gethostbyname(m_Host->str()->c_str());
+  m_Server = gethostbyname(m_Host->c_str());
 
   m_Serv_addr.sin_family = AF_INET;
   bcopy((char *)m_Server->h_addr,
@@ -127,7 +127,7 @@ kwValString kwSocketClient::sendRequest(kwValString* request)
   ssize_t rec = 1;
 
   // send the request
-  ::write(m_SocketFd, request->str()->c_str(), strlen(request->str()->c_str()));
+  ::write(m_SocketFd, request->c_str(), strlen(request->c_str()));
   ::write(m_SocketFd, "\n", 1);
 
   bzero((char *) reception_buffer, sizeof(reception_buffer));

@@ -92,7 +92,7 @@ shared_ptr<kwObject> kwLibraryManager::createObject(shared_ptr<kwValString> libn
 		MultiByteToWideChar(CP_UTF8, 0, libname->str()->c_str(), -1, ConvString, 200);
 		HINSTANCE handle = LoadLibrary(ConvString);
 #else
-		void* handle = dlopen(libname->str()->c_str(), RTLD_LAZY | RTLD_GLOBAL);
+		void* handle = dlopen(libname->c_str(), RTLD_LAZY | RTLD_GLOBAL);
 #endif
 
 		if (!handle)
@@ -111,7 +111,7 @@ shared_ptr<kwObject> kwLibraryManager::createObject(shared_ptr<kwValString> libn
 		FctCreateFunc getfactoryfct = (FctCreateFunc)GetProcAddress(handle, s_Requestfunction.str()->c_str());
 		FctGetLibraryInfo getLibraryInfo = (FctGetLibraryInfo) GetProcAddress(handle, "getLibraryInfo");
 #else
-		FctCreateFunc getfactoryfct = (FctCreateFunc)dlsym(handle, s_Requestfunction.str()->c_str()); //"get<CLASSNAME>Factory"
+		FctCreateFunc getfactoryfct = (FctCreateFunc)dlsym(handle, s_Requestfunction.c_str()); //"get<CLASSNAME>Factory"
 		FctGetLibraryInfo getLibraryInfo = (FctGetLibraryInfo)dlsym(handle, "getLibraryInfo"); //"getLibraryInfo"
 #endif
 		if (nullptr == getfactoryfct)

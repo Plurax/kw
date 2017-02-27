@@ -27,7 +27,7 @@ shared_ptr<kwObject> kwDataSourceFactory::createObject(kwValString* classname, j
 //		return new kwShm(configuration);
 //	if (classname->str()->compare("kwSocketClient") == 0)
 //		return new kwSocketClient(configuration);
-	if (classname->str()->compare("kwDataContainer") == 0)
+	if (classname->compare("kwDataContainer") == 0)
 		return shared_ptr<kwDataContainer>(new kwDataContainer(configuration));
 
 	return NULL;

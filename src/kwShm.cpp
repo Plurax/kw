@@ -36,9 +36,7 @@
 
 kwShm::kwShm(json configuration)
 {
-/*	XMLCh* TAG_key = XMLString::transcode("key");
-	XMLCh* TAG_size = XMLString::transcode("size");
-
+  /*
 	for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
 	{
 		DOMNode* currentNode = children->item(xx);

@@ -20,7 +20,9 @@
 #include "kwBase.h"
 #include "kwMessage.h"
 #include "kwMessageHandler.h"
+#include "kwLockedQueue.h"
 #include "kwDataSource.h"
+
 
 #include <json.hpp>
 #include "kwValString.h"
@@ -36,61 +38,59 @@ using namespace std;
 
 class kwSystem
 {
-public:
-	void init(kwValString& configfile);
+ public:
+  void init(kwValString& configfile);
 
-	~kwSystem();
+  ~kwSystem();
 
-	static kwSystem& Inst()
-	{
-		/* This is a windows hack to get the kwSystem instance of 
-		the main executable accessible within the DLLs
-		Linux OS should work out of the box because we load shared libs with global symbols
-		available. So the singleton will be unique even in shared object code access.
-		*/
+  static kwSystem& Inst()
+  {
+    /* This is a windows hack to get the kwSystem instance of 
+       the main executable accessible within the DLLs
+       Linux OS should work out of the box because we load shared libs with global symbols
+       available. So the singleton will be unique even in shared object code access.
+    */
 #ifdef _USRDLL
-		typedef kwSystem* (*GetSystemFn)();
-		HMODULE mod = GetModuleHandle(NULL);
-		GetSystemFn getSystem = (GetSystemFn)::GetProcAddress(mod, "GetSystem");
-		kwSystem* _instance = getSystem();
-		return *_instance;
+    typedef kwSystem* (*GetSystemFn)();
+    HMODULE mod = GetModuleHandle(NULL);
+    GetSystemFn getSystem = (GetSystemFn)::GetProcAddress(mod, "GetSystem");
+    kwSystem* _instance = getSystem();
+    return *_instance;
 #else
-		static kwSystem _instance;
-		return _instance;
+    static kwSystem _instance;
+    return _instance;
 #endif
-	}
+  }
 
-	void destroy();
+  void destroy();
 
-	void readConfiguration(kwValString& configFile);
+  void readConfiguration(kwValString& configFile);
 
-	kwMessageHandlerMap m_mMessageHandlers;
+  kwMessageHandlerMap m_mMessageHandlers;
 
-	kwDataSourceMap m_DataSources;
+  kwDataSourceMap m_DataSources;
 
-	shared_ptr<kwDataSource> getDataSource(kwValString _name);
+  shared_ptr<kwDataSource> getDataSource(kwValString _name);
 
-	kwLibraryInfo* m_libInfo;
+  kwLibraryInfo* m_libInfo;
 
-	void processMessages();
-	void addMessage(shared_ptr<kwMessage> mess);
+  void processMessages();
+  void addMessage(shared_ptr<kwMessage> mess);
 
-	void setMessageHandlers(json messageconfig);
+  void setMessageHandlers(json messageconfig);
 
-	// On windows we force to use UTF8 - so we need to create a seperate Transcoder!
+  // On windows we force to use UTF8 - so we need to create a seperate Transcoder!
 #ifdef WIN32
-	XMLTranscoder* UTF8_TRANSCODER = NULL;
+  XMLTranscoder* UTF8_TRANSCODER = NULL;
 #endif
-private:
-	int m_pixelformat;
+ private:
+  int m_pixelformat;
 
-	kwSystem();
+  kwSystem();
 
-//    XMLCh* m_TAG_root;
+  void createDataLayer(json currentElement);
 
-    void createDataLayer(json currentElement);
-
-	queue<shared_ptr<kwMessage>> m_MessageQueue;
+  vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_MessageQueues;
 };
 
 

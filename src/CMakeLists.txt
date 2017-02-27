@@ -31,6 +31,7 @@ set(LIB_HEADERS
   ../include/kw/kwValInteger.h
   ../include/kw/kwValString.h
   ../include/kw/kwValue.h
+  ../include/kw/kwLockedQueue.h
 )
 
 set(LIB_SOURCES

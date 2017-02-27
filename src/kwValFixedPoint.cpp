@@ -35,7 +35,7 @@ kwValFixedPoint::~kwValFixedPoint()
 kwValFixedPoint::kwValFixedPoint(kwValString _string)
 {
 	char* tmpBuffer = new char[50]; // should be enough
-	const char* c_str = _string.str()->c_str();
+	const char* c_str = _string.c_str();
 	strncpy(tmpBuffer, c_str, 49);
 	LOG_TRACE << "Got raw string " << tmpBuffer;
 

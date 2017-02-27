@@ -31,8 +31,23 @@
 
 using namespace std;
 
+/*! Preliminary the constructor will create 10 queues
+ * Attention! This needs to be regarded when creating configurations!
+ */
 kwSystem::kwSystem()
 {
+  m_MessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>(10); // Create vector with size 10
+  m_MessageQueues = {
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
 }
 
 /**
@@ -68,7 +83,7 @@ kwSystem::~kwSystem()
 void kwSystem::readConfiguration(kwValString& configFile)
 {
   errno = 0;
-  if (!boost::filesystem::exists(configFile.str()->c_str()))
+  if (!boost::filesystem::exists(configFile.c_str()))
   {
     if( errno == ENOENT )      // errno declared by include file errno.h
       throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
@@ -83,7 +98,7 @@ void kwSystem::readConfiguration(kwValString& configFile)
   }
 
   std::stringstream ss;
-  boost::filesystem::path p(configFile.str()->c_str());
+  boost::filesystem::path p(configFile.c_str());
   ss << std::ifstream( p.string().c_str() ).rdbuf();
 
   json config(ss);
@@ -117,7 +132,7 @@ void kwSystem::readConfiguration(kwValString& configFile)
  */
 void kwSystem::setMessageHandlers(json messageconfig)
 {
-  int messageId = -1; // -1 is initial faulty - 0 is forbidden (internal gui messages)
+  int messageId = -1; // -1 is initial faulty
   shared_ptr<kwValString> handlerlibname = nullptr;
   shared_ptr<kwValString> handlerclassname = nullptr;
   shared_ptr<string> msgID_str = nullptr;
@@ -226,35 +241,43 @@ shared_ptr<kwDataSource> kwSystem::getDataSource(kwValString _name)
  */
 void kwSystem::processMessages()
 {
-  while (!m_MessageQueue.empty())
+  for (auto p_lockedQueue : m_MessageQueues)
   {
-    shared_ptr<kwMessage> processing = m_MessageQueue.front();
-    /* Search for associated Input type within the message handler map
-     * and execute it. Otherwise we log an ERR and delete the message.
+    /* If the queue is threaded we dont need to process it here - as the thread will retrieve
+     * the item on next context switch...
      */
-    kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
-    if (findIt != m_mMessageHandlers.end())
+    while (!p_lockedQueue->Threaded() && !p_lockedQueue->empty())
     {
-      // This will execute the handler
-      (*findIt->second)(processing);
+      // Attention - here the queue item will also be removed from the queue
+      auto processing = p_lockedQueue->pop();
+      /* Search for associated Input type within the message handler map
+       * and execute it. Otherwise we log an ERR and delete the message.
+       */
+      kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
+      if (findIt != m_mMessageHandlers.end())
+      {
+	// This will execute the handler
+	(*findIt->second)(processing);
+      }
+      else
+      {
+	LOG_TRACE << "Could not find handler for message type!";
+      }
     }
-    else
-    {
-      LOG_TRACE << "Could not find handler for message type!";
-    }
-    m_MessageQueue.pop();
   }
 }
 
 
 /**
- * Add a message onto the Queue. This can be every Message we like to process...
+ * Add a message onto the corresponding Queue. Every message type has its own queue.
  *
  * @param mess The message to add.
  */
 void kwSystem::addMessage(shared_ptr<kwMessage> mess)
 {
-  m_MessageQueue.push(mess);
+  // The message ID identifies which queue to use
+  int iId = mess->getMessageType();
+  m_MessageQueues[iId]->push(mess);
 }
 
 
