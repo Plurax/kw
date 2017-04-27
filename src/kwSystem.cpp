@@ -16,6 +16,7 @@
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <iostream>
 #include "boost/filesystem.hpp"
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #ifdef WIN32
 #include "Windows.h"
@@ -247,26 +248,15 @@ void kwSystem::createTimers(json timerconfig)
   for (auto& element : timerconfig)
   {
     duration_str = make_shared<string>(((element["Duration"])).get<string>());
-    auto _dur(duration_from_string(cfgDuration));
+    auto _dur(boost::posix_time::duration_from_string(*duration_str));
     msgID_str = make_shared<string>(((element["MessageId"])).get<string>());
     messageId = atoi(msgID_str->c_str());;
     
     /* Now create the kwTimer instance
      */
     auto _timer = kwTimer(_dur);
-  TODO : create class which merges timer and message definition to MessageEmitter Class template?
+    //! TODO : create class which merges timer and message definition to MessageEmitter Class template?
     
-    if (handlerlibname != nullptr && handlerclassname != nullptr && msgID_str != nullptr)
-    {
-      // After we created the object we can attach the handler if it exists
-      LOG_TRACE << "Got a configured handler library: " << *handlerlibname << " class: " << *handlerclassname << " MessageID: " << messageId;
-      shared_ptr<kwObject> funct = kwLibraryManager::Inst().createObject(handlerlibname, handlerclassname, sMainclassname, element["config"]);
-      auto addObj = static_pointer_cast<kwMessageHandler>(funct);
-      m_mMessageHandlers.insert(std::pair<int, shared_ptr<kwMessageHandler>>(messageId, addObj));
-      handlerlibname.reset();
-      handlerclassname.reset();
-      msgID_str.reset();
-    }
   }
 }
 
@@ -297,26 +287,23 @@ void kwSystem::processMessages()
   {
     for (auto l_queue : m_MessageQueues)
     {
-      shared_ptr<kwMessage> processing = l_queue.front();
-    /* Search for associated Message type within the message handler map
-     * and execute it. Otherwise we log an ERR and delete the message.
-     */
-    kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
-    if (findIt != m_mMessageHandlers.end())
-=======
-    while (!p_lockedQueue->empty())
-    {
-      // This will execute the handler
-      (*findIt->second)(processing);
+      auto processing = l_queue->pop();
+      /* Search for associated Message type within the message handler map
+       * and execute it. Otherwise we log an ERR and delete the message.
+       */
+      kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
+      if (findIt != m_mMessageHandlers.end())
+      {
+      	// This will execute the handler
+	(*findIt->second)(processing);
+      }
+      else
+      {
+	LOG_TRACE << "Could not find handler for message type!";
+      }
     }
-    else
-    {
-      LOG_TRACE << "Could not find handler for message type!";
-    }
-    m_MessageQueue.pop();
   }
 }
-
 
 /**
  * Check timers if any, and create the corresponding messages.
@@ -337,7 +324,8 @@ void kwSystem::pollTimers()
  */
 void kwSystem::addMessage(shared_ptr<kwMessage> mess)
 {
-  m_MessageQueue.push(mess);
+  int idx = mess->getMessageType();
+  m_MessageQueues[idx]->push(mess);
 }
 
 

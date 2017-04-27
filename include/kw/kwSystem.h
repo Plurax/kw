@@ -24,6 +24,7 @@
 
 #include <json.hpp>
 #include "kwValString.h"
+#include "kwLockedQueue.h"
 
 #include "kwLibHandle.h"
 
@@ -82,8 +83,6 @@ class kwSystem
 
 #endif
  private:
-  int m_pixelformat;
-
   kwSystem();
 
   void createDataLayer(json currentElement);

@@ -52,7 +52,7 @@ bool kwTimer::done()
   auto now = boost::posix_time::microsec_clock::local_time();
   if (now > m_endTs)
   {
-    std::cout << BUH! << endl;
+    std::cout << "BUH!" << std::endl;
     return true;
   }
   
