@@ -33,6 +33,29 @@ using namespace std;
 
 kwSystem::kwSystem()
 {
+  m_MessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>(10); // Create vector with size 10
+  m_MessageQueues = {
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
+  m_ThreadedMessageQueues = {
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
 }
 
 /**
@@ -41,10 +64,10 @@ kwSystem::kwSystem()
  */
 void kwSystem::init(kwValString& configfile)
 {
-  /* Note this is not used as shared pointer as we use this inforation within lib handles which 
+  /* Note this is not used as shared pointer as we use this information within lib handles which 
      are propably initialized with external shared lib factories!
   */
-  m_libInfo = new kwLibraryInfo("kw", "0.2", "Embedded GL Toolkit", "Christoph Romas",	"MIT - www.electroknit.io");
+  m_libInfo = new kwLibraryInfo("kw", "0.2", "Knitwork", "Christoph Uhlich",	"MIT - www.electroknit.io");
 
   kwLibraryManager& dsManager = kwLibraryManager::Inst();
   dsManager.init();
@@ -96,6 +119,7 @@ void kwSystem::readConfiguration(kwValString& configFile)
     //		m_FontProvider->loadFonts(config["Font"]);
     setMessageHandlers(config["MessageHandlers"]);
     //		m_TextureManager->initTextures(config["Textures"]);
+    createTimers(config["Timers"]);
   }
   catch (kwTechnicalException& e)
   {
@@ -202,6 +226,49 @@ void kwSystem::createDataLayer(json _currentElement)
   LOG_TRACE << "Data sources completed...";
 }
 
+/*!
+ * This will create timers which can be used for emitting specific messages from the main loop.
+ * This is useful e.g. for polling measurements or similar...
+ */
+void kwSystem::createTimers(json timerconfig)
+{
+  shared_ptr<string> msgID_str = nullptr;
+  shared_ptr<string> duration_str = nullptr;
+  int messageId = -1; // -1 is initial faulty
+
+  if (timerconfig == nullptr)
+  {
+    LOG_INFO << "No timers found in config...";
+    return;
+  }
+  else
+    LOG_TRACE << "Initializing timers...";
+
+  for (auto& element : timerconfig)
+  {
+    duration_str = make_shared<string>(((element["Duration"])).get<string>());
+    auto _dur(duration_from_string(cfgDuration));
+    msgID_str = make_shared<string>(((element["MessageId"])).get<string>());
+    messageId = atoi(msgID_str->c_str());;
+    
+    /* Now create the kwTimer instance
+     */
+    auto _timer = kwTimer(_dur);
+  TODO : create class which merges timer and message definition to MessageEmitter Class template?
+    
+    if (handlerlibname != nullptr && handlerclassname != nullptr && msgID_str != nullptr)
+    {
+      // After we created the object we can attach the handler if it exists
+      LOG_TRACE << "Got a configured handler library: " << *handlerlibname << " class: " << *handlerclassname << " MessageID: " << messageId;
+      shared_ptr<kwObject> funct = kwLibraryManager::Inst().createObject(handlerlibname, handlerclassname, sMainclassname, element["config"]);
+      auto addObj = static_pointer_cast<kwMessageHandler>(funct);
+      m_mMessageHandlers.insert(std::pair<int, shared_ptr<kwMessageHandler>>(messageId, addObj));
+      handlerlibname.reset();
+      handlerclassname.reset();
+      msgID_str.reset();
+    }
+  }
+}
 
 /**
  * Retrieve a datasource with the given name.
@@ -226,14 +293,18 @@ shared_ptr<kwDataSource> kwSystem::getDataSource(kwValString _name)
  */
 void kwSystem::processMessages()
 {
-  while (!m_MessageQueue.empty())
+  while (!m_MessageQueues.empty())
   {
-    shared_ptr<kwMessage> processing = m_MessageQueue.front();
-    /* Search for associated Input type within the message handler map
+    for (auto l_queue : m_MessageQueues)
+    {
+      shared_ptr<kwMessage> processing = l_queue.front();
+    /* Search for associated Message type within the message handler map
      * and execute it. Otherwise we log an ERR and delete the message.
      */
     kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
     if (findIt != m_mMessageHandlers.end())
+=======
+    while (!p_lockedQueue->empty())
     {
       // This will execute the handler
       (*findIt->second)(processing);
@@ -248,7 +319,19 @@ void kwSystem::processMessages()
 
 
 /**
- * Add a message onto the Queue. This can be every Message we like to process...
+ * Check timers if any, and create the corresponding messages.
+ */
+void kwSystem::pollTimers()
+{
+  for (auto p_lockedQueue : m_Timers)
+  {
+    
+  }
+}
+
+
+/**
+ * Add a message onto the corresponding Queue. Every message type has its own queue.
  *
  * @param mess The message to add.
  */

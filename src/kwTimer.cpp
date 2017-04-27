@@ -12,23 +12,51 @@
  */
 kwTimer::kwTimer()
 {
-	clear();
+  clear();
+  sMode = eTimerMeasure;
+}
+
+/*!
+ * Constructor with duration - will automatically set end time.
+ * The timer can then be polled to check if duration is passed.
+ */
+kwTimer::kwTimer(boost::posix_time::time_duration _duration)
+{
+  m_endTs = (boost::posix_time::microsec_clock::local_time() + _duration);  
+  sMode = eTimerCountdown;
 }
 
 /*!
  * Reset timer TODO
+ * Set mode to up count.
  */
 void kwTimer::clear()
 {
-// Todo: Necessary?
+  
 }
 
 /*!
  * Start the timer.
+ * Sets the start time to the current local time.
  */
 void kwTimer::start()
 {
-	m_startTs = boost::posix_time::microsec_clock::local_time();
+  m_startTs = boost::posix_time::microsec_clock::local_time();
+}
+
+/*!
+ * Returns true if the Time is up and restarts the timer.
+ */
+bool kwTimer::done()
+{
+  auto now = boost::posix_time::microsec_clock::local_time();
+  if (now > m_endTs)
+  {
+    std::cout << BUH! << endl;
+    return true;
+  }
+  
+  return false;
 }
 
 /*!
@@ -36,7 +64,7 @@ void kwTimer::start()
  */
 void kwTimer::end()
 {
-	m_endTs = boost::posix_time::microsec_clock::local_time();
+  m_endTs = boost::posix_time::microsec_clock::local_time();
 }
 
 /*!
@@ -44,8 +72,8 @@ void kwTimer::end()
  */
 boost::posix_time::time_duration kwTimer::getDiffTime()
 {
-	boost::posix_time::time_duration temp;
-	return m_endTs - m_startTs;
+  boost::posix_time::time_duration temp;
+  return m_endTs - m_startTs;
 }
 
 
@@ -54,6 +82,8 @@ boost::posix_time::time_duration kwTimer::getDiffTime()
  */
 boost::posix_time::time_duration kwTimer::getCurrentDiffTime()
 {
-	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-	return now - m_startTs;
+  boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+  return now - m_startTs;
 }
+
+
