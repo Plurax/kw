@@ -31,30 +31,17 @@
 
 
 using namespace std;
+using namespace boost::posix_time;
 
 kwSystem::kwSystem()
 {
-  m_MessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>(10); // Create vector with size 10
+ // Create vector with size 10
+  m_MessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>();
+  m_ThreadedMessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>();
   m_MessageQueues = {
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
   m_ThreadedMessageQueues = {
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
 }
@@ -110,7 +97,8 @@ void kwSystem::readConfiguration(kwValString& configFile)
   boost::filesystem::path p(configFile.str()->c_str());
   ss << std::ifstream( p.string().c_str() ).rdbuf();
 
-  json config(ss);
+  json config;
+  ss >> config;
 
   try
   {
@@ -163,6 +151,7 @@ void kwSystem::setMessageHandlers(json messageconfig)
     handlerclassname = make_shared<kwValString>(((element["handlerClass"])).get<string>());
     msgID_str = make_shared<string>(((element["MessageId"])).get<string>());
     messageId = atoi(msgID_str->c_str());;
+    //make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
 
     /* Now create the message handler from the lib and attach it onto the ID
      */
@@ -235,6 +224,7 @@ void kwSystem::createTimers(json timerconfig)
 {
   shared_ptr<string> msgID_str = nullptr;
   shared_ptr<string> duration_str = nullptr;
+  shared_ptr<kwTimer> _timer = nullptr;
   int messageId = -1; // -1 is initial faulty
 
   if (timerconfig == nullptr)
@@ -247,16 +237,16 @@ void kwSystem::createTimers(json timerconfig)
 
   for (auto& element : timerconfig)
   {
-    duration_str = make_shared<string>(((element["Duration"])).get<string>());
-    auto _dur(boost::posix_time::duration_from_string(*duration_str));
-    msgID_str = make_shared<string>(((element["MessageId"])).get<string>());
+    duration_str = std::make_shared<string>(((element["Duration"])).get<string>());
+    msgID_str = std::make_shared<string>(((element["MessageId"])).get<string>());
     messageId = atoi(msgID_str->c_str());;
     
     /* Now create the kwTimer instance
      */
-    auto _timer = kwTimer(_dur);
-    //! TODO : create class which merges timer and message definition to MessageEmitter Class template?
-    
+    _timer = std::make_shared<kwTimer>(duration_from_string(*duration_str));
+    //! TODO : create class which merges timer and message d efinition to MessageEmitter Class template?
+    m_Timers.push_back(_timer);
+    _timer.reset();
   }
 }
 
@@ -283,23 +273,27 @@ shared_ptr<kwDataSource> kwSystem::getDataSource(kwValString _name)
  */
 void kwSystem::processMessages()
 {
-  while (!m_MessageQueues.empty())
+  if (!m_MessageQueues.empty())
   {
     for (auto l_queue : m_MessageQueues)
     {
-      auto processing = l_queue->pop();
-      /* Search for associated Message type within the message handler map
-       * and execute it. Otherwise we log an ERR and delete the message.
-       */
-      kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
-      if (findIt != m_mMessageHandlers.end())
+      if (!l_queue->empty())
       {
-      	// This will execute the handler
-	(*findIt->second)(processing);
-      }
-      else
-      {
-	LOG_TRACE << "Could not find handler for message type!";
+	//! Rettrieve an item from the queue (Attention its removed from the queue after pop!)
+	auto processing = l_queue->pop();
+	/* Search for associated Message type within the message handler map
+	 * and execute it. Otherwise we log an ERR and delete the message.
+	 */
+	kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
+	if (findIt != m_mMessageHandlers.end())
+	{
+	  // This will execute the handler
+	  (*findIt->second)(processing);
+	}
+	else
+	{
+	  LOG_TRACE << "Could not find handler for message type!";
+	}
       }
     }
   }
@@ -310,9 +304,14 @@ void kwSystem::processMessages()
  */
 void kwSystem::pollTimers()
 {
-  for (auto p_lockedQueue : m_Timers)
+  for (auto timer : m_Timers)
   {
-    
+    if (timer->done())
+    {
+      auto newMess  = make_shared<kwMessage>(1);
+      newMess->setMessageText("TestMessage!");
+      addMessage(newMess);
+    }
   }
 }
 

@@ -47,7 +47,8 @@ class kwLockedQueue
     std::unique_lock<std::mutex> lock(m_mutex);
     while (m_queue.empty())
     {
-      m_cond.wait(lock);
+      if (m_bThreaded)
+	m_cond.wait(lock);
     }
     T val = m_queue.front();
     m_queue.pop();

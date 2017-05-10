@@ -10,6 +10,8 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+using namespace boost::posix_time;
+
 enum eTimerMode { eTimerMeasure, eTimerCountdown };
 
 class kwTimer
@@ -21,14 +23,15 @@ public:
 	bool done();
   
 	kwTimer();
-	kwTimer(boost::posix_time::time_duration _duration);
-
-	boost::posix_time::time_duration getDiffTime();
-	boost::posix_time::time_duration getCurrentDiffTime();
+	kwTimer(time_duration _duration);
+	void startCountDown();
+	
+	time_duration getDiffTime();
+	time_duration getCurrentDiffTime();
 private:
-	boost::posix_time::ptime m_startTs;
-	boost::posix_time::ptime m_endTs;
-	boost::posix_time::time_duration m_duration;
+	ptime m_startTs;
+	ptime m_endTs;
+	time_duration m_duration;
 	
 	short sMode;
 };

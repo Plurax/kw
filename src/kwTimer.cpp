@@ -6,6 +6,7 @@
  */
 
 #include "kwTimer.h"
+#include "kwDebug.h"
 
 /*!
  * Constructor
@@ -22,8 +23,17 @@ kwTimer::kwTimer()
  */
 kwTimer::kwTimer(boost::posix_time::time_duration _duration)
 {
-  m_endTs = (boost::posix_time::microsec_clock::local_time() + _duration);  
+  m_duration = _duration;
+  startCountDown();
   sMode = eTimerCountdown;
+}
+
+/**
+ * Sets the new end time with the configured duration
+ */
+void kwTimer::startCountDown()
+{
+  m_endTs = (boost::posix_time::microsec_clock::local_time() + m_duration);  
 }
 
 /*!
@@ -52,7 +62,7 @@ bool kwTimer::done()
   auto now = boost::posix_time::microsec_clock::local_time();
   if (now > m_endTs)
   {
-    std::cout << "BUH!" << std::endl;
+    startCountDown();
     return true;
   }
   

@@ -22,12 +22,13 @@ int main() {
 
     while (!done)
     {
-    	auto newMess  = make_shared<kwMessage>(1);
-    	newMess->setMessageText("TestMessage!");
-    	MainSystem.addMessage(newMess);
+      auto newMess  = make_shared<kwMessage>(1);
+      newMess->setMessageText("TestMessage!");
+      MainSystem.addMessage(newMess);
 
-    	MainSystem.processMessages();
-    	usleep(1000000);
+      MainSystem.pollTimers();
+      MainSystem.processMessages();
+      usleep(1000000);
     }
 
     return 0;
