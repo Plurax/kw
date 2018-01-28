@@ -29,14 +29,13 @@ before_install:
     - sudo tar -xzvf boost_1_64_0.tar.gz
     - cd boost_1_64_0/
     - sudo ./bootstrap.sh --prefix=/usr/local
-    - sudo ./b2 -d0
-    - sudo ./b2 install -d0
+    - sudo ./b2 -d0 > /dev/null
+    - sudo ./b2 install -d0 /dev/null
   
 language: cpp
 
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -y -qq lcov curl
-  - sudo apt-get install libboost-all-dev
 script:
   - mkdir build && cd build && cmake .. && cmake --build . && make
