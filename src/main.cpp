@@ -15,7 +15,7 @@ using namespace std;
 
 int main() {
     kwSystem& MainSystem = kwSystem::Inst();
-    kwValString configfile = kwValString("config/Configuration.json");
+    kwValString configfile = kwValString("Configuration.json");
     MainSystem.init(configfile);
 
     bool done = false;
