@@ -25,7 +25,13 @@ matrix:
 
 before_install:
     - eval "${MATRIX_EVAL}"
-    
+    - sudo wget -O boost_1_64_0.tar.gz http://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.gz/download
+    - sudo tar -xzvf boost_1_64_0.tar.gz
+    - cd boost_1_64_0/
+    - sudo ./bootstrap.sh --prefix=/usr/local
+    - sudo ./b2 -d0
+    - sudo ./b2 install -d0
+  
 language: cpp
 
 install:
