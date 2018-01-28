@@ -1,0 +1,6 @@
+language: c
+install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y -qq lcov curl
+script:
+  - mkdir build && cd build && cmake .. && cmake --build . && make
