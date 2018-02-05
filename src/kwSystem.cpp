@@ -101,8 +101,9 @@ void kwSystem::readConfiguration(kwValString& configFile)
   boost::filesystem::path p(configFile.c_str());
   ss << std::ifstream( p.string().c_str() ).rdbuf();
 
-  json config(ss);
-
+  json config;
+  ss >> config;
+  
   try
   {
     kwLogger::Inst().configure(config["Logging"]);
