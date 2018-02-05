@@ -11,7 +11,7 @@
 #include <cstring>
 
 const short kwValFixedPoint::precN[7] = { 2, 4, 6, 8, 10, 12};
-const long kwValFixedPoint::precNScalings[7] = { 100, 10000, 1000000, 100000000, 10000000000, 1000000000000};
+const long long kwValFixedPoint::precNScalings[7] = { 100, 10000, 1000000, 100000000, 10000000000, 1000000000000};
 
 
 kwValFixedPoint::kwValFixedPoint()

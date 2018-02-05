@@ -29,7 +29,7 @@ class kwValFixedPoint : public kwValue
 {
 public:
 	static const short precN[7];
-	static const long precNScalings[7];
+	static const long long precNScalings[7];
 
 	kwValFixedPoint();
 	~kwValFixedPoint();
