@@ -13,9 +13,15 @@ using namespace std;
 
 
 
-int main() {
+int main(int argc, char* argv[]) {
     kwSystem& MainSystem = kwSystem::Inst();
     kwValString configfile = kwValString("Configuration.json");
+
+    if (argc == 2)
+    {
+      configfile = kwValString(argv[1]);
+    }
+
     MainSystem.init(configfile);
 
     bool done = false;
