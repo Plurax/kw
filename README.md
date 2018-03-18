@@ -1,4 +1,4 @@
-[![Build Status](shttp://jenkins.familie-uhlich.de/buildStatus/icon?job=kw)](https://jenkins.familie-uhlich.de/job/kw/)
+[![Build Status](http://jenkins.familie-uhlich.de:443/buildStatus/icon?job=kw)](http://jenkins.familie-uhlich.de:443/buildStatus/icon?job=kw)
 
 # kw
 JSON + shared libraries = your c++ execution salad... 
