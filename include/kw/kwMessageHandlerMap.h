@@ -18,7 +18,7 @@
 #include "kwMessageHandler.h"
 #include "kwMessageHandlerMap.h"
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include "kwValString.h"
 
 using json = nlohmann::json;

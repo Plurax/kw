@@ -9,7 +9,7 @@
 #define KWSHM_H_
 
 #include "kwDataSource.h"
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 using json = nlohmann::json;

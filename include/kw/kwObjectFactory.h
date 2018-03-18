@@ -12,7 +12,7 @@
 #include "kwObject.h"
 #include "kwLibraryInfo.h"
 #include <memory>
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 
 
 using namespace std;

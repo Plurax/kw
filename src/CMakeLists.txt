@@ -82,7 +82,7 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES
 )
 
 include_directories("${CMAKE_SOURCE_DIR}/include/kw"
-  "${CMAKE_SOURCE_DIR}/ext/json/single_include/nlohmann"
+  "${CMAKE_SOURCE_DIR}/ext/json/include"
   )
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)

@@ -24,7 +24,7 @@
 #include "kwDataSource.h"
 
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include "kwValString.h"
 
 #include "kwLibHandle.h"
