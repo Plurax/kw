@@ -8,8 +8,8 @@
 #ifndef KWLIBRARYMANAGER_H_
 #define KWLIBRARYMANAGER_H_
 
-#include "kwObject.h"
-#include "kwLibHandle.h"
+#include "kw/kwObject.h"
+#include "kw/kwLibHandle.h"
 #include "nlohmann/json.hpp"
 
 

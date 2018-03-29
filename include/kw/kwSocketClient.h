@@ -5,16 +5,17 @@
  *      Author: chuhlich
  */
 
-#ifndef KWSOCKET_H_
-#define KWSOCKET_H_
+#ifndef KWSOCKETCLIENT_H_
+#define KWSOCKETCLIENT_H_
 
-#include "kwDataSource.h"
+#include "kw/kwDataSource.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
 #ifdef WIN32
+
 #else
 
 #include <unistd.h>
@@ -50,4 +51,4 @@ private:
 };
 
 #endif
-#endif /* KWSOCKET_H_ */
+#endif /* KWSOCKETCLIENT_H_ */

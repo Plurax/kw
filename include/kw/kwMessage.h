@@ -8,8 +8,8 @@
 #ifndef KWMESSAGE_H_
 #define KWMESSAGE_H_
 
-#include "kwValString.h"
-#include "kwObject.h"
+#include "kw/kwValString.h"
+#include "kw/kwObject.h"
 
 enum eMessageType
 {

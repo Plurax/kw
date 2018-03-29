@@ -9,8 +9,8 @@
 #define KWDATACONTAINER_H_
 
 
-#include "kwDataSource.h"
-#include "kwValString.h"
+#include "kw/kwDataSource.h"
+#include "kw/kwValString.h"
 #include <nlohmann/json.hpp>
 
 using namespace std;

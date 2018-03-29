@@ -8,8 +8,8 @@
 #ifndef KWVALFIXEDPOINT_H_
 #define KWVALFIXEDPOINT_H_
 
-#include "kwValString.h"
-#include "kwValue.h"
+#include "kw/kwValString.h"
+#include "kw/kwValue.h"
 
 using namespace std;
 

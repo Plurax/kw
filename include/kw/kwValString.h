@@ -10,7 +10,7 @@
 
 #include <string>
 #include <memory>
-#include "kwValue.h"
+#include "kw/kwValue.h"
 
 class kwValString;
 

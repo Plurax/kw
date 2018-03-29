@@ -5,10 +5,10 @@
  *      Author: chuhlich
  */
 
-#ifndef KWEXCEPTION_H_
-#define KWEXCEPTION_H_
+#ifndef KWTECHNICALEXCEPTION_H_
+#define KWTECHNICALEXCEPTION_H_
 
-#include "kwValString.h"
+#include "kw/kwValString.h"
 #include <string>
 using namespace std;
 
@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif /* KWEXCEPTION_H_ */
+#endif /* KWTECHNICALEXCEPTION_H_ */

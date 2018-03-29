@@ -5,10 +5,10 @@
  *      Author: chuhlich
  */
 
-#ifndef KWVALUES_KWVALINTEGER_H_
-#define KWVALUES_KWVALINTEGER_H_
+#ifndef KWVALINTEGER_H_
+#define KWVALINTEGER_H_
 
-#include <kwValue.h>
+#include <kw/kwValue.h>
 
 class kwValInteger: public kwValue {
 public:
@@ -38,4 +38,4 @@ protected:
 	int m_Value;
 };
 
-#endif /* KWVALUES_KWVALINTEGER_H_ */
+#endif /* KWVALINTEGER_H_ */

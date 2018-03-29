@@ -11,7 +11,7 @@
 
 #include <typeinfo>
 #include <iostream>
-#include "kwObject.h"
+#include "kw/kwObject.h"
 
 class kwValue : public kwObject
 {

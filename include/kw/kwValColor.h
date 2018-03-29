@@ -5,12 +5,12 @@
  *      Author: chuhlich
  */
 
-#ifndef KWCOLOR_H_
-#define KWCOLOR_H_
+#ifndef KWVALCOLOR_H_
+#define KWVALCOLOR_H_
 
 
-#include "kwValString.h"
-#include "kwValue.h"
+#include "kw/kwValString.h"
+#include "kw/kwValue.h"
 
 class kwValColor : public kwValue
 {
@@ -34,4 +34,4 @@ private:
 	static const kwValString m_valType;
 };
 
-#endif /* KWCOLOR_H_ */
+#endif /* KWVALCOLOR_H_ */

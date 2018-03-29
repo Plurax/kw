@@ -5,10 +5,10 @@
  *      Author: chuhlich
  */
 
-#ifndef KWCOORD_H_
-#define KWCOORD_H_
+#ifndef KWVALCOORD_H_
+#define KWVALCOORD_H_
 
-#include "kwValue.h"
+#include "kw/kwValue.h"
 #include <iostream>
 
 class kwValString;
@@ -45,4 +45,4 @@ protected:
 
 
 
-#endif /* KWCOORD_H_ */
+#endif /* KWVALCOORD_H_ */

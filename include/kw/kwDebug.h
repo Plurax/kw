@@ -8,8 +8,8 @@
 #ifndef KWDEBUG_H_
 #define KWDEBUG_H_
 
-#include "kwLogger.h"
-#include "kwTechnicalException.h"
+#include "kw/kwLogger.h"
+#include "kw/kwTechnicalException.h"
 
 #define THROW_TECHNICAL_EXCEPTION(errno, msg) \
 	do { \

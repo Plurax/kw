@@ -8,9 +8,9 @@
 #ifndef KWOBJECTFACTORY_H_
 #define KWOBJECTFACTORY_H_
 
-#include "kwValString.h"
-#include "kwObject.h"
-#include "kwLibraryInfo.h"
+#include "kw/kwValString.h"
+#include "kw/kwObject.h"
+#include "kw/kwLibraryInfo.h"
 #include <memory>
 #include "nlohmann/json.hpp"
 

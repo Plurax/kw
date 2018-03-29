@@ -5,14 +5,14 @@
  *      Author: chuhlich
  */
 
-#ifndef KWDATALAYERFACTORY_H_
-#define KWDATALAYERFACTORY_H_
+#ifndef KWDATASOURCEDACTORY_H_
+#define KWDATASOURCEFACTORY_H_
 
 
-#include "kwObjectFactory.h"
-#include "kwDataSource.h"
-#include "kwLibHandle.h"
-#include "kwValString.h"
+#include "kw/kwObjectFactory.h"
+#include "kw/kwDataSource.h"
+#include "kw/kwLibHandle.h"
+#include "kw/kwValString.h"
 #include <memory>
 #include <nlohmann/json.hpp>
 
@@ -33,4 +33,4 @@ typedef kwDataSourceFactory* (*DataSourceCreateFunc)();
 typedef void (*DataSourceDestroyFunc)(kwDataSourceFactory*);
 
 
-#endif /* KWGUIACTIONFUNCTORFACTORY_H_ */
+#endif /* KWDATASOURCEFACTORY_H_ */

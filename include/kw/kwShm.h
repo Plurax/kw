@@ -8,7 +8,7 @@
 #ifndef KWSHM_H_
 #define KWSHM_H_
 
-#include "kwDataSource.h"
+#include "kw/kwDataSource.h"
 #include <nlohmann/json.hpp>
 
 using namespace std;

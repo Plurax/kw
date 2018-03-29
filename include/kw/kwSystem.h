@@ -13,21 +13,21 @@
 #include <vector>
 #include <queue>
 
-#include "kwTimer.h"
-#include "kwLogger.h"
-#include "kwLibraryManager.h"
-#include "kwSystem.h"
-#include "kwBase.h"
-#include "kwMessage.h"
-#include "kwMessageHandler.h"
-#include "kwLockedQueue.h"
-#include "kwDataSource.h"
+#include "kw/kwTimer.h"
+#include "kw/kwLogger.h"
+#include "kw/kwLibraryManager.h"
+#include "kw/kwSystem.h"
+#include "kw/kwBase.h"
+#include "kw/kwMessage.h"
+#include "kw/kwMessageHandler.h"
+#include "kw/kwLockedQueue.h"
+#include "kw/kwDataSource.h"
 
 
 #include <nlohmann/json.hpp>
-#include "kwValString.h"
+#include "kw/kwValString.h"
 
-#include "kwLibHandle.h"
+#include "kw/kwLibHandle.h"
 
 class kwGuiObject;
 

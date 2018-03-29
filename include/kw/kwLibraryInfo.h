@@ -10,7 +10,7 @@
 
 
 #include <string>
-#include "kwObject.h"
+#include "kw/kwObject.h"
 
 using namespace std;
 

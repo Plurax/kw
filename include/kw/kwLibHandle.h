@@ -8,9 +8,9 @@
 #ifndef KWLIBHANDLE_H_
 #define KWLIBHANDLE_H_
 
-#include "kwValString.h"
-#include "kwLibraryInfo.h"
-#include "kwObjectFactory.h"
+#include "kw/kwValString.h"
+#include "kw/kwLibraryInfo.h"
+#include "kw/kwObjectFactory.h"
 
 using namespace std;
 

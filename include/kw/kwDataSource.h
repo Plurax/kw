@@ -8,8 +8,8 @@
 #ifndef KWDATASOURCE_H_
 #define KWDATASOURCE_H_
 
-#include "kwValString.h"
-#include "kwObject.h"
+#include "kw/kwValString.h"
+#include "kw/kwObject.h"
 #include <map>
 #include <memory>
 

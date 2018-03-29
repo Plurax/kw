@@ -13,13 +13,13 @@
 #include <vector>
 #include <queue>
 
-#include "kwLogger.h"
-#include "kwMessage.h"
-#include "kwMessageHandler.h"
-#include "kwMessageHandlerMap.h"
+#include "kw/kwLogger.h"
+#include "kw/kwMessage.h"
+#include "kw/kwMessageHandler.h"
+#include "kw/kwMessageHandlerMap.h"
 
 #include <nlohmann/json.hpp>
-#include "kwValString.h"
+#include "kw/kwValString.h"
 
 using json = nlohmann::json;
 using namespace std;

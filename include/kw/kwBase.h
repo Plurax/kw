@@ -49,9 +49,9 @@
 #define __LIBNAME "undefinedLib"
 #endif
 
-#include "kwObject.h"
-#include "kwSystem.h"
-#include "kwTimer.h"
+#include "kw/kwObject.h"
+#include "kw/kwSystem.h"
+#include "kw/kwTimer.h"
 
 
 

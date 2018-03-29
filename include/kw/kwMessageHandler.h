@@ -8,9 +8,9 @@
 #ifndef KWMESSAGEHANDLER_H_
 #define KWMESSAGEHANDLER_H_
 
-#include "kwMessage.h"
+#include "kw/kwMessage.h"
 #include <memory>
-#include "kwObject.h"
+#include "kw/kwObject.h"
 
 using namespace std;
 
