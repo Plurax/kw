@@ -8,10 +8,10 @@
 #ifndef KWGUIACTIONFUNCTORFACTORY_H_
 #define KWGUIACTIONFUNCTORFACTORY_H_
 
-#include <kwMessageHandler.h>
-#include "kwLibraryInfo.h"
-#include "kwObjectFactory.h"
-#include "kwValString.h"
+#include <kw/kwMessageHandler.h>
+#include "kw/kwLibraryInfo.h"
+#include "kw/kwObjectFactory.h"
+#include "kw/kwValString.h"
 #include <memory>
 
 using namespace std;

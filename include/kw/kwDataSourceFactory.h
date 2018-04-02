@@ -14,7 +14,7 @@
 #include "kwLibHandle.h"
 #include "kwValString.h"
 #include <memory>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 using json = nlohmann::json; 

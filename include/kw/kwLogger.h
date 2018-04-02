@@ -15,7 +15,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>

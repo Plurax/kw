@@ -51,8 +51,9 @@ public:
 
 	  shared_ptr<string> str();
 	  const shared_ptr<string> const_str() const;
+	  const char* c_str();
 
-private:
+ private:
 	  shared_ptr<string> m_string;
 	  bool m_isEmpty;
 };

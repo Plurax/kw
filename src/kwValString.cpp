@@ -170,3 +170,8 @@ kwValString kwValString::getType()
 {
 	return kwValString("kwValString");
 }
+
+const char* kwValString::c_str()
+{
+  return m_string->c_str();
+}

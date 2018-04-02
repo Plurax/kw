@@ -10,7 +10,7 @@
 
 #include "kwObject.h"
 #include "kwLibHandle.h"
-#include "json.hpp"
+#include "nlohmann/json.hpp"
 
 
 #ifdef WIN32
