@@ -61,8 +61,9 @@ kwShm::kwShm(json configuration)
     }
     }
   */
-
-  LOG_TRACE << "Init SHM with key " << m_key << " and size " << m_size;
+  m_shmid = 12345;
+  m_size = 1024*1024;
+  LOG_TRACE << "Init SHM with key " << m_shmid << " and size " << m_size;
 }
 
 /**
@@ -72,12 +73,12 @@ kwShm::kwShm(json configuration)
 void kwShm::init()
 {
   /* Open the shared memory segment - create if necessary */
-  if((m_shmid = shmget(m_key, m_size, IPC_CREAT | 0666)) == -1)
+  if((m_shmid = shmget(m_shmid, m_size, IPC_CREAT | 0666)) == -1)
     {
       LOG_TRACE << "Shared memory segment exists - opening as client\n";
 
       /* Segment probably already exists - try as a client */
-      if((m_shmid = shmget(m_key, m_size, 0)) == -1)
+      if((m_shmid = shmget(m_shmid, m_size, 0)) == -1)
 	{
 	  LOG_ERROR << "shmget";
 	  exit(1);
@@ -101,7 +102,7 @@ void kwShm::init()
  */
 void kwShm::deInit()
 {
-  LOG_DEBUG << "Detaching SHM key " << m_key << " Detach retcode: " << shmdt(m_segptr);
+  LOG_DEBUG << "Detaching SHM key " << m_shmid << " Detach retcode: " << shmdt(m_segptr);
 }
 
 /**

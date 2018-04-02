@@ -127,7 +127,7 @@ shared_ptr<kwObject> kwLibraryManager::createObject(shared_ptr<kwValString> libn
     if (retObject)
       return retObject;
     else
-      THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of kwObject " << *classname);
+      THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of kwObject during lib init (class:" << *classname << ")");
   }
   return nullptr;
 }

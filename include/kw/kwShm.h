@@ -27,7 +27,9 @@ class kwShm : public kwDataSource
   bool unlockSegment();
   bool isLocked();
  private:
-  int   m_shmid, m_semid, m_size;
+  key_t m_shmid;
+  int m_semid;
+  size_t m_size;
   char  *m_segptr;
 };
 
