@@ -76,21 +76,20 @@ class kwSystem
 
   void processMessages();
   void addMessage(shared_ptr<kwMessage> mess);
+  void pollTimers();
 
   void setMessageHandlers(json messageconfig);
 
-  // On windows we force to use UTF8 - so we need to create a seperate Transcoder!
-#ifdef WIN32
-  XMLTranscoder* UTF8_TRANSCODER = NULL;
-#endif
  private:
-  int m_pixelformat;
-
   kwSystem();
 
   void createDataLayer(json currentElement);
+  void createTimers(json timerconfig);
 
   vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_MessageQueues;
+  vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_ThreadedMessageQueues;
+
+  vector<shared_ptr<kwTimer>> m_Timers;
 };
 
 

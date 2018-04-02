@@ -24,7 +24,7 @@ kwMessageHandlerFactory::~kwMessageHandlerFactory()
  */
 shared_ptr<kwObject> kwMessageHandlerFactory::createObject(kwValString* classname, json configuration)
 {
-	if (classname->compare("kwGuiAction") == 0)
+	if (*classname == kwValString("kwGuiAction") == 0)
 		return shared_ptr<kwMessageHandler>(new kwMessageHandler());
 
 	return NULL;

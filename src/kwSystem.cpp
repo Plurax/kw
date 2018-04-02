@@ -1,4 +1,3 @@
-
 #include <vector>
 
 
@@ -15,7 +14,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <iostream>
-#include "boost/filesystem.hpp"
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #ifdef WIN32
 #include "Windows.h"
@@ -24,9 +23,9 @@
 #include <cxxabi.h>
 #endif
 
-#include "kwSystem.h"
-#include "kwTechnicalException.h"
-#include "kwValCoord.h"
+#include "kw/kwSystem.h"
+#include "kw/kwTechnicalException.h"
+#include "kw/kwValCoord.h"
 
 
 using namespace std;
@@ -36,13 +35,15 @@ using namespace std;
  */
 kwSystem::kwSystem()
 {
-  m_MessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>(10); // Create vector with size 10
+  m_MessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>();
+  m_ThreadedMessageQueues = vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>>();
   m_MessageQueues = {
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
-    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
+    make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
+  m_ThreadedMessageQueues = {
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
@@ -56,10 +57,10 @@ kwSystem::kwSystem()
  */
 void kwSystem::init(kwValString& configfile)
 {
-  /* Note this is not used as shared pointer as we use this inforation within lib handles which 
+  /* Note this is not used as shared pointer as we use this information within lib handles which 
      are propably initialized with external shared lib factories!
   */
-  m_libInfo = new kwLibraryInfo("kw", "0.2", "Embedded GL Toolkit", "Christoph Romas",	"MIT - www.electroknit.io");
+  m_libInfo = new kwLibraryInfo("kw", "0.2", "Knitwork", "Christoph Uhlich",	"MIT - www.electroknit.io");
 
   kwLibraryManager& dsManager = kwLibraryManager::Inst();
   dsManager.init();
@@ -112,6 +113,7 @@ void kwSystem::readConfiguration(kwValString& configFile)
     //		m_FontProvider->loadFonts(config["Font"]);
     setMessageHandlers(config["MessageHandlers"]);
     //		m_TextureManager->initTextures(config["Textures"]);
+    createTimers(config["Timers"]);
   }
   catch (kwTechnicalException& e)
   {
@@ -218,6 +220,39 @@ void kwSystem::createDataLayer(json _currentElement)
   LOG_TRACE << "Data sources completed...";
 }
 
+/*!
+ * This will create timers which can be used for emitting specific messages from the main loop.
+ * This is useful e.g. for polling measurements or similar...
+ */
+void kwSystem::createTimers(json timerconfig)
+{
+  shared_ptr<string> msgID_str = nullptr;
+  shared_ptr<string> duration_str = nullptr;
+  shared_ptr<kwTimer> _timer = nullptr;
+  int messageId = -1; // -1 is initial faulty
+
+  if (timerconfig == nullptr)
+  {
+    LOG_INFO << "No timers found in config...";
+    return;
+  }
+  else
+    LOG_TRACE << "Initializing timers...";
+
+  for (auto& element : timerconfig)
+  {
+    duration_str = std::make_shared<string>(((element["Duration"])).get<string>());
+    msgID_str = std::make_shared<string>(((element["MessageId"])).get<string>());
+    messageId = atoi(msgID_str->c_str());;
+    
+    /* Now create the kwTimer instance
+     */
+    _timer = std::make_shared<kwTimer>(duration_from_string(*duration_str));
+    //! TODO : create class which merges timer and message d efinition to MessageEmitter Class template?
+    m_Timers.push_back(_timer);
+    _timer.reset();
+  }
+}
 
 /**
  * Retrieve a datasource with the given name.
@@ -242,28 +277,44 @@ shared_ptr<kwDataSource> kwSystem::getDataSource(kwValString _name)
  */
 void kwSystem::processMessages()
 {
-  for (auto p_lockedQueue : m_MessageQueues)
+  if (!m_MessageQueues.empty())
   {
-    /* If the queue is threaded we dont need to process it here - as the thread will retrieve
-     * the item on next context switch...
-     */
-    while (!p_lockedQueue->Threaded() && !p_lockedQueue->empty())
+    for (auto l_queue : m_MessageQueues)
     {
-      // Attention - here the queue item will also be removed from the queue
-      auto processing = p_lockedQueue->pop();
-      /* Search for associated Input type within the message handler map
-       * and execute it. Otherwise we log an ERR and delete the message.
-       */
-      kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
-      if (findIt != m_mMessageHandlers.end())
+      if (!l_queue->empty())
       {
-	// This will execute the handler
-	(*findIt->second)(processing);
+	//! Rettrieve an item from the queue (Attention its removed from the queue after pop!)
+	auto processing = l_queue->pop();
+	/* Search for associated Message type within the message handler map
+	 * and execute it. Otherwise we log an ERR and delete the message.
+	 */
+	kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
+	if (findIt != m_mMessageHandlers.end())
+	{
+	  // This will execute the handler
+	  (*findIt->second)(processing);
+	}
+	else
+	{
+	  LOG_TRACE << "Could not find handler for message type!";
+	}
       }
-      else
-      {
-	LOG_TRACE << "Could not find handler for message type!";
-      }
+    }
+  }
+}
+
+/**
+ * Check timers if any, and create the corresponding messages.
+ */
+void kwSystem::pollTimers()
+{
+  for (auto timer : m_Timers)
+  {
+    if (timer->done())
+    {
+      auto newMess  = make_shared<kwMessage>(1);
+      newMess->setMessageText("TestMessage!");
+      addMessage(newMess);
     }
   }
 }
@@ -276,9 +327,8 @@ void kwSystem::processMessages()
  */
 void kwSystem::addMessage(shared_ptr<kwMessage> mess)
 {
-  // The message ID identifies which queue to use
-  int iId = mess->getMessageType();
-  m_MessageQueues[iId]->push(mess);
+  int idx = mess->getMessageType();
+  m_MessageQueues[idx]->push(mess);
 }
 
 
@@ -289,5 +339,4 @@ void kwSystem::destroy()
   for (itDS = m_DataSources.begin(); itDS != m_DataSources.end(); itDS++)
     itDS->second->deInit();
 }
-
 
