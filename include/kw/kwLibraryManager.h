@@ -13,32 +13,28 @@
 #include "nlohmann/json.hpp"
 
 
-#ifdef WIN32
-#include "Windows.h"
-#else
 #include <dlfcn.h>
-#endif
 
 using json = nlohmann::json;
 
 class kwLibraryManager
 {
-public:
-	~kwLibraryManager();
+ public:
+  ~kwLibraryManager();
 
-	static kwLibraryManager& Inst()
-	{
-		static kwLibraryManager _instance;
-		return _instance;
-	};
+  static kwLibraryManager& Inst()
+  {
+    static kwLibraryManager _instance;
+    return _instance;
+  };
 
-	void init();
+  void init();
 
-	// Create an object
-	shared_ptr<kwObject> createObject(shared_ptr<kwValString> libname, shared_ptr<kwValString> classname, shared_ptr<kwValString> main_classname, json configuration);
+  // Create an object
+  shared_ptr<kwObject> createObject(shared_ptr<kwValString> libname, shared_ptr<kwValString> classname, shared_ptr<kwValString> main_classname, json configuration);
 
-private:
-	map<kwValString, shared_ptr<kwLibHandle>> m_loadedLibraries;
+ private:
+  map<kwValString, shared_ptr<kwLibHandle>> m_loadedLibraries;
 };
 
 

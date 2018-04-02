@@ -15,13 +15,7 @@
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <iostream>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#ifdef WIN32
-#include "Windows.h"
-#include <typeinfo>
-#else
 #include <cxxabi.h>
-#endif
 
 #include "kw/kwSystem.h"
 #include "kw/kwTechnicalException.h"
@@ -288,7 +282,8 @@ void kwSystem::processMessages()
 	/* Search for associated Message type within the message handler map
 	 * and execute it. Otherwise we log an ERR and delete the message.
 	 */
-	kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(processing->getMessageType());
+	int mT = processing->getMessageType();
+	kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(mT);
 	if (findIt != m_mMessageHandlers.end())
 	{
 	  // This will execute the handler
@@ -296,7 +291,7 @@ void kwSystem::processMessages()
 	}
 	else
 	{
-	  LOG_TRACE << "Could not find handler for message type!";
+	  LOG_TRACE << "Could not find handler for message type " << mT;
 	}
       }
     }

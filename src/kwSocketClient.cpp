@@ -15,9 +15,6 @@
 #include <errno.h>
 #include <kwSocketClient.h>
 
-#ifdef WIN32
-#else
-
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -28,15 +25,15 @@ using namespace std;
 kwSocketClient::kwSocketClient(json configuration)
 {
   for (json::iterator it = configuration.begin(); it != configuration.end(); ++it) 
-  {
-    string str = configuration["port"];
-    const char* xstr = str.c_str();
-    m_Port = atoi(xstr);
+    {
+      string str = configuration["port"];
+      const char* xstr = str.c_str();
+      m_Port = atoi(xstr);
 		
-    str = configuration["port"];
-    xstr = str.c_str();
-    m_Host = new kwValString(xstr);
-  }
+      str = configuration["port"];
+      xstr = str.c_str();
+      m_Host = new kwValString(xstr);
+    }
 
   m_SocketFd = -1; // initial fail state
 
@@ -134,25 +131,24 @@ kwValString kwSocketClient::sendRequest(kwValString* request)
 
   // Read into the reception buffer
   while (rec != 0)
-  {
-    LOG_TRACE << "Entering while";
-    // every run we read exactly 1 char - this is not fast - but works for the first try
-    rec = ::read(m_SocketFd, &reception_buffer[complete_size], 1023 - complete_size);
-    if (rec == -1)
     {
-      perror("Error on read from Socket: ");
-      THROW_TECHNICAL_EXCEPTION(1234, "Error on read from Socket: ");
+      LOG_TRACE << "Entering while";
+      // every run we read exactly 1 char - this is not fast - but works for the first try
+      rec = ::read(m_SocketFd, &reception_buffer[complete_size], 1023 - complete_size);
+      if (rec == -1)
+	{
+	  perror("Error on read from Socket: ");
+	  THROW_TECHNICAL_EXCEPTION(1234, "Error on read from Socket: ");
+	}
+      if (rec > 0)
+	{
+	  complete_size += rec;
+	}
+      LOG_TRACE << "rec=" << rec;
     }
-    if (rec > 0)
-    {
-      complete_size += rec;
-    }
-    LOG_TRACE << "rec=" << rec;
-  }
   reception_buffer[complete_size] = '\0';
   LOG_TRACE << reception_buffer;
   deInit();
 
   return kwValString(reception_buffer);
 }
-#endif

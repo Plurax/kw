@@ -87,11 +87,8 @@ kwValString kwValFixedPoint::asString() const
 		return kwValString("unset Object kwValFixedPoint!");
 	}
 
-#ifdef WIN32
-	_snprintf(tmp, 20, "%ld", m_lValue);
-#else
 	snprintf(tmp, 20, "%ld", m_lValue);
-#endif
+
 	int len = strlen(tmp);
 	for (i = len; i > (len - precN[ static_cast<int>(m_Precision)]); i--)
 	{
