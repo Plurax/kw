@@ -11,10 +11,10 @@
 #include <string>
 #include <memory>
 #include "kwValue.h"
-
-class kwValString;
+#include "nlohmann/json.hpp"
 
 using namespace std;
+
 
 /**
  * This is only a derived string object.
@@ -23,40 +23,54 @@ using namespace std;
  */
 class kwValString : public kwValue
 {
-public:
-	  kwValString();
-	  kwValString(char* _cstr);
-	  kwValString(const char* _cstr);
-	  kwValString(string& _str);
-	  kwValString(string* _str);
-	  kwValString(const string _str);
-	  kwValString(kwValString* _str);
-	  kwValString(shared_ptr<kwValString> _str);
+ public:
+  kwValString();
+  kwValString(char* _cstr);
+  kwValString(const char* _cstr);
+  kwValString(string& _str);
+  kwValString(string* _str);
+  kwValString(const string _str);
+  kwValString(kwValString* _str);
+  kwValString(shared_ptr<kwValString> _str);
 
-	  friend std::ostream& operator<< (std::ostream& stream, const kwValString& _valstring);
+  friend std::ostream& operator<< (std::ostream& stream, const kwValString& _valstring);
 
-	  kwValString(const kwValString& right); // Copy constructor
-	  ~kwValString();
+  using value_type = kwValString;
 
-	  int size();
-	  bool empty() const;
+  kwValString(const kwValString& right); // Copy constructor
+  ~kwValString();
 
-	  void erase(int pos, int len);
-	  kwValString getType();
+  void push_back(char c);
+  void clear();
+  char* data();
+  int size();
+  bool empty() const;
 
-	  kwValString operator + (const kwValString& _right);
-	  bool operator == (const kwValString& _right);
-	  kwValString& operator = (const kwValString& _str);
-	  bool operator < (const kwValString& _right) const;
+  void erase(int pos, int len);
+  kwValString getType();
 
-	  shared_ptr<string> str();
-	  const shared_ptr<string> const_str() const;
-	  const char* c_str();
+  kwValString operator + (const kwValString& _right);
+  bool operator == (const kwValString& rhs) const;
+  kwValString& operator = (const kwValString& _str);
+  kwValString& operator = (const string& _str);
+  bool operator < (const kwValString& _right) const;
+
+  string str();
+  const string const_str() const;
+  const char* c_str();
 
  private:
-	  shared_ptr<string> m_string;
-	  bool m_isEmpty;
+  string m_string;
+  bool m_isEmpty;
 };
+
+void to_json(nlohmann::json& j, const kwValString& q) {
+  j = nlohmann::json(q.const_str());
+}
+
+void from_json(const nlohmann::json& j, kwValString& q) {
+  q = kwValString(j.get<std::string>());
+}
 
 
 #endif /* KWVALSTRING_H_ */

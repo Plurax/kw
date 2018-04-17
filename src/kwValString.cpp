@@ -13,61 +13,75 @@
 
 kwValString::kwValString()
 {
-	m_string = make_shared<string>("");
+	m_string = string("");
 	m_isEmpty = true;
 }
 
 
 kwValString::kwValString(char* _cstr)
 {
-	m_string = make_shared<string>(_cstr);
+	m_string = string(_cstr);
 	m_isEmpty = false;
 }
 
 
 kwValString::kwValString(const char* _cstr)
 {
-	m_string = make_shared<string>(_cstr);
+	m_string = string(_cstr);
 	m_isEmpty = false;
 }
 
 
 kwValString::kwValString(string& _str)
 {
-	m_string = make_shared<string>(_str);
+	m_string = string(_str);
 	m_isEmpty = false;
 }
 
+char* kwValString::data()
+{
+  return m_string.data();
+}
+
+void kwValString::clear()
+{
+  return m_string.clear();
+}
+
+void kwValString::push_back(char c);
+{
+  m_string.push_back(c);
+}
 
 kwValString::kwValString(string* _str)
 {
-	m_string = make_shared<string>(*_str);
+	m_string = string(*_str);
 	m_isEmpty = false;
 }
 
 
 kwValString::kwValString(const string _str)
 {
-	m_string = make_shared<string>(_str);
+	m_string = string(_str);
 	m_isEmpty = false;
 }
 
 
 kwValString::kwValString(kwValString*_str)
 {
-	m_string = make_shared<string>(*_str->str());
+	m_string = string(*_str->str());
 	m_isEmpty = false;
 }
 
 kwValString::kwValString(shared_ptr<kwValString> _str)
 {
-	m_string = make_shared<string>(*_str->str());
+	m_string = string(*_str->str());
 	m_isEmpty = false;
 }
 
 kwValString::kwValString(const kwValString& right) // Copy constructor
 {
-	m_string = make_shared<string>(*right.m_string);
+	m_string = string(*right.m_string);
 	m_isEmpty = false;
 }
 
@@ -123,29 +137,26 @@ kwValString kwValString::operator + (const kwValString& _right)
 	}
 }
 
-bool kwValString::operator == (const kwValString& _right)
+bool kwValString::operator == (const kwValString& rhs) const
 {
-	if (m_string != NULL)
-		return (this->m_string->compare(*_right.m_string) == 0);
-	else
-		return false;
+  return (m_string == rhs.m_string);
 }
 
 
 kwValString& kwValString::operator = (const kwValString& _str)
 {
 	// First check if the local helds already a string - this must be deleted to avoid mem leak caused by overwriting the value!
-	if (this->m_string != NULL)
-	{
-		this->m_string = NULL;
-	}
+  this->m_string = string(*_str.m_string);
 
-	if (_str.m_string != NULL)
-	{
-		this->m_string = make_shared<string>(*_str.m_string);
-	}
+  return *this;
+}
 
-	return *this;
+kwValString& kwValString::operator = (const string& _str);
+{
+	// First check if the local helds already a string - this must be deleted to avoid mem leak caused by overwriting the value!
+  this->m_string = _str;
+
+  return *this;
 }
 
 
@@ -155,14 +166,14 @@ bool kwValString::operator < (const kwValString& _right) const
 }
 
 
-shared_ptr<string> kwValString::str()
+string kwValString::str()
 {
 	return m_string;
 }
 
-const shared_ptr<string> kwValString::const_str() const
+const string kwValString::const_str() const
 {
-	const shared_ptr<string> clone = make_shared<string>(m_string->c_str());
+	const string clone = string(m_string->c_str());
 	return clone;
 }
 
@@ -173,5 +184,5 @@ kwValString kwValString::getType()
 
 const char* kwValString::c_str()
 {
-  return m_string->c_str();
+  return m_string.c_str();
 }

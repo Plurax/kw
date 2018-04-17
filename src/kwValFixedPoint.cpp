@@ -62,7 +62,7 @@ kwValFixedPoint::kwValFixedPoint(kwValString _string)
  	if (strlen(ptr) > 0)
 		m_Precision = getPrecisionFromString(ptr);
 	m_isEmpty = false;
-	delete tmpBuffer;
+	delete[] tmpBuffer;
 }
 
 kwValFixedPoint::kwValFixedPoint(enumValFixedPointPrec prec)
