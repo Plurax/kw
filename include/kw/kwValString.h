@@ -42,10 +42,12 @@ class kwValString : public kwValue
 
   void push_back(char c);
   void clear();
-  char* data();
+  const char* data();
   int size();
   bool empty() const;
 
+  operator std::string() const { return m_string;};
+  
   void erase(int pos, int len);
   kwValString getType();
 
@@ -63,14 +65,5 @@ class kwValString : public kwValue
   string m_string;
   bool m_isEmpty;
 };
-
-void to_json(nlohmann::json& j, const kwValString& q) {
-  j = nlohmann::json(q.const_str());
-}
-
-void from_json(const nlohmann::json& j, kwValString& q) {
-  q = kwValString(j.get<std::string>());
-}
-
 
 #endif /* KWVALSTRING_H_ */

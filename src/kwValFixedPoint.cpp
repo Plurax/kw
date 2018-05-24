@@ -43,7 +43,7 @@ kwValFixedPoint::kwValFixedPoint(kwValString _string)
 
 	if (ptr != NULL)
 	{
-		while ((isdigit(*(ptr+1))) && (ptr != '\0'))
+		while ((isdigit(*(ptr+1))) && (*ptr != '\0'))
 		{
 			*ptr = *(ptr+1);
 			ptr++;

@@ -238,7 +238,7 @@ void kwSystem::createTimers(json timerconfig)
     duration_str = std::make_shared<string>(((element["Duration"])).get<string>());
     msgID_str = std::make_shared<string>(((element["MessageId"])).get<string>());
     messageId = atoi(msgID_str->c_str());;
-    
+
     /* Now create the kwTimer instance
      */
     _timer = std::make_shared<kwTimer>(duration_from_string(*duration_str));
@@ -310,6 +310,7 @@ void kwSystem::pollTimers()
       auto newMess  = make_shared<kwMessage>(1);
       newMess->setMessageText("TestMessage!");
       addMessage(newMess);
+      timer->start();
     }
   }
 }
