@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.2)
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 set (CXX_STANDARD_REQUIRED true)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+option(BUILD_TESTING "Switch tests - default on" ON)
 
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
@@ -49,7 +51,7 @@ endif()
 
 # This line finds the boost lib and headers.
 set(Boost_NO_BOOST_CMAKE ON) #  Don't do a find_package in config mode before searching for a regular boost install.
-find_package(Boost COMPONENTS log_setup log unit_test_framework program_options REQUIRED)
+find_package(Boost COMPONENTS log_setup log program_options REQUIRED)
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 # This sets the include directory for the reference project. This is the -I flag in gcc.
@@ -76,6 +78,11 @@ add_subdirectory(include)
 add_subdirectory(src)
 # -----------------------add_subdirectory(doc)
 # -----------------------add_subdirectory(test)
+
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
 
 #
 # SYSTEM PACKAGING (RPM, TGZ, ...)

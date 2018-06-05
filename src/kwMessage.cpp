@@ -25,6 +25,10 @@ int kwMessage::getMessageType()
 	return m_iMessageType;
 }
 
+json kwMessage::getJsonObj()
+{
+  return json_obj;
+}
 
 void kwMessage::setMessageText(kwValString& message)
 {

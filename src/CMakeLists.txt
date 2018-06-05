@@ -1,4 +1,3 @@
-set (CMAKE_CXX_STANDARD 14)
 add_definitions(-D__LIBNAME="kw")
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 

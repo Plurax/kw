@@ -16,6 +16,9 @@ enum eMessageType
 	mtInput = 0
 };
 
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 class kwMessage : public kwObject
 {
@@ -29,11 +32,12 @@ public:
 	void setMessageText(const char* message);
 
 	kwValString* getMessageText();
+  json getJsonObj();
 
 protected:
 	int m_iMessageType;
 	kwValString* m_MessageText;
-
+  json json_obj;
 };
 
 #endif /* KWMESSAGE_H_ */

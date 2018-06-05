@@ -243,7 +243,7 @@ void kwSystem::createTimers(json timerconfig)
      */
     _timer = std::make_shared<kwTimer>(duration_from_string(*duration_str));
     //! TODO : create class which merges timer and message d efinition to MessageEmitter Class template?
-    m_Timers.push_back(_timer);
+    m_Timers.push_back(std::make_pair(_timer,element["Payload"]));
     _timer.reset();
   }
 }
@@ -305,12 +305,12 @@ void kwSystem::pollTimers()
 {
   for (auto timer : m_Timers)
   {
-    if (timer->done())
+    if (timer.first->done())
     {
       auto newMess  = make_shared<kwMessage>(1);
       newMess->setMessageText("TestMessage!");
       addMessage(newMess);
-      timer->start();
+      timer.first->start();
     }
   }
 }

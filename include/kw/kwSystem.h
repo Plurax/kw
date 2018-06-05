@@ -89,7 +89,7 @@ class kwSystem
   vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_MessageQueues;
   vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_ThreadedMessageQueues;
 
-  vector<shared_ptr<kwTimer>> m_Timers;
+  vector<std::pair<shared_ptr<kwTimer>, json>> m_Timers;
 };
 
 
