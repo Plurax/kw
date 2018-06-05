@@ -1,0 +1,13 @@
+{
+    "schema" : "https",
+    "bootstraptenant" : "management",
+    "host" : "int2-ram.m2m.telekom.com",
+    "bootstrapuser" : "devicebootstrap",
+    "bootstrappass" : "Fhdt1bb1f",
+    "CredentialsFile" : "./credentials.json",
+    "identity" : "plurax_cpp_agent",
+    "identitytype" : "custom_name",
+    "managedObject" : {
+        "Name" : "Buh"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "schema" : "https",
+    "bootstraptenant" : "",
+    "host" : "",
+    "bootstrapuser" : "",
+    "bootstrappass" : "",
+    "CredentialsFile" : "./credentials.json",
+    "identity" : "myidentityorserialn0",
+    "identitytype" : "id_or_serial",
+    "managedObject" : {
+        "Name" : "Buh",
+        "c8y_isDevice" : {}
+    }
+}
