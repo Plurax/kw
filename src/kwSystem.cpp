@@ -102,11 +102,8 @@ void kwSystem::readConfiguration(kwValString& configFile)
   try
   {
     kwLogger::Inst().configure(config["Logging"]);
-    //		m_Configuration.init(config["AppConfiguration"]);
     createDataLayer(config["DataLayer"]);
-    //		m_FontProvider->loadFonts(config["Font"]);
     setMessageHandlers(config["MessageHandlers"]);
-    //		m_TextureManager->initTextures(config["Textures"]);
     createTimers(config["Timers"]);
   }
   catch (kwTechnicalException& e)

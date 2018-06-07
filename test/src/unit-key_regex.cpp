@@ -12,11 +12,14 @@ string extractKey( string str ) {
   smatch mat;
   if (regex_search(str, mat, re))
   {
-    cout << mat.str(1) << endl;
+    cout << "Matched: " << mat.str(1) << endl;
     return mat.str(1);
   }
   else
+  {
+    cout << "No match..." << endl;
     return string("");
+  }
 }
 
 TEST_CASE( "Regex NO Match", "[extractKey]" ) {
