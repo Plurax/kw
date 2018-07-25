@@ -23,8 +23,8 @@ kwDataSourceFactory::~kwDataSourceFactory()
 
 shared_ptr<kwObject> kwDataSourceFactory::createObject(kwValString* classname, json configuration)
 {
-	if (*classname == kwValString("kwDataContainer") == 0)
-		return shared_ptr<kwDataContainer>(new kwDataContainer(configuration));
+	if (*classname == kwValString("kwDataContainer"))
+		return make_shared<kwDataContainer>(configuration);
 
 	return NULL;
 }

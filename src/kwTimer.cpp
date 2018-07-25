@@ -57,7 +57,7 @@ void kwTimer::start()
 /*!
  * Returns true if the Time is up and restarts the timer.
  */
-bool kwTimer::done()
+bool kwTimer::doneRestart()
 {
   auto now = boost::posix_time::microsec_clock::local_time();
   if (now > m_endTs)

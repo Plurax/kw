@@ -20,6 +20,7 @@
 #include "kw/kwSystem.h"
 #include "kw/kwTechnicalException.h"
 #include "kw/kwValCoord.h"
+#include <regex>
 
 
 using namespace std;
@@ -193,13 +194,13 @@ void kwSystem::createDataLayer(json _currentElement)
       // Create the configured element via the factory
 
       auto obj = kwLibraryManager::Inst().createObject(libname,
-							classname,
-							sMainclassname,
-							configuration);
+                                                       classname,
+                                                       sMainclassname,
+                                                       configuration);
 
       thisDS = static_pointer_cast<kwDataSource>(obj);
       if (thisDS)
-	m_DataSources.insert(pair<kwValString, shared_ptr<kwDataSource>>(*name,thisDS));
+        m_DataSources.insert(pair<kwValString, shared_ptr<kwDataSource>>(*name,thisDS));
 
       thisDS = nullptr; // Kill local reference
     }
@@ -232,16 +233,10 @@ void kwSystem::createTimers(json timerconfig)
 
   for (auto& element : timerconfig)
   {
-    duration_str = std::make_shared<string>(((element["Duration"])).get<string>());
-    msgID_str = std::make_shared<string>(((element["MessageId"])).get<string>());
-    messageId = atoi(msgID_str->c_str());;
-
-    /* Now create the kwTimer instance
-     */
-    _timer = std::make_shared<kwTimer>(duration_from_string(*duration_str));
-    //! TODO : create class which merges timer and message d efinition to MessageEmitter Class template?
-    m_Timers.push_back(std::make_pair(_timer,element["Payload"]));
-    _timer.reset();
+    auto duration_str = std::make_shared<string>(((element["Duration"])).get<string>());
+    auto Timer = std::make_shared<kwTimer>(duration_from_string(*duration_str));
+    std::pair<std::shared_ptr<kwTimer>, std::shared_ptr<kwSysTimerConfiguration>> pair(Timer, std::make_shared<kwSysTimerConfiguration>(element));
+    m_Timers.push_back(pair);
   }
 }
 
@@ -274,22 +269,22 @@ void kwSystem::processMessages()
     {
       if (!l_queue->empty())
       {
-	//! Rettrieve an item from the queue (Attention its removed from the queue after pop!)
-	auto processing = l_queue->pop();
-	/* Search for associated Message type within the message handler map
-	 * and execute it. Otherwise we log an ERR and delete the message.
-	 */
-	int mT = processing->getMessageType();
-	kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(mT);
-	if (findIt != m_mMessageHandlers.end())
-	{
-	  // This will execute the handler
-	  (*findIt->second)(processing);
-	}
-	else
-	{
-	  LOG_TRACE << "Could not find handler for message type " << mT;
-	}
+        //! Rettrieve an item from the queue (Attention its removed from the queue after pop!)
+        auto processing = l_queue->pop();
+        /* Search for associated Message type within the message handler map
+         * and execute it. Otherwise we log an ERR and delete the message.
+         */
+        int mT = processing->getMessageType();
+        kwMessageHandlerMap::iterator findIt = m_mMessageHandlers.find(mT);
+        if (findIt != m_mMessageHandlers.end())
+        {
+          // This will execute the handler
+          (*findIt->second)(processing);
+        }
+        else
+        {
+          LOG_TRACE << "Could not find handler for message type " << mT;
+        }
       }
     }
   }
@@ -302,12 +297,15 @@ void kwSystem::pollTimers()
 {
   for (auto timer : m_Timers)
   {
-    if (timer.first->done())
+    if (timer.first->doneRestart())
     {
-      auto newMess  = make_shared<kwMessage>(1);
-      newMess->setMessageText("TestMessage!");
+      auto newMess  = make_shared<kwMessage>(timer.second->getMessageType());
+      json payload = expandMessagePayload(timer.second->getPayload());
+      
+      newMess->setJsonObj(payload);
+      kwValString str = payload.dump();
+      newMess->setMessageText(str);
       addMessage(newMess);
-      timer.first->start();
     }
   }
 }
@@ -333,3 +331,42 @@ void kwSystem::destroy()
     itDS->second->deInit();
 }
 
+
+/* A recursion to iterate over all strings to replace magic strings
+ * with the corresponding payload string or objects
+ */
+json kwSystem::expandMessagePayload(json obj)
+{
+  for(json::iterator it = obj.begin(); it != obj.end(); ++it)
+  {
+    if (it.value().is_string())
+    {
+      string searchstring = it.value().get<std::string>();
+      if (matchMagicString(searchstring) != "")
+      {
+        it.value() = 14.2; // replace with data source value
+      }
+    }
+    else
+      if (it.value().is_object())
+      {
+        it.value() = expandMessagePayload(it.value());
+      }
+  }
+  return obj;
+}
+
+
+string kwSystem::matchMagicString( string str ) {
+  // find ${KEY} as match on KEY
+  regex re("\\$\\{(.*)\\}");
+  smatch mat;
+  if (regex_search(str, mat, re))
+  {
+    return mat.str(1);
+  }
+  else
+  {
+    return string("");
+  }
+}

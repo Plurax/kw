@@ -17,7 +17,6 @@ kwMessage::kwMessage(int messagetype)
 
 kwMessage::~kwMessage()
 {
-	delete m_MessageText;
 }
 
 int kwMessage::getMessageType()
@@ -30,17 +29,22 @@ json kwMessage::getJsonObj()
   return json_obj;
 }
 
+void kwMessage::setJsonObj(json obj)
+{
+  json_obj = obj;
+}
+
 void kwMessage::setMessageText(kwValString& message)
 {
-	m_MessageText = new kwValString(message);
+	m_MessageText = make_shared<kwValString>(message);
 }
 
 void kwMessage::setMessageText(const char* message)
 {
-	m_MessageText = new kwValString(message);
+	m_MessageText = make_shared<kwValString>(message);
 }
 
-kwValString* kwMessage::getMessageText()
+shared_ptr<kwValString> kwMessage::getMessageText()
 {
 	return m_MessageText;
 }

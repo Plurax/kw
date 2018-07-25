@@ -27,7 +27,7 @@ void kwLibraryManager::init()
 {
   // The basic handle...
   auto defaultLibHandle = make_shared<kwLibHandle>(nullptr,
-						   kwSystem::Inst().m_libInfo);
+                                                   kwSystem::Inst().m_libInfo);
 
   // Note this is not a shared_ptr because this is also used for init of external factories!
   kwObjectFactory* defaultObjFactory = new kwDataSourceFactory();
@@ -36,8 +36,8 @@ void kwLibraryManager::init()
   defaultLibHandle->addFactory(defaultObjFactory, main_class);
 
   m_loadedLibraries.insert(std::pair<kwValString,shared_ptr<kwLibHandle>>(
-									  kwValString("kw"),
-									  defaultLibHandle));
+      kwValString("kw"),
+      defaultLibHandle));
 
   // Object constructors
   main_class = make_shared<kwValString>("kwMessageHandler");
@@ -66,22 +66,22 @@ shared_ptr<kwObject> kwLibraryManager::createObject(shared_ptr<kwValString> libn
   auto getprefix = kwValString("get");
   auto getsuffix = kwValString("Factory");
   auto s_Requestfunction = getprefix + *main_classname + getsuffix;
-	
+
   kwObjectFactory* factory = nullptr;
 
   if (libIterator != m_loadedLibraries.end())
-    {
-      factory  = libIterator->second->getFactory(main_classname);
-    }
+  {
+    factory  = libIterator->second->getFactory(main_classname);
+  }
 
   if (factory)
-    {
-      shared_ptr<kwObject> retObject = factory->createObject(classname.get(), configuration);
-      if (retObject)
-	return retObject;
-      else
-	THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of kwObject of type " << *classname);
-    }
+  {
+    shared_ptr<kwObject> retObject = factory->createObject(classname.get(), configuration);
+    if (retObject)
+      return retObject;
+    else
+      THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of kwObject of type " << *classname);
+  }
 
   // otherwise load lib and retrive factory...
 
@@ -90,28 +90,28 @@ shared_ptr<kwObject> kwLibraryManager::createObject(shared_ptr<kwValString> libn
     void* handle = dlopen(libname->c_str(), RTLD_LAZY | RTLD_GLOBAL);
 
     if (!handle)
-      {
-	std::cerr << "LibraryManager: Cannot open library: ";
-	std::cerr << dlerror();
-	std::cerr << '\n';
-	THROW_TECHNICAL_EXCEPTION(666, "Could not load library " << *libname);
-      }
+    {
+      std::cerr << "LibraryManager: Cannot open library: ";
+      std::cerr << dlerror();
+      std::cerr << '\n';
+      THROW_TECHNICAL_EXCEPTION(666, "Could not load library " << *libname);
+    }
 		
     LOG_DEBUG << "Loaded...";
 
     FctCreateFunc getfactoryfct = (FctCreateFunc)dlsym(handle, s_Requestfunction.c_str()); //"get<CLASSNAME>Factory"
     FctGetLibraryInfo getLibraryInfo = (FctGetLibraryInfo)dlsym(handle, "getLibraryInfo"); //"getLibraryInfo"
     if (nullptr == getfactoryfct)
-      {
-	THROW_TECHNICAL_EXCEPTION(666, "Procadress retrieval for " << s_Requestfunction << " failed!");
-      }
+    {
+      THROW_TECHNICAL_EXCEPTION(666, "Procadress retrieval for " << s_Requestfunction << " failed!");
+    }
 
     kwObjectFactory* factory = getfactoryfct();
 
     if (!factory)
-      {
-	THROW_TECHNICAL_EXCEPTION(666, "Factory for " << *main_classname << " could not be created!");
-      }
+    {
+      THROW_TECHNICAL_EXCEPTION(666, "Factory for " << *main_classname << " could not be created!");
+    }
 
     auto libinfo = getLibraryInfo();
     auto LibHandle = make_shared<kwLibHandle>(handle, libinfo);

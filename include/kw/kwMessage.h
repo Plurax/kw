@@ -31,12 +31,13 @@ public:
 	void setMessageText(kwValString& message);
 	void setMessageText(const char* message);
 
-	kwValString* getMessageText();
+	shared_ptr<kwValString> getMessageText();
   json getJsonObj();
+  void setJsonObj(json obj);
 
-protected:
+ protected:
 	int m_iMessageType;
-	kwValString* m_MessageText;
+	shared_ptr<kwValString> m_MessageText;
   json json_obj;
 };
 

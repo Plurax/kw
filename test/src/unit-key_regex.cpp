@@ -37,3 +37,7 @@ TEST_CASE( "Regex Match START", "[extractKey]" ) {
 TEST_CASE( "Regex Match WITHIN", "[extractKey]" ) {
   REQUIRE( extractKey(string("buh hab ${TEST}sdfsdf")) == string("TEST"));
 }
+
+TEST_CASE( "Regex Match extWITHIN", "[extractKey]" ) {
+  REQUIRE( extractKey(string("buh hab ${TEST:Temperature}sdfsdf")) == string("TEST:Temperature"));
+}

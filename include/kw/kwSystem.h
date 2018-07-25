@@ -26,6 +26,7 @@
 
 #include <nlohmann/json.hpp>
 #include "kw/kwValString.h"
+#include "kwSysTimerConfiguration.h"
 
 #include "kw/kwLibHandle.h"
 
@@ -86,10 +87,14 @@ class kwSystem
   void createDataLayer(json currentElement);
   void createTimers(json timerconfig);
 
+  json inspectAndReplacePayload(json obj);
+  string matchMagicString( string str );
+  json expandMessagePayload(json obj);
+
   vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_MessageQueues;
   vector<shared_ptr<kwLockedQueue<std::shared_ptr<kwMessage>>>> m_ThreadedMessageQueues;
 
-  vector<std::pair<shared_ptr<kwTimer>, json>> m_Timers;
+  vector<std::pair<shared_ptr<kwTimer>, shared_ptr<kwSysTimerConfiguration>>> m_Timers;
 };
 
 

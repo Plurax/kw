@@ -20,7 +20,7 @@ public:
 	void start();
 	void end();
 	void clear();
-	bool done();
+	bool doneRestart();
   
 	kwTimer();
 	kwTimer(time_duration _duration);

@@ -31,12 +31,14 @@ set(LIB_HEADERS
   ../include/kw/kwValString.h
   ../include/kw/kwValue.h
   ../include/kw/kwLockedQueue.h
+  ../include/kw/kwSysTimerConfiguration.h
 )
 
 set(LIB_SOURCES
   kwDataContainer.cpp
   kwDataSource.cpp
   kwDataSourceFactory.cpp
+  kwSysTimerConfiguration.cpp
   kwException.cpp
   kwLibHandle.cpp
   kwLibraryInfo.cpp
