@@ -1,3 +1,4 @@
+ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
 
 add_library(catch_main OBJECT
@@ -23,8 +24,14 @@ foreach(file ${files})
     target_compile_features(${testcase} PRIVATE cxx_std_11)
     target_include_directories(${testcase} PRIVATE "thirdparty/catch")
     target_include_directories(${testcase} PRIVATE "thirdparty/fifo_map")
-    target_include_directories(${testcase} PRIVATE ${NLOHMANN_JSON_INCLUDE_BUILD_DIR})
-    target_link_libraries(${testcase} ${NLOHMANN_JSON_TARGET_NAME})
+    target_include_directories(${testcase} PRIVATE ${CHUHLICH_KW_INCLUDE_BUILD_DIR})
+    target_include_directories(${testcase} PRIVATE ${Boost_INCLUDE_DIRS})
+
+    target_link_libraries(${testcase} ${CHUHLICH_KW_TARGET_NAME} kw boost_filesystem boost_system boost_log_setup boost_log)
+
+    set(Boost_NO_BOOST_CMAKE ON) #  Don't do a find_package in config mode before searching for a regular boost install.
+    find_package(Boost COMPONENTS log_setup log program_options REQUIRED)
+    add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
     if(NOT MSVC)
         set_target_properties(${testcase} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wno-float-equal")

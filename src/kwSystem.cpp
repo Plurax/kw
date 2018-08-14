@@ -301,7 +301,7 @@ void kwSystem::pollTimers()
     {
       auto newMess  = make_shared<kwMessage>(timer.second->getMessageType());
       json payload = expandMessagePayload(timer.second->getPayload());
-
+      
       newMess->setJsonObj(payload);
       kwValString str = payload.dump();
       newMess->setMessageText(str);
@@ -345,8 +345,6 @@ json kwSystem::expandMessagePayload(json obj)
       auto match = matchMagicString(searchstring);
       if (match.compare(""))
       {
-        // Check datasource path and retrieve value
-        getDataSource(kwValString(match));
         it.value() = 14.2; // replace with data source value
       }
     }

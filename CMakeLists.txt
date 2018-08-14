@@ -12,6 +12,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
+set(CHUHLICH_KW_INCLUDE_BUILD_DIR "${PROJECT_SOURCE_DIR}/include/")
+
+
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
@@ -25,6 +28,9 @@ endif(DOXYGEN_FOUND)
 
 # Setting up project
 project(kw)
+
+
+set(CHUHLICH_KW_TARGET_NAME               ${PROJECT_NAME})
 
 # The version number.
 # Set the version number of your project here (format is MAJOR.MINOR.PATCHLEVEL - e.g. 1.0.0)
