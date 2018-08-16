@@ -1,6 +1,12 @@
 add_definitions(-D__LIBNAME="kw")
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
+# We need profiling info if tests are activated
+if(BUILD_TESTING AND KW_BuildTests)
+    set(CMAKE_CXX_FLAGS "--coverage -g -O0 -fprofile-arcs -ftest-coverage")
+endif()
+
+
 # @author  Barthélémy von Haller
 set(LIB_HEADERS
   "${CMAKE_CURRENT_BINARY_DIR}/../include/kw/kwVersion.h" # Generated header
@@ -73,6 +79,7 @@ set(LIBRARY_NAME kw)
 
 # Define the library
 add_library(${LIBRARY_NAME} SHARED ${LIB_SOURCES})
+set_target_properties(${LIBRARY_NAME} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wno-float-equal")
 
 # Set the build version. It will be used in the name of the lib, with corresponding
 # symlinks created. SOVERSION could also be specified for api version. 

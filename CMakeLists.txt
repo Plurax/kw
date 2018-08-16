@@ -3,7 +3,8 @@ set (CMAKE_CXX_STANDARD 17)
 set (CXX_STANDARD_REQUIRED true)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-option(BUILD_TESTING "Switch tests - default on" ON)
+# Setting up project
+project(kw)
 
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
@@ -13,22 +14,18 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 set(CHUHLICH_KW_INCLUDE_BUILD_DIR "${PROJECT_SOURCE_DIR}/include/")
-
+set(CHUHLICH_KW_SRC_BUILD_DIR "${PROJECT_SOURCE_DIR}/src/")
 
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/KW.doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/KW.doxyfile @ONLY)
-add_custom_target(doc
-${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/../KW.doxyfile
-WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-COMMENT "Generating API documentation with Doxygen" VERBATIM
-)
+    #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/KW.doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/KW.doxyfile @ONLY)
+    add_custom_target(doc
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/../KW.doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen" VERBATIM
+        )
 endif(DOXYGEN_FOUND)
-
-# Setting up project
-project(kw)
-
 
 set(CHUHLICH_KW_TARGET_NAME               ${PROJECT_NAME})
 
@@ -39,6 +36,10 @@ set(VERSION_MINOR "4")
 set(VERSION_PATCH "0")
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
+##
+## OPTIONS
+##
+option(KW_BuildTests "Build the unit tests when BUILD_TESTING is enabled." OFF)
 
 ## Git (and its revision)
 find_package(Git QUIET) # if we don't find git or FindGit.cmake is not on the system we ignore it.
@@ -62,7 +63,7 @@ endif()
 
 # This line finds the boost lib and headers.
 set(Boost_NO_BOOST_CMAKE ON) #  Don't do a find_package in config mode before searching for a regular boost install.
-find_package(Boost COMPONENTS log_setup log program_options REQUIRED)
+find_package(Boost COMPONENTS log_setup REQUIRED)
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 
 # This sets the include directory for the reference project. This is the -I flag in gcc.
@@ -77,21 +78,18 @@ include_directories(
 )
 
 
-# Mac needed variables (adapt according to your needs)
-set(CMAKE_MACOSX_RPATH ON)
-#set(CMAKE_SKIP_BUILD_RPATH FALSE)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-# -----------------------enable_testing()
 add_subdirectory(include)
 add_subdirectory(src)
-# -----------------------add_subdirectory(doc)
-# -----------------------add_subdirectory(test)
 
 
-if(BUILD_TESTING)
+##
+## TESTS
+## create and configure the unit test target
+##
+include(CTest) #adds option BUILD_TESTING (default ON)
+
+if(BUILD_TESTING AND KW_BuildTests)
+    enable_testing()
     add_subdirectory(test)
 endif()
 
