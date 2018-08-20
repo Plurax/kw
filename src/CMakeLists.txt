@@ -22,6 +22,7 @@ set(LIB_HEADERS
   ../include/kw/kwMessage.h
   ../include/kw/kwMessageHandlerFactory.h
   ../include/kw/kwMessageHandler.h
+  ../include/kw/kwTestHandler.h
   ../include/kw/kwObjectFactory.h
   ../include/kw/kwObject.h
   ../include/kw/kwReleaseInfo.h
@@ -52,6 +53,7 @@ set(LIB_SOURCES
   kwLogger.cpp
   kwMessage.cpp
   kwMessageHandler.cpp
+  kwTestHandler.cpp
   kwMessageHandlerFactory.cpp
   kwObject.cpp
   kwObjectFactory.cpp
