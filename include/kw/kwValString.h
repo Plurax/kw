@@ -56,6 +56,7 @@ class kwValString : public kwValue
   kwValString& operator = (const kwValString& _str);
   kwValString& operator = (const string& _str);
   bool operator < (const kwValString& _right) const;
+  bool operator > (const kwValString& _right) const;
 
   string str();
   const string const_str() const;

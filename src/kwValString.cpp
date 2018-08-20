@@ -43,7 +43,7 @@ const char* kwValString::data()
 
 void kwValString::clear()
 {
-  return m_string.clear();
+  m_string.clear();
 }
 
 void kwValString::push_back(char c)
@@ -86,7 +86,6 @@ kwValString::kwValString(const kwValString& right) // Copy constructor
 
 kwValString::~kwValString()
 {
-  // nothing to do as string is kept as smart pointer
 }
 
 
@@ -137,7 +136,6 @@ bool kwValString::operator == (const kwValString& rhs) const
 
 kwValString& kwValString::operator = (const kwValString& _str)
 {
-  // First check if the local helds already a string - this must be deleted to avoid mem leak caused by overwriting the value!
   this->m_string = string(_str.m_string);
 
   return *this;
@@ -157,6 +155,10 @@ bool kwValString::operator < (const kwValString& _right) const
   return ((this->m_string) < (_right.m_string));
 }
 
+bool kwValString::operator > (const kwValString& _right) const
+{
+  return ((this->m_string) > (_right.m_string));
+}
 
 string kwValString::str()
 {
