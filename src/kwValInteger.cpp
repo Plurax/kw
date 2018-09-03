@@ -35,6 +35,11 @@ int kwValInteger::getValue()
 	return m_Value;
 }
 
+std::string  kwValInteger::asString()
+{
+  return std::to_string(m_Value);
+}
+
 std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger)
 {
 	stream << _valinteger.m_Value;

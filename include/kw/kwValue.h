@@ -12,12 +12,14 @@
 #include <typeinfo>
 #include <iostream>
 #include "kw/kwObject.h"
+#include <string>
 
 class kwValue : public kwObject
 {
 public:
 	kwValue();
 	virtual ~kwValue();
+  virtual std::string asString() = 0;
 };
 
 

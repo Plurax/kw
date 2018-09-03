@@ -36,7 +36,7 @@ public:
 	kwValFixedPoint(kwValString _string);
 	kwValFixedPoint(enumValFixedPointPrec prec);
 	kwValFixedPoint(long in, enumValFixedPointPrec prec);
-	kwValString asString() const;
+  std::string asString() const;
 
 	kwValString getType();
 

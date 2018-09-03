@@ -78,7 +78,7 @@ kwValFixedPoint::kwValFixedPoint(long in, enumValFixedPointPrec prec)
 	m_isEmpty = false;
 }
 
-kwValString kwValFixedPoint::asString() const
+std::string kwValFixedPoint::asString() const
 {
 	int i;
 	char tmp[21] = "";
@@ -97,10 +97,8 @@ kwValString kwValFixedPoint::asString() const
 	}
 	tmp[i] = '.';
 
-	return kwValString(tmp);
+	return std::string(tmp);
 }
-
-
 
 bool kwValFixedPoint::operator >= (const kwValFixedPoint right)
 {

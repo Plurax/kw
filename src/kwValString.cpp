@@ -29,6 +29,11 @@ kwValString::kwValString(const char* _cstr)
   m_isEmpty = false;
 }
 
+std::string kwValString::asString()
+{
+  return m_string;
+}
+
 
 kwValString::kwValString(string& _str)
 {

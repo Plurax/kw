@@ -21,6 +21,8 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger);
 
+  std::string asString();
+  
 	bool operator >= (const kwValInteger right);
 	bool operator > (const kwValInteger right);
 	bool operator <= (const kwValInteger right);

@@ -50,6 +50,7 @@ class kwValString : public kwValue
   
   void erase(int pos, int len);
   kwValString getType();
+  std::string asString();
 
   kwValString operator + (const kwValString& _right);
   bool operator == (const kwValString& rhs) const;

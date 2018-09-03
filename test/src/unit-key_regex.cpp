@@ -10,7 +10,8 @@ string extractKey( string str ) {
   // find ${KEY} as match on KEY
   regex re("\\$\\{(.*)\\}");
   smatch mat;
-  if (regex_search(str, mat, re))
+  regex_search(str, mat, re);
+  if (mat.str() != "")
   {
     cout << "Matched: " << mat.str(1) << endl;
     return mat.str(1);
@@ -21,6 +22,25 @@ string extractKey( string str ) {
     return string("");
   }
 }
+
+
+string splitPath( string str ) {
+  // find ${KEY} as match on KEY
+  regex re("(.*):(.*)");
+  smatch mat;
+  regex_search(str, mat, re);
+  if (mat.str() != "")
+  {
+    cout << "Matched: "<< endl << "1: " << mat.str(1) << endl << "2: " << mat.str(2) << endl;
+    return mat.str(1) + "AAA"  + mat.str(2);
+  }
+  else
+  {
+    cout << "No match..." << endl;
+    return string("");
+  }
+}
+
 
 TEST_CASE( "Regex NO Match", "[extractKey]" ) {
   REQUIRE( extractKey(string("das ist ein TEST")) == string(""));
@@ -40,4 +60,9 @@ TEST_CASE( "Regex Match WITHIN", "[extractKey]" ) {
 
 TEST_CASE( "Regex Match extWITHIN", "[extractKey]" ) {
   REQUIRE( extractKey(string("buh hab ${TEST:Temperature}sdfsdf")) == string("TEST:Temperature"));
+}
+
+TEST_CASE( "Regex Match split", "[]" ) {
+  INFO("TEST: " << splitPath(string("TEST:BUH")));
+  REQUIRE( splitPath(string("buh hab ${TEST:Temperature}sdfsdf")) == string("TEST:Temperature"));
 }

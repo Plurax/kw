@@ -343,8 +343,16 @@ json kwSystem::expandMessagePayload(json obj)
     {
       string searchstring = it.value().get<std::string>();
       auto match = matchMagicString(searchstring);
-      if (match.compare(""))
+      if (match != "")
       {
+        regex re("(.*):(.*)");
+        smatch mat;
+        regex_search(match, mat, re);
+        LOG_DEBUG << mat.str(1) << " --- " << mat.str(2) << endl;
+
+        auto src = getDataSource(kwValString(mat.str(1)));
+        auto value = src->getValue(mat.str(2));
+        LOG_DEBUG << "Value: " << value->asString() << endl;
         it.value() = 14.2; // replace with data source value
       }
     }
@@ -362,7 +370,8 @@ string kwSystem::matchMagicString( string str ) {
   // find ${KEY} as match on KEY
   regex re("\\$\\{(.*)\\}");
   smatch mat;
-  if (regex_search(str, mat, re))
+  regex_search(str, mat, re);
+  if (mat.str() != "")
   {
     return mat.str(1);
   }

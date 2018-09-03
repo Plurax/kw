@@ -22,7 +22,7 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValColor& _valcolor);
 
-	kwValString asString();
+  std::string asString();
 	kwValString getType();
 
 	float fRed;
