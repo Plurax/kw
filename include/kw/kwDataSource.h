@@ -29,7 +29,7 @@ public:
 	virtual void deInit() = 0;
 	kwDataSource(kwValString _name, unsigned int _type);
 	kwValString getName();
-  virtual shared_ptr<kwValue> getValue(kwValString key) = 0;
+    virtual shared_ptr<kwValue<kwValString>> getValue(kwValString key) = 0;
 
 protected:
 	unsigned int m_type;

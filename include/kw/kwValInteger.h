@@ -9,8 +9,10 @@
 #define KWVALINTEGER_H_
 
 #include <kw/kwValue.h>
+#include <kw/kwValString.h>
 
-class kwValInteger: public kwValue {
+class kwValInteger: public kwValue<kwValString>
+{
 public:
 
 	kwValInteger();
@@ -21,8 +23,10 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger);
 
-  std::string asString();
-  
+    kwValString asString();
+
+    operator int() const;
+    
 	bool operator >= (const kwValInteger right);
 	bool operator > (const kwValInteger right);
 	bool operator <= (const kwValInteger right);

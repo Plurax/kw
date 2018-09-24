@@ -13,7 +13,7 @@
 
 class kwValString;
 
-class kwValCoord : public kwValue
+class kwValCoord : public kwValue<kwValString>
 {
 public:
 	kwValCoord(int x, int y, int z);

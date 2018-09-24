@@ -21,7 +21,7 @@ using namespace std;
  *
  * The only reason to derive it is the possibility to identify its type during runtime.
  */
-class kwValString : public kwValue
+class kwValString : public kwValue<kwValString>
 {
  public:
   kwValString();
@@ -50,7 +50,7 @@ class kwValString : public kwValue
   
   void erase(int pos, int len);
   kwValString getType();
-  std::string asString();
+  kwValString asString();
 
   kwValString operator + (const kwValString& _right);
   bool operator == (const kwValString& rhs) const;
@@ -63,9 +63,13 @@ class kwValString : public kwValue
   const string const_str() const;
   const char* c_str();
 
+    std::shared_ptr<kwValString> getValue();
  private:
   string m_string;
   bool m_isEmpty;
 };
+
+
+
 
 #endif /* KWVALSTRING_H_ */

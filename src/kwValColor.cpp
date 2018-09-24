@@ -69,11 +69,11 @@ kwValColor::kwValColor(const char* hex)
 	}
 }
 	
-std::string kwValColor::asString()
+kwValString kwValColor::asString()
 {
 	std::stringstream str;
 	str << "kwValColor: { " << fRed << ", " << fGreen << ", " << fBlue << ", " << fAlpha << "}";
-	return str.str();
+	return kwValString(str.str());
 }
 
 

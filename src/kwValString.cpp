@@ -29,9 +29,14 @@ kwValString::kwValString(const char* _cstr)
   m_isEmpty = false;
 }
 
-std::string kwValString::asString()
+kwValString kwValString::asString()
 {
-  return m_string;
+  return *this;
+}
+
+std::shared_ptr<kwValString> kwValString::getValue()
+{
+    return std::make_shared<kwValString>(*this);
 }
 
 

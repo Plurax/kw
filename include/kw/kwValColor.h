@@ -12,7 +12,7 @@
 #include "kw/kwValString.h"
 #include "kw/kwValue.h"
 
-class kwValColor : public kwValue
+class kwValColor : public kwValue<kwValString>
 {
 public:
 	kwValColor();
@@ -22,7 +22,7 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValColor& _valcolor);
 
-  std::string asString();
+    kwValString asString();
 	kwValString getType();
 
 	float fRed;

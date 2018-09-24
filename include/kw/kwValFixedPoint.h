@@ -25,7 +25,7 @@ enum class enumValFixedPointPrec {
 
 
 
-class kwValFixedPoint : public kwValue
+class kwValFixedPoint : public kwValue<kwValString>
 {
 public:
 	static const short precN[7];
@@ -59,6 +59,7 @@ public:
 	enumValFixedPointPrec getPrecision();
 
 	float asFloat();
+    kwValString asString();
 private:
 	static enumValFixedPointPrec getPrecisionFromString(char* _str);
 	long m_lValue;

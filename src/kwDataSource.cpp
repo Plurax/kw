@@ -6,6 +6,7 @@
  */
 
 #include "kwDataSource.h"
+#include "kwValInteger.h"
 
 
 kwDataSource::kwDataSource()
@@ -25,5 +26,10 @@ kwDataSource::kwDataSource(kwValString _name, unsigned int _type)
 kwValString kwDataSource::getName()
 {
 	return m_name;
+}
+
+shared_ptr<kwValue<kwValString>> kwDataSource::getValue(kwValString key)
+{
+    return std::make_shared<kwValInteger>(42);
 }
 

@@ -27,11 +27,11 @@ public:
 	void init();
 	void deInit();
 
-	void addValue(kwValString _key, shared_ptr<kwValue> _val);
+	void addValue(kwValString _key, shared_ptr<kwValue<kwValString>> _val);
 	void delValue(kwValString _str);
-	shared_ptr<kwValue> getValue(kwValString key);
+	shared_ptr<kwValue<kwValString>> getValue(kwValString key);
 private:
-	map<kwValString, shared_ptr<kwValue>> m_MapValues;
+	map<kwValString, shared_ptr<kwValue<kwValString>>> m_MapValues;
 };
 
 #endif /* KWDATACONTAINER_H_ */

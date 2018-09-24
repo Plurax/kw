@@ -341,6 +341,10 @@ float kwValFixedPoint::asFloat()
 	return ((float)m_lValue) / (float)precNScalings[static_cast<unsigned long>(this->m_Precision)];
 }
 
+kwValString kwValFixedPoint::asString()
+{
+    return kwValString(asString());
+}
 
 enumValFixedPointPrec kwValFixedPoint::getPrecision()
 {

@@ -14,13 +14,12 @@
 #include "kw/kwObject.h"
 #include <string>
 
+template<class T>
 class kwValue : public kwObject
 {
 public:
-	kwValue();
-	virtual ~kwValue();
-  virtual std::string asString() = 0;
+    //	virtual kwValue() =0;
+    virtual T asString()=0;
 };
-
 
 #endif /* KWVALUE_H_ */

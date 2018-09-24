@@ -353,7 +353,7 @@ json kwSystem::expandMessagePayload(json obj)
         auto src = getDataSource(kwValString(mat.str(1)));
         auto value = src->getValue(mat.str(2));
         LOG_DEBUG << "Value: " << value->asString() << endl;
-        it.value() = 14.2; // replace with data source value
+        it.value() = *(std::dynamic_pointer_cast<kwValString>(value)); // replace with data source value
       }
     }
     else
