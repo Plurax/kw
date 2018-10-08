@@ -7,12 +7,37 @@
 
 
 #include "kwDataContainer.h"
+#include "kwValInteger.h"
+#include "kwValBool.h"
+#include "kwValUnsignedInteger.h"
+#include "kwValFloat.h"
+#include "kwValJsonObject.h"
+
 
 kwDataContainer::kwDataContainer(json configuration)
 {
   for (json::iterator it = configuration.begin(); it != configuration.end(); ++it) 
   {
-      addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValString>(it->get<string>()));
+      // Avoid null as we cant do something with null value - instead
+      // the requested key will return value not found.
+      // if (it->type() == json::value_t::null)
+      //     addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValue>(nullptr));
+      if (it->type() == json::value_t::boolean)
+          addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValBool>(it->get<bool>()));
+      if (it->is_number_integer())
+      {
+          addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValInteger>(it->get<int>()));
+      }
+      if (it->type() == json::value_t::number_unsigned)
+          addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValUnsignedInteger>(it->get<uint>()));
+      if (it->type() == json::value_t::number_float)
+          addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValFloat>(it->get<float>()));
+      if (it->is_string())
+      {
+          addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValString>(it->get<string>()));
+      }
+      if (it->type() == json::value_t::object)
+          addValue(std::make_shared<kwValString>(it.key()), std::make_shared<kwValJsonObject>(it.value()));
   }
 }
 
@@ -25,9 +50,6 @@ void kwDataContainer::deInit()
 
 }
 
-/*
- * Attention - this will add the given pointer to the map - so dont delete it after adding - its not cloned!
- */
 void kwDataContainer::addValue(kwValString _key, shared_ptr<kwValue<kwValString>> _val)
 {
 	m_MapValues.insert(std::pair<kwValString, shared_ptr<kwValue<kwValString>>>(_key, _val));

@@ -350,3 +350,10 @@ enumValFixedPointPrec kwValFixedPoint::getPrecision()
 {
 	return m_Precision;
 }
+
+
+json kwValFixedPoint::toJson()
+{
+    json j;
+    return j;
+}

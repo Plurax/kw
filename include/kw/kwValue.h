@@ -13,6 +13,8 @@
 #include <iostream>
 #include "kw/kwObject.h"
 #include <string>
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
 
 template<class T>
 class kwValue : public kwObject
@@ -20,6 +22,7 @@ class kwValue : public kwObject
 public:
     //	virtual kwValue() =0;
     virtual T asString()=0;
+    virtual json toJson() = 0;
 };
 
 #endif /* KWVALUE_H_ */

@@ -10,5 +10,3 @@
 
 #include "kwValue.h"
 
-#include "nlohmann/json.hpp"
-using json = nlohmann::json;

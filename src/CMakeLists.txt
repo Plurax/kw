@@ -35,8 +35,12 @@ set(LIB_HEADERS
   ../include/kw/kwValCoord.h
   ../include/kw/kwValFixedPoint.h
   ../include/kw/kwValInteger.h
+  ../include/kw/kwValUnsignedInteger.h
+  ../include/kw/kwValFloat.h
   ../include/kw/kwValString.h
   ../include/kw/kwValue.h
+  ../include/kw/kwValJsonObject.h
+  ../include/kw/kwValBool.h
   ../include/kw/kwLockedQueue.h
   ../include/kw/kwSysTimerConfiguration.h
 )
@@ -65,7 +69,11 @@ set(LIB_SOURCES
   kwValCoord.cpp
   kwValFixedPoint.cpp
   kwValInteger.cpp
+  kwValUnsignedInteger.cpp
+  kwValFloat.cpp
   kwValString.cpp
+  kwValBool.cpp
+  kwValJsonObject.cpp
   kwValue.cpp
 )
 

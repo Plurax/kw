@@ -22,6 +22,7 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValColor& _valcolor);
 
+    json toJson() override;
     kwValString asString();
 	kwValString getType();
 

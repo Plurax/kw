@@ -23,6 +23,7 @@ public:
 	~kwValCoord();
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValCoord& _valcoord);
+    json toJson() override;
 
 	void setX(float x);
 	void setY(float y);

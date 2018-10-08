@@ -78,3 +78,8 @@ bool kwValCoord::empty()
 }
 
 
+json kwValCoord::toJson()
+{
+    json j;
+    return j;
+}

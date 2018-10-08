@@ -89,3 +89,8 @@ kwValString kwValColor::getType()
 	return kwValString("kwValColor");
 }
 
+
+json kwValColor::toJson()
+{
+    json j;
+}

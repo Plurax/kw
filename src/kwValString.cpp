@@ -190,3 +190,10 @@ const char* kwValString::c_str()
 {
   return m_string.c_str();
 }
+
+
+json kwValString::toJson()
+{
+    json j = m_string;
+    return j;
+}

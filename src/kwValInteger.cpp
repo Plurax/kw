@@ -11,22 +11,17 @@
 
 kwValInteger::kwValInteger()
 {
-	// TODO Auto-generated constructor stub
 	m_Value = 0;
-	m_isEmpty = true;
 }
 
 kwValInteger::kwValInteger(int val)
 {
-	// TODO Auto-generated constructor stub
 	m_Value = val;
-	m_isEmpty = false;
 }
 
 
 kwValInteger::~kwValInteger()
 {
-
 }
 
 
@@ -42,10 +37,7 @@ kwValString  kwValInteger::asString()
 
 kwValInteger::operator int() const
 {
-    if (m_isEmpty)
-        return 0;
-    else
-        return m_Value;
+    return m_Value;
 }
 
 std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger)
@@ -79,7 +71,6 @@ kwValInteger& kwValInteger::operator = (kwValInteger const& right)
 {
 	if (this != &right)
 	{
-		this->m_isEmpty = right.m_isEmpty;
 		this->m_Value = right.m_Value;
 	}
 	return *this;
@@ -87,62 +78,40 @@ kwValInteger& kwValInteger::operator = (kwValInteger const& right)
 
 kwValInteger kwValInteger::operator + (const kwValInteger& right)
 {
-	if (this->m_isEmpty || right.m_isEmpty)
-	{
-		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
-	}
 	return kwValInteger(this->m_Value + right.m_Value);
 }
 
 kwValInteger& kwValInteger::operator += (kwValInteger const& right)
 {
-	if (this->m_isEmpty || right.m_isEmpty)
-	{
-		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
-	}
-
 	this->m_Value += right.m_Value;
 	return *this;
 }
 
 kwValInteger kwValInteger::operator - (const kwValInteger& right)
 {
-	if (this->m_isEmpty || right.m_isEmpty)
-	{
-		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
-	}
-
 	return kwValInteger(this->m_Value - right.m_Value);
 }
 
 kwValInteger& kwValInteger::operator -= (kwValInteger const& right)
 {
-	if (this->m_isEmpty || right.m_isEmpty)
-	{
-		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
-	}
-
 	this->m_Value -= right.m_Value;
 	return *this;
 }
 
 kwValInteger kwValInteger::operator * (const kwValInteger& right)
 {
-	if (this->m_isEmpty || right.m_isEmpty)
-	{
-		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
-	}
-
 	return kwValInteger(this->m_Value * right.m_Value);
 }
 
 
 kwValInteger kwValInteger::operator / (const kwValInteger& right)
 {
-	if (this->m_isEmpty || right.m_isEmpty)
-	{
-		THROW_TECHNICAL_EXCEPTION(2, "Operation not allowed - object NULL");
-	}
-
 	return kwValInteger(this->m_Value / right.m_Value);
+}
+
+
+json kwValInteger::toJson()
+{
+    json j = m_Value;
+    return j;
 }

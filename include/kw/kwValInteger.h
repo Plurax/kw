@@ -26,7 +26,8 @@ public:
     kwValString asString();
 
     operator int() const;
-    
+    json toJson() override;
+
 	bool operator >= (const kwValInteger right);
 	bool operator > (const kwValInteger right);
 	bool operator <= (const kwValInteger right);
@@ -40,7 +41,6 @@ public:
 	kwValInteger operator / (const kwValInteger& right);
 
 protected:
-	bool m_isEmpty;
 	int m_Value;
 };
 

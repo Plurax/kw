@@ -41,6 +41,7 @@ public:
 	kwValString getType();
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValFixedPoint& _valfixedpoint);
+    json toJson() override;
 
 	bool operator >= (const kwValFixedPoint right);
 	bool operator > (const kwValFixedPoint right);

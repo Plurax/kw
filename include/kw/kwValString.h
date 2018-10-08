@@ -47,7 +47,7 @@ class kwValString : public kwValue<kwValString>
   bool empty() const;
 
   operator std::string() const { return m_string;};
-  
+    json toJson() override;
   void erase(int pos, int len);
   kwValString getType();
   kwValString asString();
