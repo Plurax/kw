@@ -8,6 +8,7 @@
 #ifndef KWOBJECTFACTORY_H_
 #define KWOBJECTFACTORY_H_
 
+#include "kw/api.h"
 #include "kw/kwValString.h"
 #include "kw/kwObject.h"
 #include "kw/kwLibraryInfo.h"
@@ -19,7 +20,7 @@ using namespace std;
 using json = nlohmann::json;
 
 
-class kwObjectFactory
+class DLL_PUBLIC kwObjectFactory
 {
 public:
 	virtual ~kwObjectFactory();

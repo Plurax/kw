@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <vector>
 #include <queue>
+#include "kw/api.h"
 
 #include "kw/kwTimer.h"
 #include "kw/kwLogger.h"
@@ -37,7 +38,7 @@ typedef map<int, shared_ptr<kwMessageHandler>> kwMessageHandlerMap;
 using json = nlohmann::json;
 using namespace std;
 
-class kwSystem
+class DLL_PUBLIC kwSystem
 {
  public:
   void init(kwValString& configfile);

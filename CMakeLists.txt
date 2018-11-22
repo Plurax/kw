@@ -8,6 +8,9 @@ project(kw)
 
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
+# Avoid all symbols to be exported
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+
 # Output dirs
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)

@@ -12,6 +12,7 @@
 #include <memory>
 #include "kwValue.h"
 #include "nlohmann/json.hpp"
+#include "api.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ using namespace std;
  *
  * The only reason to derive it is the possibility to identify its type during runtime.
  */
-class kwValString : public kwValue<kwValString>
+class DLL_PUBLIC kwValString : public kwValue<kwValString>
 {
  public:
   kwValString();
@@ -33,7 +34,7 @@ class kwValString : public kwValue<kwValString>
   kwValString(kwValString* _str);
   kwValString(shared_ptr<kwValString> _str);
 
-  friend std::ostream& operator<< (std::ostream& stream, const kwValString& _valstring);
+  DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValString& _valstring);
 
   using value_type = kwValString;
 

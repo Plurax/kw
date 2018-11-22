@@ -8,6 +8,7 @@
 #ifndef KWVALFIXEDPOINT_H_
 #define KWVALFIXEDPOINT_H_
 
+#include "kw/api.h"
 #include "kw/kwValString.h"
 #include "kw/kwValue.h"
 
@@ -25,7 +26,7 @@ enum class enumValFixedPointPrec {
 
 
 
-class kwValFixedPoint : public kwValue<kwValString>
+class DLL_PUBLIC kwValFixedPoint : public kwValue<kwValString>
 {
 public:
 	static const short precN[7];

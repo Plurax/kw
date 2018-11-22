@@ -9,10 +9,11 @@
 #define KWVALCOLOR_H_
 
 
+#include "kw/api.h"
 #include "kw/kwValString.h"
 #include "kw/kwValue.h"
 
-class kwValColor : public kwValue<kwValString>
+class DLL_PUBLIC kwValColor : public kwValue<kwValString>
 {
 public:
 	kwValColor();

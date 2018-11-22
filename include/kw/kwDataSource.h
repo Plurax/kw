@@ -8,6 +8,7 @@
 #ifndef KWDATASOURCE_H_
 #define KWDATASOURCE_H_
 
+#include "kw/api.h"
 #include "kw/kwValString.h"
 #include "kw/kwObject.h"
 #include <map>
@@ -20,7 +21,7 @@ using namespace std;
  * All objects which act as a data source should inherit from this type to allow the management by the kwSystem singleton.
  * Custom code can retrieve the data source object from the kwSystem singleton to perform any desired action.
  */
-class kwDataSource : public kwObject
+class DLL_PUBLIC kwDataSource : public kwObject
 {
 public:
 	kwDataSource();

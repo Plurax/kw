@@ -10,11 +10,12 @@
 
 
 #include <string>
+#include "kw/api.h"
 #include "kw/kwObject.h"
 
 using namespace std;
 
-class kwLibraryInfo : public kwObject
+class DLL_PUBLIC kwLibraryInfo : public kwObject
 {
 public:
 	kwLibraryInfo(	string name, string version, string description, string author, string license);

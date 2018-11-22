@@ -8,10 +8,11 @@
 #ifndef KWVALBOOL_H_
 #define KWVALBOOL_H_
 
+#include "kw/api.h"
 #include <kw/kwValue.h>
 #include <kw/kwValString.h>
 
-class kwValBool: public kwValue<kwValString>
+class DLL_PUBLIC kwValBool: public kwValue<kwValString>
 {
 public:
 

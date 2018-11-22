@@ -189,7 +189,7 @@ void kwSystem::createDataLayer(json _currentElement)
       auto classname = make_shared<kwValString>(((*it)["classname"]).get<string>());
       auto sMainclassname = make_shared<kwValString>("kwDataSource");
 
-      auto configuration = (*it)["configuration"];
+      auto configuration = (*it)["config"];
 
       // Create the configured element via the factory
 

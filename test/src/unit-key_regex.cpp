@@ -64,5 +64,5 @@ TEST_CASE( "Regex Match extWITHIN", "[extractKey]" ) {
 
 TEST_CASE( "Regex Match split", "[]" ) {
   INFO("TEST: " << splitPath(string("TEST:BUH")));
-  REQUIRE( splitPath(string("buh hab ${TEST:Temperature}sdfsdf")) == string("TEST:Temperature"));
+  REQUIRE( extractKey(string("buh hab ${TEST:Temperature}sdfsdf")) == string("TEST:Temperature"));
 }

@@ -8,10 +8,11 @@
 #ifndef KWVALFLOAT_H_
 #define KWVALFLOAT_H_
 
+#include <kw/api.h>
 #include <kw/kwValue.h>
 #include <kw/kwValString.h>
 
-class kwValFloat : public kwValue<kwValString>
+class DLL_PUBLIC kwValFloat : public kwValue<kwValString>
 {
 public:
 
@@ -21,7 +22,7 @@ public:
 
 	float getValue();
 
-	friend std::ostream& operator<< (std::ostream& stream, const kwValFloat& _valfloat);
+	DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValFloat& _valfloat);
 
     kwValString asString();
 

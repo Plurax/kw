@@ -8,10 +8,11 @@
 #ifndef KWVALINTEGER_H_
 #define KWVALINTEGER_H_
 
+#include <kw/api.h>
 #include <kw/kwValue.h>
 #include <kw/kwValString.h>
 
-class kwValInteger: public kwValue<kwValString>
+class DLL_PUBLIC kwValInteger: public kwValue<kwValString>
 {
 public:
 
@@ -21,7 +22,7 @@ public:
 
 	int getValue();
 
-	friend std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger);
+	friend DLL_PUBLIC std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger);
 
     kwValString asString();
 
