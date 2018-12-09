@@ -31,8 +31,6 @@ set(LIB_HEADERS
   ../include/kw/kwSystem.h
   ../include/kw/kwTechnicalException.h
   ../include/kw/kwTimer.h
-  ../include/kw/kwValColor.h
-  ../include/kw/kwValCoord.h
   ../include/kw/kwValFixedPoint.h
   ../include/kw/kwValInteger.h
   ../include/kw/kwValUnsignedInteger.h
@@ -65,8 +63,6 @@ set(LIB_SOURCES
   kwSocketClient.cpp
   kwSystem.cpp
   kwTimer.cpp
-  kwValColor.cpp
-  kwValCoord.cpp
   kwValFixedPoint.cpp
   kwValInteger.cpp
   kwValUnsignedInteger.cpp
