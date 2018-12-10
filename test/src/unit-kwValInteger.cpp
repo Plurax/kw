@@ -32,6 +32,6 @@ TEST_CASE( "kwValInteger Method tests - should behave the same like string", "[k
     REQUIRE( (clone >= val1) == true);
     REQUIRE( (clone <= val1) == true);
     REQUIRE( (val1 >= val2) == false);
-    REQUIRE( (val1 <= val2) == false);
+    REQUIRE( (val1 <= val2) == true);
   }
 }
