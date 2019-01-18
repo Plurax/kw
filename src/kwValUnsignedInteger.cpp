@@ -5,7 +5,7 @@
  *      Author: chuhlich
  */
 
-#include <kwValUnsignedInteger.h>
+#include <kw/kwValUnsignedInteger.h>
 #include "kwDebug.h"
 
 

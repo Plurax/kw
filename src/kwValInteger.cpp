@@ -5,7 +5,7 @@
  *      Author: chuhlich
  */
 
-#include <kwValInteger.h>
+#include <kw/kwValInteger.h>
 #include "kwDebug.h"
 
 
@@ -46,6 +46,15 @@ std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger)
 	return stream;
 }
 
+bool kwValInteger::operator == (const kwValInteger right)
+{
+	return this->m_Value == right.m_Value;
+}
+
+bool kwValInteger::operator != (const kwValInteger right)
+{
+	return !(this->m_Value == right.m_Value);
+}
 
 bool kwValInteger::operator >= (const kwValInteger right)
 {

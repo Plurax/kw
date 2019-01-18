@@ -11,7 +11,7 @@
 #include <kw/kwValue.h>
 #include <kw/kwValString.h>
 
-class kwValUnsignedInteger: public kwValue<kwValString>
+class DLL_PUBLIC kwValUnsignedInteger: public kwValue<kwValString>
 {
 public:
 
@@ -20,8 +20,8 @@ public:
 	virtual ~kwValUnsignedInteger();
 
 	uint getValue();
-
-	friend std::ostream& operator<< (std::ostream& stream, const kwValUnsignedInteger& _valinteger);
+    
+	DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValUnsignedInteger& _valinteger);
 
     kwValString asString();
 

@@ -30,6 +30,11 @@ std::ostream& operator<< (std::ostream& stream, const kwValBool& _valbool)
     return stream;
 }
 
+bool kwValBool::operator== (const kwValBool &right) const
+{
+	return this->m_Value == right.m_Value;
+}
+
 
 kwValString kwValBool::asString()
 {

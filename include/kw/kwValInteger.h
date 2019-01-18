@@ -29,6 +29,8 @@ public:
     operator int() const;
     json toJson() override;
 
+	bool operator == (const kwValInteger right);
+	bool operator != (const kwValInteger right);
 	bool operator >= (const kwValInteger right);
 	bool operator > (const kwValInteger right);
 	bool operator <= (const kwValInteger right);

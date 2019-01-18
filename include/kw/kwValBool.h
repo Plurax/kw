@@ -22,7 +22,9 @@ public:
 
 	bool getValue();
 
-	friend std::ostream& operator<< (std::ostream& stream, const kwValBool& _valbool);
+	DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValBool& _valbool);
+
+    bool operator== (const kwValBool &right) const;
 
     kwValString asString();
 

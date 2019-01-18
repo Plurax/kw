@@ -42,6 +42,7 @@ class DLL_PUBLIC kwSystem
 {
  public:
   void init(kwValString& configfile);
+  void configure(json config);
 
   ~kwSystem();
 

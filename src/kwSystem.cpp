@@ -99,7 +99,13 @@ void kwSystem::readConfiguration(kwValString& configFile)
 
   json config;
   ss >> config;
-  
+
+  configure(config);
+}
+
+
+void kwSystem::configure(json config)
+{  
   try
   {
     kwLogger::Inst().configure(config["Logging"]);
@@ -110,13 +116,10 @@ void kwSystem::readConfiguration(kwValString& configFile)
   catch (kwTechnicalException& e)
   {
     LOG_EXCEPTION << e.getMessage();
-  }
-  catch (exception& e)
-  {
+  } catch (exception &e) {
     LOG_EXCEPTION << "Exception occured during init!: " << e.what();
   }
 }
-
 
 /**
  * This will configure the message handlers to be assigned on the different message IDs.

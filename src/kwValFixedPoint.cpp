@@ -30,7 +30,7 @@ kwValFixedPoint::~kwValFixedPoint()
  * This constructor can be used to initialize ValFixedPoint by using a string from an XML
  * The String should note the precision - otherwise the default prec11N6 is taken as in empty constructor.
  * To avoid confusion, the dot is ignored!
- * @param _string
+ * @param _string The string which is parsed into a new kwValFixedPoint
  */
 kwValFixedPoint::kwValFixedPoint(kwValString _string)
 {
