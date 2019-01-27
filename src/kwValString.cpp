@@ -29,7 +29,7 @@ kwValString::kwValString(const char* _cstr)
   m_isEmpty = false;
 }
 
-kwValString kwValString::asString()
+kwValString kwValString::asString() const
 {
   return *this;
 }
@@ -140,7 +140,7 @@ kwValString kwValString::operator + (const kwValString& _right)
 
 bool kwValString::operator == (const kwValString& rhs) const
 {
-  return (m_string == rhs.m_string);
+  return (this->m_string == rhs.m_string);
 }
 
 

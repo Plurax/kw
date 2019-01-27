@@ -23,7 +23,7 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& stream, const kwValJsonObject& _valbool);
 
-    kwValString asString();
+    kwValString asString() const;
 
     json toJson() override;
 

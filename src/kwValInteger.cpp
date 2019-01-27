@@ -30,7 +30,7 @@ int kwValInteger::getValue()
 	return m_Value;
 }
 
-kwValString  kwValInteger::asString()
+kwValString  kwValInteger::asString() const
 {
     return kwValString(std::to_string(m_Value));
 }

@@ -21,7 +21,7 @@ class kwValue : public kwObject
 {
 public:
     //	virtual kwValue() =0;
-    virtual T asString()=0;
+    virtual T asString() const = 0;
     virtual json toJson() = 0;
 };
 

@@ -30,7 +30,7 @@ float kwValFloat::getValue()
 	return m_Value;
 }
 
-kwValString  kwValFloat::asString()
+kwValString  kwValFloat::asString() const
 {
     return kwValString(std::to_string(m_Value));
 }

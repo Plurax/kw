@@ -17,7 +17,7 @@ const long long kwValFixedPoint::precNScalings[7] = { 100, 10000, 1000000, 10000
 kwValFixedPoint::kwValFixedPoint()
 {
 	m_isEmpty = true;
-	m_Precision = enumValFixedPointPrec::prec11N6;
+	m_Precision = enumValFixedPointPrec::prec13N4;
 	m_lValue = 0;
 }
 
@@ -55,7 +55,7 @@ kwValFixedPoint::kwValFixedPoint(kwValString _string)
 	LOG_TRACE << "mod string " << tmpBuffer;
 	sscanf(tmpBuffer, "%ld", &m_lValue);
 
-	m_Precision = enumValFixedPointPrec::prec11N6;
+	m_Precision = enumValFixedPointPrec::prec13N4;
 
 	if (*ptr == ' ') // skip space
 		ptr++;
@@ -78,11 +78,11 @@ kwValFixedPoint::kwValFixedPoint(long in, enumValFixedPointPrec prec)
 	m_isEmpty = false;
 }
 
-std::string kwValFixedPoint::asString() const
+kwValString kwValFixedPoint::asString() const
 {
 	int i;
 	char tmp[21] = "";
-	
+
 	if (m_isEmpty)
 	{
 		return kwValString("unset Object kwValFixedPoint!");
@@ -91,13 +91,19 @@ std::string kwValFixedPoint::asString() const
 	snprintf(tmp, 20, "%ld", m_lValue);
 
 	int len = strlen(tmp);
+    tmp[len+1] = '\0';
 	for (i = len; i > (len - precN[ static_cast<int>(m_Precision)]); i--)
 	{
 		tmp[i]=tmp[i-1];
 	}
 	tmp[i] = '.';
 
-	return std::string(tmp);
+	return kwValString(tmp);
+}
+
+int kwValFixedPoint::getValue()
+{
+    return m_lValue;
 }
 
 bool kwValFixedPoint::operator >= (const kwValFixedPoint right)
@@ -224,6 +230,22 @@ kwValFixedPoint kwValFixedPoint::operator / (const kwValFixedPoint& right)
 
 }
 
+bool kwValFixedPoint::operator ==(const kwValFixedPoint &right)
+{
+    if (this->m_isEmpty != right.m_isEmpty)
+        return false;
+    if (this->m_lValue != right.m_lValue)
+        return false;
+    if (this->m_Precision != right.m_Precision)
+        return false;
+    return true;
+}
+
+bool kwValFixedPoint::operator !=(const kwValFixedPoint &right)
+{
+    return !(*this == right);
+}
+
 /**
  *	This will convert between different precision settings. There is no rounding made!
  */
@@ -290,9 +312,9 @@ kwValString kwValFixedPoint::getType()
 
 std::ostream& operator<< (std::ostream& stream, const kwValFixedPoint& _valfixedpoint)
 {
-	const kwValString str = kwValString(_valfixedpoint.asString());
-	stream << str;
-	return stream;
+  const kwValString str = kwValString(_valfixedpoint.asString());
+  stream << str;
+  return stream;
 }
 
 
@@ -339,11 +361,6 @@ enumValFixedPointPrec kwValFixedPoint::getPrecisionFromString(char* _str)
 float kwValFixedPoint::asFloat()
 {
 	return ((float)m_lValue) / (float)precNScalings[static_cast<unsigned long>(this->m_Precision)];
-}
-
-kwValString kwValFixedPoint::asString()
-{
-    return kwValString(asString());
 }
 
 enumValFixedPointPrec kwValFixedPoint::getPrecision()

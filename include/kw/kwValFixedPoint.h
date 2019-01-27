@@ -37,17 +37,20 @@ public:
 	kwValFixedPoint(kwValString _string);
 	kwValFixedPoint(enumValFixedPointPrec prec);
 	kwValFixedPoint(long in, enumValFixedPointPrec prec);
-  std::string asString() const;
 
 	kwValString getType();
 
-	friend std::ostream& operator<< (std::ostream& stream, const kwValFixedPoint& _valfixedpoint);
+	DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValFixedPoint& _valfixedpoint);
     json toJson() override;
+
+    int getValue();
 
 	bool operator >= (const kwValFixedPoint right);
 	bool operator > (const kwValFixedPoint right);
 	bool operator <= (const kwValFixedPoint right);
 	bool operator < (const kwValFixedPoint right);
+	bool operator == (const kwValFixedPoint& right);
+	bool operator != (const kwValFixedPoint& right);
 	kwValFixedPoint& operator = (kwValFixedPoint const& right);
 	kwValFixedPoint operator + (const kwValFixedPoint& right);
 	kwValFixedPoint& operator += (kwValFixedPoint const& right);
@@ -61,7 +64,7 @@ public:
 	enumValFixedPointPrec getPrecision();
 
 	float asFloat();
-    kwValString asString();
+    kwValString asString() const;
 private:
 	static enumValFixedPointPrec getPrecisionFromString(char* _str);
 	long m_lValue;

@@ -26,7 +26,7 @@ public:
 
     bool operator== (const kwValBool &right) const;
 
-    kwValString asString();
+    kwValString asString() const;
 
     json toJson() override;
 

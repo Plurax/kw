@@ -35,7 +35,7 @@ uint kwValUnsignedInteger::getValue()
 	return m_Value;
 }
 
-kwValString  kwValUnsignedInteger::asString()
+kwValString  kwValUnsignedInteger::asString() const
 {
     return kwValString(std::to_string(m_Value));
 }

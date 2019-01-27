@@ -51,7 +51,7 @@ class DLL_PUBLIC kwValString : public kwValue<kwValString>
     json toJson() override;
   void erase(int pos, int len);
   kwValString getType();
-  kwValString asString();
+  kwValString asString() const;
 
   kwValString operator + (const kwValString& _right);
   bool operator == (const kwValString& rhs) const;

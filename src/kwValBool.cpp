@@ -36,7 +36,7 @@ bool kwValBool::operator== (const kwValBool &right) const
 }
 
 
-kwValString kwValBool::asString()
+kwValString kwValBool::asString() const
 {
     if (m_Value)
         return kwValString("true");
