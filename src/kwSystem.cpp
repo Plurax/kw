@@ -19,7 +19,6 @@
 
 #include "kw/kwSystem.h"
 #include "kw/kwTechnicalException.h"
-#include "kw/kwValCoord.h"
 #include <regex>
 
 
