@@ -43,23 +43,7 @@ kwSystem::kwSystem()
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>(),
     make_shared<kwLockedQueue<std::shared_ptr<kwMessage>>>()};
-}
 
-/**
- * Main initialization routine.
- *
- */
-void kwSystem::init(kwValString& configfile)
-{
-  /* Note this is not used as shared pointer as we use this information within lib handles which 
-     are propably initialized with external shared lib factories!
-  */
-  m_libInfo = new kwLibraryInfo("kw", "0.2", "Knitwork", "Christoph Uhlich",	"MIT - www.electroknit.io");
-
-  kwLibraryManager& dsManager = kwLibraryManager::Inst();
-  dsManager.init();
-
-  readConfiguration(configfile);
 }
 
 /**
@@ -71,11 +55,12 @@ kwSystem::~kwSystem()
 
 
 /**
- * Reads the complete configuration file and creates the corresponding graphic objects via
+ * Reads the complete configuration file and calls the json confgure
+ * function to create the corresponding objects via
  * loading of shared libs and factory pattern.
  * @param configFile - string containing a full path file for the configuration
  */
-void kwSystem::readConfiguration(kwValString& configFile)
+void kwSystem::init(kwValString& configFile)
 {
   errno = 0;
   if (!boost::filesystem::exists(configFile.c_str()))
@@ -104,7 +89,15 @@ void kwSystem::readConfiguration(kwValString& configFile)
 
 
 void kwSystem::configure(json config)
-{  
+{
+  /* Note this is not used as shared pointer as we use this information within lib handles which 
+     are propably initialized with external shared lib factories!
+  */
+  m_libInfo = new kwLibraryInfo("kw", "0.2", "Knitwork", "Christoph Uhlich",	"MIT - www.electroknit.io");
+
+  kwLibraryManager& dsManager = kwLibraryManager::Inst();
+  dsManager.init();
+
   try
   {
     kwLogger::Inst().configure(config["Logging"]);
@@ -122,8 +115,7 @@ void kwSystem::configure(json config)
 
 /**
  * This will configure the message handlers to be assigned on the different message IDs.
- * This is completely flexible to provide own handlers. The only handler which is intern
- * is the GUI Message for inputs with ID 0.
+ * This is completely flexible to provide own handlers.
  *
  * @param _currentElement
  */

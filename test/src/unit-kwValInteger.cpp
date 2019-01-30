@@ -39,11 +39,16 @@ TEST_CASE( "kwValInteger Method tests - should behave the same like string", "[k
     }
 
     SECTION("Assignments") {
-        int iVal = 50;
-        kwValInteger integerassign = iVal;
-        REQUIRE(integerassign.getValue() == 50);
-        integerassign = val2;
-        REQUIRE( (integerassign == val2) == true);
+      int iVal = 50, assignInteger = 5;
+      kwValInteger integerassign = iVal;
+      int intfromkwVal = integerassign;
+
+      REQUIRE(intfromkwVal == 50);
+      REQUIRE(integerassign.getValue() == 50);
+      integerassign = val2;
+      REQUIRE( (integerassign == val2) == true);
+      integerassign = assignInteger;
+      REQUIRE( (integerassign.getValue()) == 5);
     }
 
     SECTION("asString") {

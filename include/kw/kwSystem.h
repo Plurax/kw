@@ -67,8 +67,6 @@ class DLL_PUBLIC kwSystem
 
   void destroy();
 
-  void readConfiguration(kwValString& configFile);
-
   kwMessageHandlerMap m_mMessageHandlers;
 
   kwDataSourceMap m_DataSources;

@@ -42,7 +42,11 @@ TEST_CASE( "kwValString Method tests - should behave the same like string", "[kw
     }
 
     kwValString ptr = kwValString(&str_string_A);
-    REQUIRE( ptr.str() == str_string_A);
+    REQUIRE( ptr.str() == str_string_A); // This assumes that
+                                         // comparison == is working
+    kwValString ref = kwValString(str_string_A);
+    REQUIRE( ref.str() == str_string_A);
+
     kwValString fromkwPtr = kwValString(&ptr);
     std::shared_ptr<kwValString> shared = std::make_shared<kwValString>("TestA");
     kwValString fromShared = kwValString(shared);
@@ -101,5 +105,10 @@ TEST_CASE( "kwValString Method tests - should behave the same like string", "[kw
     acopy.erase(0, 4);
     str_string_A.erase(0, 4);
     REQUIRE(acopy.str() == str_string_A);
+  }
+
+  SECTION("Return plain chars") {
+    const char* chars = string_A.data();
+    REQUIRE(strcmp(chars, "TestA") == 0);
   }
 }
