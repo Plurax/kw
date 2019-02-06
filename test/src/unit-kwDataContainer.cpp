@@ -16,10 +16,18 @@ TEST_CASE("kwDataContainer Method tests", "[kwDataContainer]") {
   json config =
       "{\"DataLayer\" : {\"DataSource\": { \"config\": { \"Temperature\": 1002.4 }, \"name\": \"valuemap\", \"classname\": \"kwDataContainer\", \"libname\": \"kw\" }}}"_json;
 
-  kwSystem &sys = kwSystem::Inst();
-  sys.configure(config);
+  SECTION("File init") {
+    kwSystem &sys = kwSystem::Inst();
+    // Load example config from data folder.
+    kwValString configfile = kwValString("test/data/TestConfig.json");
+    sys.init(configfile);
+  }
 
   SECTION("Retrieve valuemap") {
+
+    kwSystem &sys = kwSystem::Inst();
+    sys.configure(config);
+
     std::shared_ptr<kwDataSource> mySource = sys.getDataSource(kwValString("valuemap"));
 
     std::shared_ptr<kwValue<kwValString>> fvalue = mySource->getValue(kwValString("Temperature"));
