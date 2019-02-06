@@ -90,4 +90,16 @@ TEST_CASE( "kwValUnsignedInteger Method tests - should behave the same like stri
         generated["uint"] = val1.toJson();
         REQUIRE(expected == generated);
     }
+
+    SECTION("Exception throwing on empty objects.") {
+      kwValUnsignedInteger value1 = kwValUnsignedInteger(10);
+      kwValUnsignedInteger empty = kwValUnsignedInteger();
+
+      CHECK_THROWS(value1 + empty);
+      CHECK_THROWS(value1 += empty);
+      CHECK_THROWS(value1 * empty);
+      CHECK_THROWS(value1 / empty);
+      CHECK_THROWS(value1 - empty);
+      CHECK_THROWS(value1 -= empty);
+    }
 }
