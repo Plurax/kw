@@ -8,6 +8,7 @@
 #include "kwLibraryManager.h"
 #include "kwDebug.h"
 #include "kwLibHandle.h"
+#include "kwLibraryInfo.h"
 #include "kwSystem.h"
 #include "kwDataSourceFactory.h"
 #include "kwMessageHandlerFactory.h"
@@ -130,4 +131,18 @@ shared_ptr<kwObject> kwLibraryManager::createObject(shared_ptr<kwValString> libn
       THROW_TECHNICAL_EXCEPTION(1, "Error during instantiation of kwObject during lib init (class:" << *classname << ")");
   }
   return nullptr;
+}
+
+
+std::vector<kwLibraryInfo> kwLibraryManager::listLibraryInfo(shared_ptr<kwValString> libname)
+{
+  std::map<kwValString,shared_ptr<kwLibHandle>>::iterator libIterator;
+
+  std::vector<kwLibraryInfo> returnVec;
+  for (libIterator = m_loadedLibraries.begin(); libIterator != m_loadedLibraries.end(); libIterator++)
+  {
+    auto libInfo = libIterator->second->getInfo();
+    returnVec.push_back(*libInfo);
+  }
+  return returnVec;
 }
