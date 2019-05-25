@@ -32,6 +32,7 @@ class kwLibraryManager
 
   // Create an object
   shared_ptr<kwObject> createObject(shared_ptr<kwValString> libname, shared_ptr<kwValString> classname, shared_ptr<kwValString> main_classname, json configuration);
+  std::vector<kwLibraryInfo> listLibraryInfo(shared_ptr<kwValString> libname);
 
  private:
   map<kwValString, shared_ptr<kwLibHandle>> m_loadedLibraries;
