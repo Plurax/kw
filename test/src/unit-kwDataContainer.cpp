@@ -27,6 +27,7 @@ TEST_CASE("kwDataContainer Method tests", "[kwDataContainer]") {
 
     kwSystem &sys = kwSystem::Inst();
     sys.configure(config);
+    sys.listLibraryInfo(nullptr);
 
     std::shared_ptr<kwDataSource> mySource = sys.getDataSource(kwValString("valuemap"));
 
