@@ -24,7 +24,7 @@ public:
 
 	friend DLL_PUBLIC std::ostream& operator<< (std::ostream& stream, const kwValInteger& _valinteger);
 
-    kwValString asString();
+    kwValString asString() const;
 
     operator int() const;
     json toJson() override;

@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include "kw/kwValBool.h"
+#include "kw/kwValFloat.h"
 #include "kw/kwSystem.h"
 #include "kw/kwValString.h"
 #include "kw/kwDataContainer.h"
@@ -10,19 +11,30 @@
 
 using namespace std;
 
-TEST_CASE( "kwDataContainer Method tests", "[kwDataContainer]" ) {
+TEST_CASE("kwDataContainer Method tests", "[kwDataContainer]") {
 
-    json config = "{\"DataSource\": { \"config\": { \"Temperature\": 1002.4 }, \"name\": \"valuemap\", \"classname\": \"kwDataContainer\", \"libname\": \"kw\" }"_json;
+  json config =
+      "{\"DataLayer\" : {\"DataSource\": { \"config\": { \"Temperature\": 1002.4 }, \"name\": \"valuemap\", \"classname\": \"kwDataContainer\", \"libname\": \"kw\" }}}"_json;
 
-    kwSystem& sys = kwSystem::Inst();
+  SECTION("File init") {
+    kwSystem &sys = kwSystem::Inst();
+    // Load example config from data folder.
+    kwValString configfile = kwValString("test/data/TestConfig.json");
+    sys.init(configfile);
+  }
+
+  SECTION("Retrieve valuemap") {
+
+    kwSystem &sys = kwSystem::Inst();
     sys.configure(config);
-    
-    auto container = sys.getDataSource("valuemap");
 
-    SECTION("Constructor") {
-        kwValBool val(true);
-        REQUIRE(val.getValue() == true);
-        kwValBool val2(true);
-        REQUIRE(val == val2);
-    }
+    std::shared_ptr<kwDataSource> mySource = sys.getDataSource(kwValString("valuemap"));
+
+    std::shared_ptr<kwValue<kwValString>> fvalue = mySource->getValue(kwValString("Temperature"));
+
+    kwValBool val(true);
+    REQUIRE(val.getValue() == true);
+    kwValBool val2(true);
+    REQUIRE(val == val2);
+  }
 }

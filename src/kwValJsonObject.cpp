@@ -30,7 +30,7 @@ std::ostream& operator<< (std::ostream& stream, const kwValJsonObject& _valbool)
 }
 
 
-kwValString kwValJsonObject::asString()
+kwValString kwValJsonObject::asString() const
 {
     return kwValString(m_Value.dump());
 }

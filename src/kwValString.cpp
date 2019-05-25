@@ -29,7 +29,7 @@ kwValString::kwValString(const char* _cstr)
   m_isEmpty = false;
 }
 
-kwValString kwValString::asString()
+kwValString kwValString::asString() const
 {
   return *this;
 }
@@ -39,12 +39,6 @@ std::shared_ptr<kwValString> kwValString::getValue()
     return std::make_shared<kwValString>(*this);
 }
 
-
-kwValString::kwValString(string& _str)
-{
-  m_string = string(_str);
-  m_isEmpty = false;
-}
 
 const char* kwValString::data()
 {
@@ -61,12 +55,6 @@ void kwValString::push_back(char c)
   m_string.push_back(c);
 }
 
-kwValString::kwValString(string* _str)
-{
-  m_string = string(*_str);
-  m_isEmpty = false;
-}
-
 
 kwValString::kwValString(const string _str)
 {
@@ -74,12 +62,6 @@ kwValString::kwValString(const string _str)
   m_isEmpty = false;
 }
 
-
-kwValString::kwValString(kwValString*_str)
-{
-  m_string = string(_str->str());
-  m_isEmpty = false;
-}
 
 kwValString::kwValString(shared_ptr<kwValString> _str)
 {
@@ -140,7 +122,7 @@ kwValString kwValString::operator + (const kwValString& _right)
 
 bool kwValString::operator == (const kwValString& rhs) const
 {
-  return (m_string == rhs.m_string);
+  return (this->m_string == rhs.m_string);
 }
 
 

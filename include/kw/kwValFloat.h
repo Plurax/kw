@@ -24,7 +24,7 @@ public:
 
 	DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValFloat& _valfloat);
 
-    kwValString asString();
+    kwValString asString() const;
 
     operator float() const;
     json toJson() override;

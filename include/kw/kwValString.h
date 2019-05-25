@@ -28,10 +28,7 @@ class DLL_PUBLIC kwValString : public kwValue<kwValString>
   kwValString();
   kwValString(char* _cstr);
   kwValString(const char* _cstr);
-  kwValString(string& _str);
-  kwValString(string* _str);
   kwValString(const string _str);
-  kwValString(kwValString* _str);
   kwValString(shared_ptr<kwValString> _str);
 
   DLL_PUBLIC friend std::ostream& operator<< (std::ostream& stream, const kwValString& _valstring);
@@ -51,7 +48,7 @@ class DLL_PUBLIC kwValString : public kwValue<kwValString>
     json toJson() override;
   void erase(int pos, int len);
   kwValString getType();
-  kwValString asString();
+  kwValString asString() const override;
 
   kwValString operator + (const kwValString& _right);
   bool operator == (const kwValString& rhs) const;
