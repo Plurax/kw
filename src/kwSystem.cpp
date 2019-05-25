@@ -374,3 +374,11 @@ string kwSystem::matchMagicString( string str ) {
     return string("");
   }
 }
+
+
+vector<kwLibraryInfo> kwSystem::listLibraryInfo(shared_ptr<kwValString> libname)
+{
+  kwLibraryManager& dsManager = kwLibraryManager::Inst();
+  return dsManager.listLibraryInfo(libname);
+}
+
