@@ -14,7 +14,7 @@
 
 using namespace std;
 
-class kwMessageHandler : public kwObject
+class DLL_PUBLIC kwMessageHandler : public kwObject
 {
 public:
 	kwMessageHandler();
