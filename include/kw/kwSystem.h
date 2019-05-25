@@ -80,7 +80,8 @@ class DLL_PUBLIC kwSystem
   void pollTimers();
 
   void setMessageHandlers(json messageconfig);
-
+  
+  vector<kwLibraryInfo> listLibraryInfo(shared_ptr<kwValString> libname);
  private:
   kwSystem();
 
