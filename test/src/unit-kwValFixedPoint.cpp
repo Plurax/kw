@@ -17,6 +17,8 @@ TEST_CASE( "kwValFixedPoint Method tests", "[kwValFixedPoint]" ) {
         kwValFixedPoint val;
         REQUIRE(val.getValue() == 0);
         REQUIRE(val.getPrecision() == enumValFixedPointPrec::prec13N4);
+
+        auto precConst = kwValFixedPoint(12908, enumValFixedPointPrec::prec13N4);
     }
 
     SECTION( "O Stream") {
