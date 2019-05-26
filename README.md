@@ -28,9 +28,20 @@ make
 ```
 
 After that you will have the shared object of the library libkw.so and an executable kwRunner available in `build/lib` and `build/bin`.
-There is a configuration file available which contains already another handler library. If you run the executable without this you will at least get not found outputs on the console.
-Assuming you are in `build/bin` you can verify this via:
+There is a configuration file available which contains a basic handler from kw shared object itself.
+Assuming you are in `bin` you can verify this via:
 
 ```bash
-./kwRunner ../../config/ExampleConfig.cfg
+./kwRunner ../config/ExampleConfig.cfg
 ```
+
+# Tests and coverage
+
+Use 
+```
+cmake -DKW_Coverage=1 -DBuild_Type=Debug -DKW_BuildTests=1 ..
+make
+make test
+make lcov_html
+```
+to build also tests and coverage.
